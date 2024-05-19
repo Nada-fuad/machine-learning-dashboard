@@ -1,12 +1,12 @@
 import React from "react";
 import { Box, styled, useMediaQuery } from "@mui/material";
-const StyledBox = styled(Box)(({}) => ({
+const StyledBox = styled(Box)({
   backgroundColor: "#fff",
 
   borderRadius: "1rem",
   boxShadow: "0.15rem 0.2rem 0.15rem 0.1rem rgba(0, 0, 0, .8)",
   padding: "",
-}));
+});
 const displayTowColum = `
 "a b "
 "a b "

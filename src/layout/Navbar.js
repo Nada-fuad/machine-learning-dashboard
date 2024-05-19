@@ -1,4 +1,4 @@
-import { Brightness4, Home, LightMode, Menu } from "@mui/icons-material";
+import { Brightness4, LightMode, Menu } from "@mui/icons-material";
 import { Box, IconButton, Typography } from "@mui/material";
 import React, { useState } from "react";
 
