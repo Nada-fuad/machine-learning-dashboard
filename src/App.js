@@ -30,6 +30,7 @@ function App() {
       <Navbar />
       <Box display="flex" flexDirection="column">
         <Content expermintData={expermintData} />
+        ok
       </Box>
     </>
   );
