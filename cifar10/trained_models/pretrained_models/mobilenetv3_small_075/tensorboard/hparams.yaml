@@ -1,0 +1,69 @@
+dataset:
+  data_folder: /local/gerum/hannah/experiments/cifar10/datasets/
+  cls: hannah.datasets.vision.Cifar10Dataset
+  dataset: cifar10
+  val_percent: 0.1
+model:
+  _target_: hannah.models.timm.TimmModel
+  name: mobilenetv3_small_075
+  drop_rate: 0.3
+  drop_path_rate: 0.2
+  pretrained: true
+optimizer:
+  _target_: torch.optim.sgd.SGD
+  lr: 0.3
+  momentum: 0.9
+  dampening: 0
+  weight_decay: 0.0005
+  nesterov: false
+features:
+  _target_: torch.nn.Identity
+num_workers: 0
+batch_size: 2048
+time_masking: 0
+frequency_masking: 0
+scheduler:
+  _target_: torch.optim.lr_scheduler.OneCycleLR
+  max_lr: 0.3
+  pct_start: 0.3
+  anneal_strategy: cos
+  cycle_momentum: true
+  base_momentum: 0.85
+  max_momentum: 0.95
+  div_factor: 25.0
+  final_div_factor: 10000.0
+  last_epoch: -1
+normalizer: null
+unlabeled_data: null
+export_onnx: true
+export_relay: false
+shuffle_all_dataloaders: false
+augmentation:
+  batch_augment:
+    pipeline: null
+    transforms:
+      RandomHorizontalFlip:
+        p: 0.5
+      RandomAffine:
+        degrees:
+        - -15
+        - 15
+        translate:
+        - 0.1
+        - 0.1
+        scale:
+        - 0.9
+        - 1.1
+        shear:
+        - -5
+        - 5
+        p: 0.5
+      RandomCrop:
+        size:
+        - 32
+        - 32
+        padding: 4
+      RandomErasing:
+        p: 0.5
+pseudo_labeling: null
+log_images: false

@@ -1,0 +1,534 @@
+[2024-02-15 12:11:41,994][hannah.utils.utils][INFO] - Environment info:
+[2024-02-15 12:11:41,994][hannah.utils.utils][INFO] -   Number of GPUs: 2
+[2024-02-15 12:11:41,994][hannah.utils.utils][INFO] -   CUDA version: 12.1
+[2024-02-15 12:11:41,994][hannah.utils.utils][INFO] -   CUDNN version: 8907
+[2024-02-15 12:11:41,994][hannah.utils.utils][INFO] -   Kernel: 4.18.0-513.11.1.el8_9.x86_64
+[2024-02-15 12:11:41,994][hannah.utils.utils][INFO] -   Python: 3.11.5 (main, Nov 15 2023, 03:52:27) [GCC 8.5.0 20210514 (Red Hat 8.5.0-20)]
+[2024-02-15 12:11:41,994][hannah.utils.utils][INFO] -   PyTorch: 2.1.2+cu121
+[2024-02-15 12:11:41,994][hannah.utils.utils][INFO] -   Pytorch Lightning: 2.1.3
+[2024-02-15 12:11:41,994][hannah.utils.utils][INFO] -   Numpy: 1.23.5
+[2024-02-15 12:11:41,994][hannah.utils.utils][INFO] -   Hannah version info:
+[2024-02-15 12:11:41,994][hannah.utils.utils][INFO] -     Cannot find a Git repository.  You probably downloaded an archive
+[2024-02-15 12:11:41,995][hannah.utils.utils][INFO] -   Command line: /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/bin/hannah-train +experiment=sweep_lr
+[2024-02-15 12:11:41,995][hannah.utils.utils][INFO] -   
+[2024-02-15 12:11:41,995][lightning.fabric.utilities.seed][INFO] - Seed set to 1234
+[2024-02-15 12:11:41,995][root][INFO] - Configuration: 
+[2024-02-15 12:11:41,998][root][INFO] - dataset:
+  data_folder: ${hydra:runtime.cwd}/datasets/
+  cls: hannah.datasets.vision.Cifar10Dataset
+  dataset: cifar10
+  val_percent: 0.1
+features:
+  _target_: torch.nn.Identity
+model:
+  _target_: hannah.models.kakao_resnet.resnet8
+  name: kakao_resnet8
+  width_multiplier: 1.0
+  input_kernel: 3
+  input_stride: 1
+scheduler:
+  _target_: torch.optim.lr_scheduler.OneCycleLR
+  max_lr: 0.3
+  pct_start: 0.3
+  anneal_strategy: cos
+  cycle_momentum: true
+  base_momentum: 0.85
+  max_momentum: 0.95
+  div_factor: 25.0
+  final_div_factor: 10000.0
+  last_epoch: -1
+optimizer:
+  _target_: torch.optim.sgd.SGD
+  lr: 0.3
+  momentum: 0.9
+  dampening: 0
+  weight_decay: 0.0005
+  nesterov: false
+module:
+  _target_: hannah.modules.vision.ImageClassifierModule
+  num_workers: 0
+  batch_size: 2048
+  shuffle_all_dataloaders: false
+trainer:
+  _target_: pytorch_lightning.trainer.Trainer
+  accelerator: auto
+  devices: 1
+  limit_train_batches: 1.0
+  limit_val_batches: 1.0
+  limit_test_batches: 1.0
+  max_epochs: 50
+  default_root_dir: .
+  fast_dev_run: false
+  overfit_batches: 0.0
+  benchmark: false
+  deterministic: warn
+  gradient_clip_val: 0
+  accumulate_grad_batches: 1
+  plugins: null
+  strategy: auto
+  reload_dataloaders_every_n_epochs: 0
+  precision: 16
+  enable_model_summary: false
+checkpoint:
+  _target_: pytorch_lightning.callbacks.ModelCheckpoint
+  dirpath: checkpoints
+  save_top_k: 1
+  verbose: true
+  monitor: val_error
+  mode: min
+  save_last: true
+augmentation:
+  batch_augment:
+    pipeline: null
+    transforms:
+      RandomHorizontalFlip:
+        p: 0.5
+      RandomAffine:
+        degrees:
+        - -15
+        - 15
+        translate:
+        - 0.1
+        - 0.1
+        scale:
+        - 0.9
+        - 1.1
+        shear:
+        - -5
+        - 5
+        p: 0.5
+      RandomCrop:
+        size:
+        - 32
+        - 32
+        padding: 4
+      RandomErasing:
+        p: 0.5
+experiment_id: sweep_lr
+output_dir: trained_models
+auto_lr: false
+resume: false
+fx_mac_summary: false
+skip_test: false
+skip_val: false
+seed:
+- 1234
+validate_output: false
+monitor:
+  metric: val_accuracy
+  direction: maximize
+
+[2024-02-15 12:11:41,998][root][INFO] - Current working directory /local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3
+[2024-02-15 12:11:42,004][root][ERROR] - Exception Message: Error locating target 'hannah.modules.vision.ImageClassifierModule', set env var HYDRA_FULL_ERROR=1 to see chained exception.
+full_key: module
+Traceback (most recent call last):
+  File "/local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/hydra/_internal/utils.py", line 644, in _locate
+    obj = getattr(obj, part)
+          ^^^^^^^^^^^^^^^^^^
+AttributeError: module 'hannah.modules' has no attribute 'vision'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/hydra/_internal/utils.py", line 650, in _locate
+    obj = import_module(mod)
+          ^^^^^^^^^^^^^^^^^^
+  File "/usr/lib64/python3.11/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/local/gerum/hannah/hannah/modules/vision/__init__.py", line 19, in <module>
+    from .anomaly_detection import AnomalyDetectionModule
+  File "/local/gerum/hannah/hannah/modules/vision/anomaly_detection.py", line 34, in <module>
+    from .base import VisionBaseModule
+  File "/local/gerum/hannah/hannah/modules/vision/base.py", line 24, in <module>
+    import kornia
+ModuleNotFoundError: No module named 'kornia'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/hydra/_internal/instantiate/_instantiate2.py", line 134, in _resolve_target
+    target = _locate(target)
+             ^^^^^^^^^^^^^^^
+  File "/local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/hydra/_internal/utils.py", line 653, in _locate
+    raise ImportError(
+ImportError: Error loading 'hannah.modules.vision.ImageClassifierModule':
+ModuleNotFoundError("No module named 'kornia'")
+Are you sure that 'vision' is importable from module 'hannah.modules'?
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/local/gerum/hannah/hannah/tools/train.py", line 44, in main
+    return train(config)
+           ^^^^^^^^^^^^^
+  File "/local/gerum/hannah/hannah/train.py", line 93, in train
+    lit_module = instantiate(
+                 ^^^^^^^^^^^^
+  File "/local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/hydra/_internal/instantiate/_instantiate2.py", line 226, in instantiate
+    return instantiate_node(
+           ^^^^^^^^^^^^^^^^^
+  File "/local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/hydra/_internal/instantiate/_instantiate2.py", line 333, in instantiate_node
+    _target_ = _resolve_target(node.get(_Keys.TARGET), full_key)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/hydra/_internal/instantiate/_instantiate2.py", line 139, in _resolve_target
+    raise InstantiationException(msg) from e
+hydra.errors.InstantiationException: Error locating target 'hannah.modules.vision.ImageClassifierModule', set env var HYDRA_FULL_ERROR=1 to see chained exception.
+full_key: module
+[2024-02-15 16:51:46,679][hannah.utils.utils][INFO] - Environment info:
+[2024-02-15 16:51:46,679][hannah.utils.utils][INFO] -   Number of GPUs: 2
+[2024-02-15 16:51:46,679][hannah.utils.utils][INFO] -   CUDA version: 12.1
+[2024-02-15 16:51:46,679][hannah.utils.utils][INFO] -   CUDNN version: 8907
+[2024-02-15 16:51:46,679][hannah.utils.utils][INFO] -   Kernel: 4.18.0-513.11.1.el8_9.x86_64
+[2024-02-15 16:51:46,679][hannah.utils.utils][INFO] -   Python: 3.11.5 (main, Nov 15 2023, 03:52:27) [GCC 8.5.0 20210514 (Red Hat 8.5.0-20)]
+[2024-02-15 16:51:46,679][hannah.utils.utils][INFO] -   PyTorch: 2.1.2+cu121
+[2024-02-15 16:51:46,679][hannah.utils.utils][INFO] -   Pytorch Lightning: 2.1.3
+[2024-02-15 16:51:46,679][hannah.utils.utils][INFO] -   Numpy: 1.23.5
+[2024-02-15 16:51:46,679][hannah.utils.utils][INFO] -   Hannah version info:
+[2024-02-15 16:51:46,680][hannah.utils.utils][INFO] -     Cannot find a Git repository.  You probably downloaded an archive
+[2024-02-15 16:51:46,680][hannah.utils.utils][INFO] -   Command line: /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/bin/hannah-train +experiment=sweep_lr
+[2024-02-15 16:51:46,680][hannah.utils.utils][INFO] -   
+[2024-02-15 16:51:46,680][lightning.fabric.utilities.seed][INFO] - Seed set to 1234
+[2024-02-15 16:51:46,680][root][INFO] - Configuration: 
+[2024-02-15 16:51:46,683][root][INFO] - dataset:
+  data_folder: ${hydra:runtime.cwd}/datasets/
+  cls: hannah.datasets.vision.Cifar10Dataset
+  dataset: cifar10
+  val_percent: 0.1
+features:
+  _target_: torch.nn.Identity
+model:
+  _target_: hannah.models.kakao_resnet.resnet8
+  name: kakao_resnet8
+  width_multiplier: 1.0
+  input_kernel: 3
+  input_stride: 1
+scheduler:
+  _target_: torch.optim.lr_scheduler.OneCycleLR
+  max_lr: 0.3
+  pct_start: 0.3
+  anneal_strategy: cos
+  cycle_momentum: true
+  base_momentum: 0.85
+  max_momentum: 0.95
+  div_factor: 25.0
+  final_div_factor: 10000.0
+  last_epoch: -1
+optimizer:
+  _target_: torch.optim.sgd.SGD
+  lr: 0.3
+  momentum: 0.9
+  dampening: 0
+  weight_decay: 0.0005
+  nesterov: false
+module:
+  _target_: hannah.modules.vision.ImageClassifierModule
+  num_workers: 0
+  batch_size: 2048
+  shuffle_all_dataloaders: false
+trainer:
+  _target_: pytorch_lightning.trainer.Trainer
+  accelerator: auto
+  devices: 1
+  limit_train_batches: 1.0
+  limit_val_batches: 1.0
+  limit_test_batches: 1.0
+  max_epochs: 50
+  default_root_dir: .
+  fast_dev_run: false
+  overfit_batches: 0.0
+  benchmark: false
+  deterministic: warn
+  gradient_clip_val: 0
+  accumulate_grad_batches: 1
+  plugins: null
+  strategy: auto
+  reload_dataloaders_every_n_epochs: 0
+  precision: 16
+  enable_model_summary: false
+checkpoint:
+  _target_: pytorch_lightning.callbacks.ModelCheckpoint
+  dirpath: checkpoints
+  save_top_k: 1
+  verbose: true
+  monitor: val_error
+  mode: min
+  save_last: true
+augmentation:
+  batch_augment:
+    pipeline: null
+    transforms:
+      RandomHorizontalFlip:
+        p: 0.5
+      RandomAffine:
+        degrees:
+        - -15
+        - 15
+        translate:
+        - 0.1
+        - 0.1
+        scale:
+        - 0.9
+        - 1.1
+        shear:
+        - -5
+        - 5
+        p: 0.5
+      RandomCrop:
+        size:
+        - 32
+        - 32
+        padding: 4
+      RandomErasing:
+        p: 0.5
+experiment_id: sweep_lr
+output_dir: trained_models
+auto_lr: false
+resume: false
+fx_mac_summary: false
+skip_test: false
+skip_val: false
+seed:
+- 1234
+validate_output: false
+monitor:
+  metric: val_accuracy
+  direction: maximize
+
+[2024-02-15 16:51:46,683][root][INFO] - Current working directory /local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3
+[2024-02-15 16:51:46,689][hannah.callbacks.optimization][INFO] - Monitoring the following values for optimization
+[2024-02-15 16:51:46,689][hannah.callbacks.optimization][INFO] -   - val_accuracy direction: maximize(-1)
+[2024-02-15 16:51:46,692][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/lightning_fabric/connector.py:558: `precision=16` is supported for historical reasons but its usage is discouraged. Please set your precision to 16-mixed instead!
+
+[2024-02-15 16:51:46,692][pytorch_lightning.utilities.rank_zero][INFO] - Using 16bit Automatic Mixed Precision (AMP)
+[2024-02-15 16:51:46,698][pytorch_lightning.utilities.rank_zero][INFO] - GPU available: True (cuda), used: True
+[2024-02-15 16:51:46,698][pytorch_lightning.utilities.rank_zero][INFO] - TPU available: False, using: 0 TPU cores
+[2024-02-15 16:51:46,698][pytorch_lightning.utilities.rank_zero][INFO] - IPU available: False, using: 0 IPUs
+[2024-02-15 16:51:46,698][pytorch_lightning.utilities.rank_zero][INFO] - HPU available: False, using: 0 HPUs
+[2024-02-15 16:51:46,698][pytorch_lightning.utilities.rank_zero][INFO] - `Trainer(limit_train_batches=1.0)` was configured so 100% of the batches per epoch will be used..
+[2024-02-15 16:51:46,698][pytorch_lightning.utilities.rank_zero][INFO] - `Trainer(limit_val_batches=1.0)` was configured so 100% of the batches will be used..
+[2024-02-15 16:51:46,698][pytorch_lightning.utilities.rank_zero][INFO] - `Trainer(limit_test_batches=1.0)` was configured so 100% of the batches will be used..
+[2024-02-15 16:51:46,698][root][INFO] - Starting training
+[2024-02-15 16:51:47,897][py.warnings][WARNING] - /local/gerum/hannah/hannah/modules/vision/base.py:66: UserWarning: Vision datasets should return a length 4 tuple, will assume unlabeled data is None
+  warnings.warn(
+
+[2024-02-15 16:51:47,897][hannah.modules.vision.base][INFO] - Dataset lengths:
+[2024-02-15 16:51:47,897][hannah.modules.vision.base][INFO] -   Train Set (Labeled): 45000
+[2024-02-15 16:51:47,897][hannah.modules.vision.base][INFO] -   Train Set (Unlabled): 0
+[2024-02-15 16:51:47,897][hannah.modules.vision.base][INFO] -   Dev Set: 5000
+[2024-02-15 16:51:47,897][hannah.modules.vision.base][INFO] -   Test Set: 10000
+[2024-02-15 16:51:47,897][hannah.modules.vision.base][INFO] - Setting up model kakao_resnet8
+[2024-02-15 16:51:47,920][hannah.modules.vision.base][INFO] - Instantiating input Normalizer with mean: (0.491, 0.482, 0.446), std: (0.247, 0.243, 0.261)
+[2024-02-15 16:51:47,925][hannah.modules.vision.base][INFO] - Running dummy forward to initialize lazy modules
+[2024-02-15 16:51:47,935][pytorch_lightning.accelerators.cuda][INFO] - LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+[2024-02-15 16:51:47,937][pytorch_lightning.utilities.rank_zero][INFO] - Loading `train_dataloader` to estimate number of stepping batches.
+[2024-02-15 16:51:47,937][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:441: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=191` in the `DataLoader` to improve performance.
+
+[2024-02-15 16:51:47,938][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/pytorch_lightning/loops/fit_loop.py:293: The number of training batches (21) is smaller than the logging interval Trainer(log_every_n_steps=50). Set a lower value for log_every_n_steps if you want to see logs for the training epoch.
+
+[2024-02-15 16:51:48,121][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:441: The 'val_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=191` in the `DataLoader` to improve performance.
+
+[2024-02-15 16:51:48,332][hannah.callbacks.summaries][INFO] - 
++----+--------------+-------------------+--------------------------------------------------+------------------+--------------+------------------+--------------+------------------+----------+
+|    | Name         | Type              | Attrs                                            | IFM              |   IFM volume | OFM              |   OFM volume |   Weights volume |     MACs |
+|----+--------------+-------------------+--------------------------------------------------+------------------+--------------+------------------+--------------+------------------+----------|
+|  0 | 0.0          | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 3, 32, 32)   |         3072 | (1, 64, 32, 32)  |        65536 |             1728 |  1769472 |
+|  1 | 0.1          | BatchNorm2d       |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  2 | 0.2          | ReLU              |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  3 | 0            | Sequential        |                                                  | (1, 3, 32, 32)   |         3072 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  4 | 1.0          | Conv2d            | k=(5, 5), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 128, 16, 16) |        32768 |           204800 | 52428800 |
+|  5 | 1.1          | BatchNorm2d       |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  6 | 1.2          | ReLU              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  7 | 1            | Sequential        |                                                  | (1, 64, 32, 32)  |        65536 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  8 | 2.module.0.0 | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |           147456 | 37748736 |
+|  9 | 2.module.0.1 | BatchNorm2d       |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 10 | 2.module.0.2 | ReLU              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 11 | 2.module.0   | Sequential        |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 12 | 2.module.1.0 | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |           147456 | 37748736 |
+| 13 | 2.module.1.1 | BatchNorm2d       |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 14 | 2.module.1.2 | ReLU              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 15 | 2.module.1   | Sequential        |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 16 | 2.module     | Sequential        |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 17 | 2            | Residual          |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 18 | 3.0          | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 256, 16, 16) |        65536 |           294912 | 75497472 |
+| 19 | 3.1          | BatchNorm2d       |                                                  | (1, 256, 16, 16) |        65536 | (1, 256, 16, 16) |        65536 |                0 |        0 |
+| 20 | 3.2          | ReLU              |                                                  | (1, 256, 16, 16) |        65536 | (1, 256, 16, 16) |        65536 |                0 |        0 |
+| 21 | 3            | Sequential        |                                                  | (1, 128, 16, 16) |        32768 | (1, 256, 16, 16) |        65536 |                0 |        0 |
+| 22 | 4            | MaxPool2d         |                                                  | (1, 256, 16, 16) |        65536 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 23 | 5.module.0.0 | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |           589824 | 37748736 |
+| 24 | 5.module.0.1 | BatchNorm2d       |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 25 | 5.module.0.2 | ReLU              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 26 | 5.module.0   | Sequential        |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 27 | 5.module.1.0 | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |           589824 | 37748736 |
+| 28 | 5.module.1.1 | BatchNorm2d       |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 29 | 5.module.1.2 | ReLU              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 30 | 5.module.1   | Sequential        |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 31 | 5.module     | Sequential        |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 32 | 5            | Residual          |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 33 | 6.0          | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 128, 6, 6)   |         4608 |           294912 | 10616832 |
+| 34 | 6.1          | BatchNorm2d       |                                                  | (1, 128, 6, 6)   |         4608 | (1, 128, 6, 6)   |         4608 |                0 |        0 |
+| 35 | 6.2          | ReLU              |                                                  | (1, 128, 6, 6)   |         4608 | (1, 128, 6, 6)   |         4608 |                0 |        0 |
+| 36 | 6            | Sequential        |                                                  | (1, 256, 8, 8)   |        16384 | (1, 128, 6, 6)   |         4608 |                0 |        0 |
+| 37 | 7            | AdaptiveMaxPool2d |                                                  | (1, 128, 6, 6)   |         4608 | (1, 128, 1, 1)   |          128 |                0 |        0 |
+| 38 | 8            | Flatten           |                                                  | (1, 128, 1, 1)   |          128 | (1, 128)         |          128 |                0 |        0 |
+| 39 | 9            | Linear            |                                                  | (1, 128)         |          128 | (1, 10)          |           10 |             1280 |     1280 |
+| 40 | 10           | Mul               |                                                  | (1, 10)          |           10 | (1, 10)          |           10 |                0 |        0 |
++----+--------------+-------------------+--------------------------------------------------+------------------+--------------+------------------+--------------+------------------+----------+
+[2024-02-15 16:51:48,332][hannah.callbacks.summaries][INFO] - Total MACs: 291,308,800
+[2024-02-15 16:51:48,332][hannah.callbacks.summaries][INFO] - Total Weights: 2,272,192
+[2024-02-15 16:51:48,332][hannah.callbacks.summaries][INFO] - Total Activations: 1,185,044
+[2024-02-15 16:51:48,332][hannah.callbacks.summaries][INFO] - Estimated Activations: 131,072
+[2024-02-15 16:51:49,122][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:251: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:71.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-02-15 16:52:01,620][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 0, global step 21: 'val_error' reached 0.79761 (best 0.79761), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3/checkpoints/epoch=0-step=21.ckpt' as top 1
+[2024-02-15 16:52:32,018][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 1, global step 42: 'val_error' reached 0.66895 (best 0.66895), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3/checkpoints/epoch=1-step=42.ckpt' as top 1
+[2024-02-15 16:53:04,921][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 2, global step 63: 'val_error' reached 0.60034 (best 0.60034), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3/checkpoints/epoch=2-step=63.ckpt' as top 1
+[2024-02-15 16:53:40,157][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 3, global step 84: 'val_error' was not in top 1
+[2024-02-15 16:54:12,216][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 4, global step 105: 'val_error' reached 0.53320 (best 0.53320), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3/checkpoints/epoch=4-step=105.ckpt' as top 1
+[2024-02-15 16:54:45,352][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 5, global step 126: 'val_error' reached 0.44336 (best 0.44336), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3/checkpoints/epoch=5-step=126.ckpt' as top 1
+[2024-02-15 16:55:08,139][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 6, global step 147: 'val_error' was not in top 1
+[2024-02-15 16:55:24,787][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 7, global step 168: 'val_error' reached 0.37061 (best 0.37061), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3/checkpoints/epoch=7-step=168.ckpt' as top 1
+[2024-02-15 16:55:40,332][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 8, global step 189: 'val_error' was not in top 1
+[2024-02-15 16:56:11,404][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 9, global step 210: 'val_error' reached 0.35938 (best 0.35938), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3/checkpoints/epoch=9-step=210.ckpt' as top 1
+[2024-02-15 16:56:40,023][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 10, global step 231: 'val_error' was not in top 1
+[2024-02-15 16:57:10,697][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 11, global step 252: 'val_error' reached 0.26245 (best 0.26245), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3/checkpoints/epoch=11-step=252.ckpt' as top 1
+[2024-02-15 16:57:39,096][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 12, global step 273: 'val_error' reached 0.22803 (best 0.22803), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3/checkpoints/epoch=12-step=273.ckpt' as top 1
+[2024-02-15 16:58:04,845][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 13, global step 294: 'val_error' reached 0.21021 (best 0.21021), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3/checkpoints/epoch=13-step=294.ckpt' as top 1
+[2024-02-15 16:58:22,398][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 14, global step 315: 'val_error' reached 0.20557 (best 0.20557), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3/checkpoints/epoch=14-step=315.ckpt' as top 1
+[2024-02-15 16:58:40,171][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 15, global step 336: 'val_error' was not in top 1
+[2024-02-15 16:58:54,314][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 16, global step 357: 'val_error' was not in top 1
+[2024-02-15 16:59:17,933][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 17, global step 378: 'val_error' was not in top 1
+[2024-02-15 16:59:47,570][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 18, global step 399: 'val_error' was not in top 1
+[2024-02-15 17:00:13,750][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 19, global step 420: 'val_error' reached 0.17334 (best 0.17334), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3/checkpoints/epoch=19-step=420.ckpt' as top 1
+[2024-02-15 17:00:42,969][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 20, global step 441: 'val_error' reached 0.16431 (best 0.16431), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3/checkpoints/epoch=20-step=441.ckpt' as top 1
+[2024-02-15 17:01:07,194][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 21, global step 462: 'val_error' reached 0.15698 (best 0.15698), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3/checkpoints/epoch=21-step=462.ckpt' as top 1
+[2024-02-15 17:01:37,993][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 22, global step 483: 'val_error' reached 0.14551 (best 0.14551), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3/checkpoints/epoch=22-step=483.ckpt' as top 1
+[2024-02-15 17:01:57,827][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 23, global step 504: 'val_error' was not in top 1
+[2024-02-15 17:02:09,743][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 24, global step 525: 'val_error' was not in top 1
+[2024-02-15 17:02:37,813][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 25, global step 546: 'val_error' was not in top 1
+[2024-02-15 17:03:14,611][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 26, global step 567: 'val_error' reached 0.13208 (best 0.13208), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3/checkpoints/epoch=26-step=567.ckpt' as top 1
+[2024-02-15 17:03:50,509][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 27, global step 588: 'val_error' was not in top 1
+[2024-02-15 17:04:24,242][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 28, global step 609: 'val_error' was not in top 1
+[2024-02-15 17:05:00,102][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 29, global step 630: 'val_error' was not in top 1
+[2024-02-15 17:05:36,612][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 30, global step 651: 'val_error' reached 0.13184 (best 0.13184), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3/checkpoints/epoch=30-step=651.ckpt' as top 1
+[2024-02-15 17:05:53,508][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 31, global step 672: 'val_error' was not in top 1
+[2024-02-15 17:06:17,909][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 32, global step 693: 'val_error' reached 0.12817 (best 0.12817), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3/checkpoints/epoch=32-step=693.ckpt' as top 1
+[2024-02-15 17:06:48,331][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 33, global step 714: 'val_error' reached 0.11450 (best 0.11450), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3/checkpoints/epoch=33-step=714.ckpt' as top 1
+[2024-02-15 17:07:19,898][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 34, global step 735: 'val_error' was not in top 1
+[2024-02-15 17:07:49,685][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 35, global step 756: 'val_error' was not in top 1
+[2024-02-15 17:08:15,645][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 36, global step 777: 'val_error' reached 0.11230 (best 0.11230), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3/checkpoints/epoch=36-step=777.ckpt' as top 1
+[2024-02-15 17:08:31,635][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 37, global step 798: 'val_error' reached 0.11133 (best 0.11133), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3/checkpoints/epoch=37-step=798.ckpt' as top 1
+[2024-02-15 17:08:55,704][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 38, global step 819: 'val_error' was not in top 1
+[2024-02-15 17:09:26,995][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 39, global step 840: 'val_error' reached 0.10425 (best 0.10425), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3/checkpoints/epoch=39-step=840.ckpt' as top 1
+[2024-02-15 17:09:53,409][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 40, global step 861: 'val_error' reached 0.09937 (best 0.09937), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3/checkpoints/epoch=40-step=861.ckpt' as top 1
+[2024-02-15 17:10:25,561][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 41, global step 882: 'val_error' was not in top 1
+[2024-02-15 17:10:51,793][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 42, global step 903: 'val_error' reached 0.09009 (best 0.09009), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3/checkpoints/epoch=42-step=903.ckpt' as top 1
+[2024-02-15 17:11:14,216][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 43, global step 924: 'val_error' reached 0.08643 (best 0.08643), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3/checkpoints/epoch=43-step=924.ckpt' as top 1
+[2024-02-15 17:11:33,686][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 44, global step 945: 'val_error' reached 0.08398 (best 0.08398), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3/checkpoints/epoch=44-step=945.ckpt' as top 1
+[2024-02-15 17:11:47,185][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 45, global step 966: 'val_error' reached 0.08154 (best 0.08154), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3/checkpoints/epoch=45-step=966.ckpt' as top 1
+[2024-02-15 17:12:19,627][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 46, global step 987: 'val_error' reached 0.08057 (best 0.08057), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3/checkpoints/epoch=46-step=987.ckpt' as top 1
+[2024-02-15 17:12:54,174][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 47, global step 1008: 'val_error' reached 0.07886 (best 0.07886), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3/checkpoints/epoch=47-step=1008.ckpt' as top 1
+[2024-02-15 17:13:30,093][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 48, global step 1029: 'val_error' was not in top 1
+[2024-02-15 17:14:05,925][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 49, global step 1050: 'val_error' reached 0.07861 (best 0.07861), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3/checkpoints/epoch=49-step=1050.ckpt' as top 1
+[2024-02-15 17:14:05,960][pytorch_lightning.utilities.rank_zero][INFO] - `Trainer.fit` stopped: `max_epochs=50` reached.
+[2024-02-15 17:14:06,150][lightning.fabric.utilities.seed][INFO] - Seed set to 1234
+[2024-02-15 17:14:06,151][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/checkpoint_connector.py:145: `.validate(ckpt_path=None)` was called without a model. The best model of the previous `fit` call will be used. You can pass `.validate(ckpt_path='best')` to use the best model or `.validate(ckpt_path='last')` to use the last model. If you pass a value, this warning will be silenced.
+
+[2024-02-15 17:14:06,152][pytorch_lightning.utilities.rank_zero][INFO] - Restoring states from the checkpoint path at /local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3/checkpoints/epoch=49-step=1050.ckpt
+[2024-02-15 17:14:06,248][pytorch_lightning.accelerators.cuda][INFO] - LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+[2024-02-15 17:14:06,435][pytorch_lightning.utilities.rank_zero][INFO] - Loaded model weights from the checkpoint at /local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3/checkpoints/epoch=49-step=1050.ckpt
+[2024-02-15 17:14:06,712][lightning.fabric.utilities.seed][INFO] - Seed set to 1234
+[2024-02-15 17:14:06,712][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/checkpoint_connector.py:145: `.test(ckpt_path=None)` was called without a model. The best model of the previous `fit` call will be used. You can pass `.test(ckpt_path='best')` to use the best model or `.test(ckpt_path='last')` to use the last model. If you pass a value, this warning will be silenced.
+
+[2024-02-15 17:14:06,713][pytorch_lightning.utilities.rank_zero][INFO] - Restoring states from the checkpoint path at /local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3/checkpoints/epoch=49-step=1050.ckpt
+[2024-02-15 17:14:06,810][pytorch_lightning.accelerators.cuda][INFO] - LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+[2024-02-15 17:14:06,989][pytorch_lightning.utilities.rank_zero][INFO] - Loaded model weights from the checkpoint at /local/gerum/hannah/experiments/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.3/checkpoints/epoch=49-step=1050.ckpt
+[2024-02-15 17:14:06,990][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:441: The 'test_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=191` in the `DataLoader` to improve performance.
+
+[2024-02-15 17:14:07,446][hannah.callbacks.summaries][INFO] - 
++----+--------------+-------------------+--------------------------------------------------+------------------+--------------+------------------+--------------+------------------+----------+
+|    | Name         | Type              | Attrs                                            | IFM              |   IFM volume | OFM              |   OFM volume |   Weights volume |     MACs |
+|----+--------------+-------------------+--------------------------------------------------+------------------+--------------+------------------+--------------+------------------+----------|
+|  0 | 0.0          | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 3, 32, 32)   |         3072 | (1, 64, 32, 32)  |        65536 |             1728 |  1769472 |
+|  1 | 0.1          | BatchNorm2d       |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  2 | 0.2          | ReLU              |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  3 | 0            | Sequential        |                                                  | (1, 3, 32, 32)   |         3072 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  4 | 1.0          | Conv2d            | k=(5, 5), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 128, 16, 16) |        32768 |           204800 | 52428800 |
+|  5 | 1.1          | BatchNorm2d       |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  6 | 1.2          | ReLU              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  7 | 1            | Sequential        |                                                  | (1, 64, 32, 32)  |        65536 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  8 | 2.module.0.0 | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |           147456 | 37748736 |
+|  9 | 2.module.0.1 | BatchNorm2d       |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 10 | 2.module.0.2 | ReLU              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 11 | 2.module.0   | Sequential        |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 12 | 2.module.1.0 | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |           147456 | 37748736 |
+| 13 | 2.module.1.1 | BatchNorm2d       |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 14 | 2.module.1.2 | ReLU              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 15 | 2.module.1   | Sequential        |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 16 | 2.module     | Sequential        |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 17 | 2            | Residual          |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 18 | 3.0          | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 256, 16, 16) |        65536 |           294912 | 75497472 |
+| 19 | 3.1          | BatchNorm2d       |                                                  | (1, 256, 16, 16) |        65536 | (1, 256, 16, 16) |        65536 |                0 |        0 |
+| 20 | 3.2          | ReLU              |                                                  | (1, 256, 16, 16) |        65536 | (1, 256, 16, 16) |        65536 |                0 |        0 |
+| 21 | 3            | Sequential        |                                                  | (1, 128, 16, 16) |        32768 | (1, 256, 16, 16) |        65536 |                0 |        0 |
+| 22 | 4            | MaxPool2d         |                                                  | (1, 256, 16, 16) |        65536 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 23 | 5.module.0.0 | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |           589824 | 37748736 |
+| 24 | 5.module.0.1 | BatchNorm2d       |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 25 | 5.module.0.2 | ReLU              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 26 | 5.module.0   | Sequential        |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 27 | 5.module.1.0 | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |           589824 | 37748736 |
+| 28 | 5.module.1.1 | BatchNorm2d       |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 29 | 5.module.1.2 | ReLU              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 30 | 5.module.1   | Sequential        |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 31 | 5.module     | Sequential        |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 32 | 5            | Residual          |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 33 | 6.0          | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 128, 6, 6)   |         4608 |           294912 | 10616832 |
+| 34 | 6.1          | BatchNorm2d       |                                                  | (1, 128, 6, 6)   |         4608 | (1, 128, 6, 6)   |         4608 |                0 |        0 |
+| 35 | 6.2          | ReLU              |                                                  | (1, 128, 6, 6)   |         4608 | (1, 128, 6, 6)   |         4608 |                0 |        0 |
+| 36 | 6            | Sequential        |                                                  | (1, 256, 8, 8)   |        16384 | (1, 128, 6, 6)   |         4608 |                0 |        0 |
+| 37 | 7            | AdaptiveMaxPool2d |                                                  | (1, 128, 6, 6)   |         4608 | (1, 128, 1, 1)   |          128 |                0 |        0 |
+| 38 | 8            | Flatten           |                                                  | (1, 128, 1, 1)   |          128 | (1, 128)         |          128 |                0 |        0 |
+| 39 | 9            | Linear            |                                                  | (1, 128)         |          128 | (1, 10)          |           10 |             1280 |     1280 |
+| 40 | 10           | Mul               |                                                  | (1, 10)          |           10 | (1, 10)          |           10 |                0 |        0 |
++----+--------------+-------------------+--------------------------------------------------+------------------+--------------+------------------+--------------+------------------+----------+
+[2024-02-15 17:14:07,446][hannah.callbacks.summaries][INFO] - Total MACs: 291,308,800
+[2024-02-15 17:14:07,446][hannah.callbacks.summaries][INFO] - Total Weights: 2,272,192
+[2024-02-15 17:14:07,446][hannah.callbacks.summaries][INFO] - Total Activations: 1,185,044
+[2024-02-15 17:14:07,446][hannah.callbacks.summaries][INFO] - Estimated Activations: 131,072
+[2024-02-15 17:14:07,447][hannah.datasets.base][WARNING] - Datasets class names contain classes that are longer than the recommended lenght of 5 characters, consider implementing class_names_abbreviated in your dataset
+[2024-02-15 17:14:07,447][hannah.datasets.base][WARNING] - Datasets class names contain classes that are longer than the recommended lenght of 5 characters, consider implementing class_names_abbreviated in your dataset
+[2024-02-15 17:14:07,694][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/torchmetrics/utilities/prints.py:43: UserWarning: The ``compute`` method of metric MulticlassROC was called before the ``update`` method which may lead to errors, as metric states have not yet been updated.
+  warnings.warn(*args, **kwargs)  # noqa: B028
+
+[2024-02-15 17:14:07,695][hannah.datasets.base][WARNING] - Datasets class names contain classes that are longer than the recommended lenght of 5 characters, consider implementing class_names_abbreviated in your dataset
+[2024-02-15 17:14:07,802][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/torchmetrics/utilities/prints.py:43: UserWarning: The ``compute`` method of metric MulticlassPrecisionRecallCurve was called before the ``update`` method which may lead to errors, as metric states have not yet been updated.
+  warnings.warn(*args, **kwargs)  # noqa: B028
+
+[2024-02-15 17:14:07,803][hannah.datasets.base][WARNING] - Datasets class names contain classes that are longer than the recommended lenght of 5 characters, consider implementing class_names_abbreviated in your dataset
+[2024-02-15 17:14:07,955][hannah.train][INFO] - Averaged Result Metrics:
+| Metric               |      Mean |   Std |   Count |
+|----------------------|-----------|-------|---------|
+| test_classifier_loss | 0.224195  |     0 |       1 |
+| test_accuracy        | 0.922852  |     0 |       1 |
+| test_error           | 0.0771484 |     0 |       1 |
+| test_f1              | 0.923068  |     0 |       1 |
+| test_precision       | 0.923175  |     0 |       1 |
+| test_recall          | 0.92305   |     0 |       1 |
+| test_loss            | 0.224195  |     0 |       1 |
+[2024-02-15 17:14:07,965][hannah.train][INFO] - Averaged Result Metrics:
+| Metric              |      Mean |   Std |   Count |
+|---------------------|-----------|-------|---------|
+| val_classifier_loss | 0.240081  |     0 |       1 |
+| val_accuracy        | 0.921387  |     0 |       1 |
+| val_error           | 0.0786133 |     0 |       1 |
+| val_f1              | 0.920942  |     0 |       1 |
+| val_precision       | 0.921227  |     0 |       1 |
+| val_recall          | 0.920908  |     0 |       1 |
+| val_loss            | 0.240081  |     0 |       1 |

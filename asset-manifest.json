@@ -1,16 +1,13 @@
 {
   "files": {
-    "main.css": "/machine-learning-dashboard/static/css/main.f855e6bc.css",
-    "main.js": "/machine-learning-dashboard/static/js/main.5ac49659.js",
-    "static/js/453.53a18636.chunk.js": "/machine-learning-dashboard/static/js/453.53a18636.chunk.js",
-    "static/media/logo.svg": "/machine-learning-dashboard/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
+    "main.css": "/machine-learning-dashboard/static/css/main.ca87580a.css",
+    "main.js": "/machine-learning-dashboard/static/js/main.7c22dde8.js",
     "index.html": "/machine-learning-dashboard/index.html",
-    "main.f855e6bc.css.map": "/machine-learning-dashboard/static/css/main.f855e6bc.css.map",
-    "main.5ac49659.js.map": "/machine-learning-dashboard/static/js/main.5ac49659.js.map",
-    "453.53a18636.chunk.js.map": "/machine-learning-dashboard/static/js/453.53a18636.chunk.js.map"
+    "main.ca87580a.css.map": "/machine-learning-dashboard/static/css/main.ca87580a.css.map",
+    "main.7c22dde8.js.map": "/machine-learning-dashboard/static/js/main.7c22dde8.js.map"
   },
   "entrypoints": [
-    "static/css/main.f855e6bc.css",
-    "static/js/main.5ac49659.js"
+    "static/css/main.ca87580a.css",
+    "static/js/main.7c22dde8.js"
   ]
 }
