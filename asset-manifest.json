@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/machine-learning-dashboard/static/css/main.ca87580a.css",
-    "main.js": "/machine-learning-dashboard/static/js/main.7c22dde8.js",
+    "main.js": "/machine-learning-dashboard/static/js/main.5e0ce05a.js",
     "index.html": "/machine-learning-dashboard/index.html",
     "main.ca87580a.css.map": "/machine-learning-dashboard/static/css/main.ca87580a.css.map",
-    "main.7c22dde8.js.map": "/machine-learning-dashboard/static/js/main.7c22dde8.js.map"
+    "main.5e0ce05a.js.map": "/machine-learning-dashboard/static/js/main.5e0ce05a.js.map"
   },
   "entrypoints": [
     "static/css/main.ca87580a.css",
-    "static/js/main.7c22dde8.js"
+    "static/js/main.5e0ce05a.js"
   ]
 }
