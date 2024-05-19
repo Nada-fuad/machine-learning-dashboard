@@ -1,0 +1,2 @@
+- model=kakao_resnet8
+- +experiment=sweep_models

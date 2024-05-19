@@ -1,0 +1,3 @@
+- model=timm_resnet18
+- +model.pretrained=True
+- +experiment=pretrained_models

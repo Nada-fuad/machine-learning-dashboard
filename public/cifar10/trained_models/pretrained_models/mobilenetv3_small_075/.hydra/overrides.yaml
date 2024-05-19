@@ -1,0 +1,3 @@
+- model=timm_mobilenetv3_small_075
+- +model.pretrained=True
+- +experiment=pretrained_models
