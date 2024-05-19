@@ -5,9 +5,10 @@ import { useEffect, useState } from "react";
 
 function App() {
   const [expermintData, setExpermintData] = useState();
+  console.log("🚀 ~ App ~ expermintData:", expermintData);
 
   const getExpermintData = () => {
-    fetch("../dashboard.json", {
+    fetch("/machine-learning-dashboard/dashboard.json", {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
