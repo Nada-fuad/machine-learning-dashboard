@@ -1,13 +1,15 @@
 import { Box, styled, useMediaQuery } from "@mui/material";
-const StyledBox = styled(Box)({
-  backgroundColor: "#fff",
-
+import TestRange from "../expermintsDashboard/TestRange";
+import ValRange from "../expermintsDashboard/ValRange";
+import ValOverview from "../expermintsDashboard/ValOverview";
+import TestOverview from "../expermintsDashboard/TestOverview";
+const StyledBox = styled(Box)(({ theme }) => ({
   borderRadius: "1rem",
   boxShadow: "0.15rem 0.2rem 0.15rem 0.1rem rgba(0, 0, 0, .8)",
   padding: "0",
-});
+}));
 const displayTowColum = `
-"a b "
+
 "a b "
 "a b "
 "a b "
@@ -15,12 +17,12 @@ const displayTowColum = `
 "c d "
 "c d "
 "c d "
-"c d"
-"c d "`;
+"c d "
+`;
 
 const displayOneColum = `
-"a "
-"a "
+
+"a"
 "a"
 "a "
 "a"
@@ -28,49 +30,61 @@ const displayOneColum = `
 "b"
 "b"
 "b"
-"b"
 "c"
 "c"
 "c"
 "c"
-"c"
-"d"
 "d"
 "d"
 "d"
 "d"
 
 `;
-export default function Experiment() {
+export default function Experiment({ jsonExperiment, theme }) {
   const toSmall = useMediaQuery("(min-width:1000px)");
+
+  const selectedHistoryData = jsonExperiment.historyPath;
 
   return (
     <Box
+      maxHeight={1200}
       width="100%"
       height="100%"
-      p={2}
+      pt={2}
+      pl={0}
       display="grid"
-      gap="0.8rem"
+      gap="0.6rem"
       sx={
         toSmall
           ? {
-              gridTemplateColumns: "repeat(2 ,minmax(80px,1fr))",
-              gridTemplateRows: "repeat(10 ,minmax(60px,1fr))",
+              gridTemplateColumns: "repeat(2 ,minmax(5px,1fr))",
+              gridTemplateRows: "repeat(10 ,minmax(5px,1fr))",
               gridTemplateAreas: displayTowColum,
+              backgroundColor: theme.palette.primary.contentbackground,
             }
           : {
               gridTemplateAreas: displayOneColum,
               gridAutoColumns: "1fr",
-              gridAutoRows: "80px",
+              gridAutoRows: "100px",
+              backgroundColor: theme.palette.primary.contentbackground,
             }
       }
     >
-      <StyledBox gridArea="a"></StyledBox>
-      <StyledBox gridArea="b"></StyledBox>
+      <StyledBox gridArea="a" backgroundColor={theme.palette.primary.box}>
+        {" "}
+        <ValOverview path={selectedHistoryData} theme={theme} />
+      </StyledBox>
+      <StyledBox gridArea="b" backgroundColor={theme.palette.primary.box}>
+        <ValRange path={selectedHistoryData} theme={theme} />
+      </StyledBox>
 
-      <StyledBox gridArea="c"></StyledBox>
+      <StyledBox gridArea="c" backgroundColor={theme.palette.primary.box}>
+        <TestOverview path={selectedHistoryData} theme={theme} />
+      </StyledBox>
 
-      <StyledBox gridArea="d"></StyledBox>
+      <StyledBox gridArea="d" backgroundColor={theme.palette.primary.box}>
+        <TestRange path={selectedHistoryData} theme={theme} />
+      </StyledBox>
     </Box>
   );
 }
