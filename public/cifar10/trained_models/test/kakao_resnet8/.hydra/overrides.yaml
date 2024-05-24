@@ -1,0 +1,5 @@
+- dataset=cifar10
+- model=kakao_resnet8
+- trainer.devices=[1]
+- module.batch_size=1000
+- profiler=simple

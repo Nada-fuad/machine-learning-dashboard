@@ -3,6 +3,10 @@ dataset:
   cls: hannah.datasets.vision.Cifar10Dataset
   dataset: cifar10
   val_percent: 0.1
+  sensor:
+    resolution:
+    - 32
+    - 32
 model:
   _target_: hannah.models.timm.TimmModel
   name: resnet18
@@ -15,8 +19,8 @@ optimizer:
   nesterov: false
 features:
   _target_: torch.nn.Identity
-num_workers: 0
-batch_size: 2048
+num_workers: 32
+batch_size: 128
 time_masking: 0
 frequency_masking: 0
 scheduler:

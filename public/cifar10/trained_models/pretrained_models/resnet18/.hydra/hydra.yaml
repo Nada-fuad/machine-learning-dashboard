@@ -176,7 +176,6 @@ hydra:
       pseudo_labeling: null
       nas: null
       fine_tuning: null
-      augmentation: cifar_augment
       compression: null
       profiler: null
       early_stopping: null

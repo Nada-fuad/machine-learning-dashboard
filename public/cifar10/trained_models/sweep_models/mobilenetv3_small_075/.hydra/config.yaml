@@ -3,6 +3,10 @@ dataset:
   cls: hannah.datasets.vision.Cifar10Dataset
   dataset: cifar10
   val_percent: 0.1
+  sensor:
+    resolution:
+    - 32
+    - 32
 features:
   _target_: torch.nn.Identity
 model:
@@ -30,8 +34,8 @@ optimizer:
   nesterov: false
 module:
   _target_: hannah.modules.vision.ImageClassifierModule
-  num_workers: 0
-  batch_size: 2048
+  num_workers: 32
+  batch_size: 128
   shuffle_all_dataloaders: false
 trainer:
   _target_: pytorch_lightning.trainer.Trainer

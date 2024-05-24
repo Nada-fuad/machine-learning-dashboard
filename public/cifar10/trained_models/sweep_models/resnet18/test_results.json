@@ -1,1 +1,1 @@
-{"test_classifier_loss":{"0":0.3084650636},"test_accuracy":{"0":0.8990478516},"test_error":{"0":0.1009521484},"test_f1":{"0":0.8992733955},"test_precision":{"0":0.899286747},"test_recall":{"0":0.8993807435},"test_loss":{"0":0.3084650636}}
+{"test_classifier_loss":{"0":0.2572572529},"test_accuracy":{"0":0.9231770635},"test_error":{"0":0.0768229365},"test_f1":{"0":0.923047781},"test_precision":{"0":0.9230951071},"test_recall":{"0":0.9231518507},"test_loss":{"0":0.2572572529}}

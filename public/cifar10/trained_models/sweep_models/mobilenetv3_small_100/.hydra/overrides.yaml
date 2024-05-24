@@ -1,2 +1,4 @@
 - model=timm_mobilenetv3_small_100
+- module.num_workers=32
+- module.batch_size=128
 - +experiment=sweep_models
