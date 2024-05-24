@@ -1,0 +1,6 @@
+- dataset.data_folder=/data
+- module.num_workers=64
+- module.batch_size=128
+- dataset.downsampling.enabled=False
+- experiment_id=weighted_loss
+- dataset.weighted_loss=true

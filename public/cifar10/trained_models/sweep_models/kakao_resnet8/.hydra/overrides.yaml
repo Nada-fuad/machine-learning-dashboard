@@ -1,2 +1,4 @@
 - model=kakao_resnet8
+- module.num_workers=32
+- module.batch_size=128
 - +experiment=sweep_models

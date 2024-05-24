@@ -10,7 +10,7 @@ hydra:
     _target_: hydra._internal.core_plugins.basic_sweeper.BasicSweeper
     max_batch_size: null
     params:
-      model: timm_resnet50,timm_resnet18,timm_mobilenetv3_small_075,timm_mobilenetv3_small_100,kakao_resnet8
+      model: timm_resnet18,timm_mobilenetv3_small_075,timm_mobilenetv3_small_100,kakao_resnet8
   help:
     app_name: ${hydra.job.name}
     header: '${hydra.help.app_name} is powered by Hydra.
@@ -130,13 +130,15 @@ hydra:
     hydra: []
     task:
     - model=timm_resnet18
+    - module.num_workers=32
+    - module.batch_size=128
     - +experiment=sweep_models
   job:
     name: train
     chdir: true
-    override_dirname: +experiment=sweep_models,model=timm_resnet18
-    id: '1'
-    num: 1
+    override_dirname: +experiment=sweep_models,model=timm_resnet18,module.batch_size=128,module.num_workers=32
+    id: '0'
+    num: 0
     config_name: config
     env_set: {}
     env_copy: []

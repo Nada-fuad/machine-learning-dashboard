@@ -1,0 +1,12 @@
+# @package _global_
+experiment_id: no_subsampling
+
+dataset:
+  downsampling:
+    enabled: false
+  sampler: balanced
+ 
+trainer:
+ limit_train_batches: 0.1
+ limit_val_batches: 0.1
+

@@ -132,11 +132,13 @@ hydra:
     task:
     - model=timm_mobilenetv3_small_075
     - +model.pretrained=True
+    - module.num_workers=32
+    - module.batch_size=128
     - +experiment=pretrained_models
   job:
     name: train
     chdir: true
-    override_dirname: +experiment=pretrained_models,+model.pretrained=True,model=timm_mobilenetv3_small_075
+    override_dirname: +experiment=pretrained_models,+model.pretrained=True,model=timm_mobilenetv3_small_075,module.batch_size=128,module.num_workers=32
     id: '1'
     num: 1
     config_name: config

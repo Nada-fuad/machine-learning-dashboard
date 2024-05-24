@@ -10,7 +10,7 @@ hydra:
     _target_: hydra._internal.core_plugins.basic_sweeper.BasicSweeper
     max_batch_size: null
     params:
-      model: timm_resnet50,timm_resnet18,timm_mobilenetv3_small_075,timm_mobilenetv3_small_100,kakao_resnet8
+      model: timm_resnet18,timm_mobilenetv3_small_075,timm_mobilenetv3_small_100,kakao_resnet8
   help:
     app_name: ${hydra.job.name}
     header: '${hydra.help.app_name} is powered by Hydra.
@@ -129,11 +129,13 @@ hydra:
   overrides:
     hydra: []
     task:
+    - module.num_workers=32
+    - module.batch_size=128
     - +experiment=sweep_models
   job:
     name: train
     chdir: true
-    override_dirname: +experiment=sweep_models
+    override_dirname: +experiment=sweep_models,module.batch_size=128,module.num_workers=32
     id: ???
     num: ???
     config_name: config
@@ -204,6 +206,10 @@ dataset:
   cls: hannah.datasets.vision.Cifar10Dataset
   dataset: cifar10
   val_percent: 0.1
+  sensor:
+    resolution:
+    - 32
+    - 32
 features:
   _target_: torch.nn.Identity
 model:
@@ -229,8 +235,8 @@ optimizer:
   nesterov: false
 module:
   _target_: hannah.modules.vision.ImageClassifierModule
-  num_workers: 0
-  batch_size: 2048
+  num_workers: 32
+  batch_size: 128
   shuffle_all_dataloaders: false
 trainer:
   _target_: pytorch_lightning.trainer.Trainer

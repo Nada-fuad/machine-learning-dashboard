@@ -1,3 +1,5 @@
 - model=timm_mobilenetv3_small_075
 - +model.pretrained=True
+- module.num_workers=32
+- module.batch_size=128
 - +experiment=pretrained_models
