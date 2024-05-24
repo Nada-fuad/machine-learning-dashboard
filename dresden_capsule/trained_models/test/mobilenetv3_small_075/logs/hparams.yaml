@@ -1,0 +1,72 @@
+dataset:
+  sensor:
+    name: naneye-m
+    resolution:
+    - 320
+    - 320
+  cls: hannah.datasets.vision.DresdenCapsuleDataset
+  data_folder: /data
+  download_folder: MISSING
+  dataset: dresden_capsule
+  sampler: random
+  weighted_loss: false
+  task: sections
+  split: split_0
+  downsampling:
+    enabled: false
+    ratio:
+      binary: 1
+      sections:
+      - 1
+      - 1
+      - 0.05
+      - 0.01
+      - 0.005
+      technical_multilabel_bubbles_dirt:
+      - 1
+      - 1
+      technical_multiclass_view:
+      - 1
+      - 1
+      - 1
+    anomalies_fraction: 0.3
+  seed: 1234
+model:
+  _target_: hannah.models.timm.TimmModel
+  name: mobilenetv3_small_075
+  drop_rate: 0.3
+  drop_path_rate: 0.2
+optimizer:
+  _target_: torch.optim.adamw.AdamW
+  lr: 0.001
+  betas:
+  - 0.9
+  - 0.999
+  eps: 1.0e-08
+  weight_decay: 1.0e-05
+  amsgrad: false
+features:
+  _target_: torch.nn.Identity
+num_workers: 64
+batch_size: 128
+time_masking: 0
+frequency_masking: 0
+scheduler:
+  _target_: torch.optim.lr_scheduler.OneCycleLR
+  max_lr: 0.001
+  pct_start: 0.3
+  anneal_strategy: cos
+  cycle_momentum: true
+  base_momentum: 0.85
+  max_momentum: 0.95
+  div_factor: 25.0
+  final_div_factor: 10000.0
+  last_epoch: -1
+normalizer: null
+unlabeled_data: null
+export_onnx: true
+export_relay: false
+shuffle_all_dataloaders: false
+augmentation: null
+pseudo_labeling: null
+log_images: false

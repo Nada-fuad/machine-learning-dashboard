@@ -1,0 +1,827 @@
+[2024-02-15 12:12:14,512][hannah.utils.utils][INFO] - Environment info:
+[2024-02-15 12:12:14,604][hannah.utils.utils][INFO] -   Number of GPUs: 2
+[2024-02-15 12:12:14,604][hannah.utils.utils][INFO] -   CUDA version: 12.1
+[2024-02-15 12:12:14,607][hannah.utils.utils][INFO] -   CUDNN version: 8907
+[2024-02-15 12:12:14,607][hannah.utils.utils][INFO] -   Kernel: 4.18.0-513.11.1.el8_9.x86_64
+[2024-02-15 12:12:14,607][hannah.utils.utils][INFO] -   Python: 3.11.5 (main, Nov 15 2023, 03:52:27) [GCC 8.5.0 20210514 (Red Hat 8.5.0-20)]
+[2024-02-15 12:12:14,607][hannah.utils.utils][INFO] -   PyTorch: 2.1.2+cu121
+[2024-02-15 12:12:14,607][hannah.utils.utils][INFO] -   Pytorch Lightning: 2.1.3
+[2024-02-15 12:12:14,607][hannah.utils.utils][INFO] -   Numpy: 1.23.5
+[2024-02-15 12:12:14,607][hannah.utils.utils][INFO] -   Hannah version info:
+[2024-02-15 12:12:14,609][hannah.utils.utils][INFO] -     Cannot find a Git repository.  You probably downloaded an archive
+[2024-02-15 12:12:14,609][hannah.utils.utils][INFO] -   Command line: /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/bin/hannah-train model=timm_resnet50
+[2024-02-15 12:12:14,609][hannah.utils.utils][INFO] -   
+[2024-02-15 12:12:14,610][lightning.fabric.utilities.seed][INFO] - Seed set to 1234
+[2024-02-15 12:12:14,611][root][INFO] - Configuration: 
+[2024-02-15 12:12:14,614][root][INFO] - dataset:
+  data_folder: ${hydra:runtime.cwd}/datasets/
+  cls: hannah.datasets.vision.Cifar10Dataset
+  dataset: cifar10
+  val_percent: 0.1
+features:
+  _target_: torch.nn.Identity
+model:
+  _target_: hannah.models.timm.TimmModel
+  name: resnet50
+scheduler:
+  _target_: torch.optim.lr_scheduler.OneCycleLR
+  max_lr: ${optimizer.lr}
+  pct_start: 0.3
+  anneal_strategy: cos
+  cycle_momentum: true
+  base_momentum: 0.85
+  max_momentum: 0.95
+  div_factor: 25.0
+  final_div_factor: 10000.0
+  last_epoch: -1
+optimizer:
+  _target_: torch.optim.sgd.SGD
+  lr: 0.3
+  momentum: 0.9
+  dampening: 0
+  weight_decay: 0.0005
+  nesterov: false
+module:
+  _target_: hannah.modules.vision.ImageClassifierModule
+  num_workers: 0
+  batch_size: 2048
+  shuffle_all_dataloaders: false
+trainer:
+  _target_: pytorch_lightning.trainer.Trainer
+  accelerator: auto
+  devices: 1
+  limit_train_batches: 1.0
+  limit_val_batches: 1.0
+  limit_test_batches: 1.0
+  max_epochs: 50
+  default_root_dir: .
+  fast_dev_run: false
+  overfit_batches: 0.0
+  benchmark: false
+  deterministic: warn
+  gradient_clip_val: 0
+  accumulate_grad_batches: 1
+  plugins: null
+  strategy: auto
+  reload_dataloaders_every_n_epochs: 0
+  precision: 16
+  enable_model_summary: false
+checkpoint:
+  _target_: pytorch_lightning.callbacks.ModelCheckpoint
+  dirpath: checkpoints
+  save_top_k: 1
+  verbose: true
+  monitor: val_error
+  mode: min
+  save_last: true
+augmentation:
+  batch_augment:
+    pipeline: null
+    transforms:
+      RandomHorizontalFlip:
+        p: 0.5
+      RandomAffine:
+        degrees:
+        - -15
+        - 15
+        translate:
+        - 0.1
+        - 0.1
+        scale:
+        - 0.9
+        - 1.1
+        shear:
+        - -5
+        - 5
+        p: 0.5
+      RandomCrop:
+        size:
+        - 32
+        - 32
+        padding: 4
+      RandomErasing:
+        p: 0.5
+experiment_id: test
+output_dir: trained_models
+auto_lr: false
+resume: false
+fx_mac_summary: false
+skip_test: false
+skip_val: false
+seed:
+- 1234
+validate_output: false
+monitor:
+  metric: val_accuracy
+  direction: maximize
+
+[2024-02-15 12:12:14,615][root][INFO] - Current working directory /local/gerum/hannah/experiments/cifar10/trained_models/test/resnet50
+[2024-02-15 12:12:14,731][root][WARNING] - Could not import kornia augmentations if needed install with -E vision
+[2024-02-15 12:12:14,731][root][ERROR] - Exception Message: Error locating target 'hannah.modules.vision.ImageClassifierModule', set env var HYDRA_FULL_ERROR=1 to see chained exception.
+full_key: module
+Traceback (most recent call last):
+  File "/local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/hydra/_internal/utils.py", line 644, in _locate
+    obj = getattr(obj, part)
+          ^^^^^^^^^^^^^^^^^^
+AttributeError: module 'hannah.modules' has no attribute 'vision'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/hydra/_internal/utils.py", line 650, in _locate
+    obj = import_module(mod)
+          ^^^^^^^^^^^^^^^^^^
+  File "/usr/lib64/python3.11/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/local/gerum/hannah/hannah/modules/vision/__init__.py", line 19, in <module>
+    from .anomaly_detection import AnomalyDetectionModule
+  File "/local/gerum/hannah/hannah/modules/vision/anomaly_detection.py", line 34, in <module>
+    from .base import VisionBaseModule
+  File "/local/gerum/hannah/hannah/modules/vision/base.py", line 24, in <module>
+    import kornia
+ModuleNotFoundError: No module named 'kornia'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/hydra/_internal/instantiate/_instantiate2.py", line 134, in _resolve_target
+    target = _locate(target)
+             ^^^^^^^^^^^^^^^
+  File "/local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/hydra/_internal/utils.py", line 653, in _locate
+    raise ImportError(
+ImportError: Error loading 'hannah.modules.vision.ImageClassifierModule':
+ModuleNotFoundError("No module named 'kornia'")
+Are you sure that 'vision' is importable from module 'hannah.modules'?
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/local/gerum/hannah/hannah/tools/train.py", line 44, in main
+    return train(config)
+           ^^^^^^^^^^^^^
+  File "/local/gerum/hannah/hannah/train.py", line 93, in train
+    lit_module = instantiate(
+                 ^^^^^^^^^^^^
+  File "/local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/hydra/_internal/instantiate/_instantiate2.py", line 226, in instantiate
+    return instantiate_node(
+           ^^^^^^^^^^^^^^^^^
+  File "/local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/hydra/_internal/instantiate/_instantiate2.py", line 333, in instantiate_node
+    _target_ = _resolve_target(node.get(_Keys.TARGET), full_key)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/hydra/_internal/instantiate/_instantiate2.py", line 139, in _resolve_target
+    raise InstantiationException(msg) from e
+hydra.errors.InstantiationException: Error locating target 'hannah.modules.vision.ImageClassifierModule', set env var HYDRA_FULL_ERROR=1 to see chained exception.
+full_key: module
+[2024-02-15 12:20:21,232][hannah.utils.utils][INFO] - Environment info:
+[2024-02-15 12:20:21,332][hannah.utils.utils][INFO] -   Number of GPUs: 2
+[2024-02-15 12:20:21,333][hannah.utils.utils][INFO] -   CUDA version: 12.1
+[2024-02-15 12:20:21,336][hannah.utils.utils][INFO] -   CUDNN version: 8907
+[2024-02-15 12:20:21,336][hannah.utils.utils][INFO] -   Kernel: 4.18.0-513.11.1.el8_9.x86_64
+[2024-02-15 12:20:21,336][hannah.utils.utils][INFO] -   Python: 3.11.5 (main, Nov 15 2023, 03:52:27) [GCC 8.5.0 20210514 (Red Hat 8.5.0-20)]
+[2024-02-15 12:20:21,337][hannah.utils.utils][INFO] -   PyTorch: 2.1.2+cu121
+[2024-02-15 12:20:21,337][hannah.utils.utils][INFO] -   Pytorch Lightning: 2.1.3
+[2024-02-15 12:20:21,337][hannah.utils.utils][INFO] -   Numpy: 1.23.5
+[2024-02-15 12:20:21,337][hannah.utils.utils][INFO] -   Hannah version info:
+[2024-02-15 12:20:21,339][hannah.utils.utils][INFO] -     Cannot find a Git repository.  You probably downloaded an archive
+[2024-02-15 12:20:21,339][hannah.utils.utils][INFO] -   Command line: /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/bin/hannah-train model=timm_resnet50
+[2024-02-15 12:20:21,339][hannah.utils.utils][INFO] -   
+[2024-02-15 12:20:21,340][lightning.fabric.utilities.seed][INFO] - Seed set to 1234
+[2024-02-15 12:20:21,341][root][INFO] - Configuration: 
+[2024-02-15 12:20:21,345][root][INFO] - dataset:
+  data_folder: ${hydra:runtime.cwd}/datasets/
+  cls: hannah.datasets.vision.Cifar10Dataset
+  dataset: cifar10
+  val_percent: 0.1
+features:
+  _target_: torch.nn.Identity
+model:
+  _target_: hannah.models.timm.TimmModel
+  name: resnet50
+scheduler:
+  _target_: torch.optim.lr_scheduler.OneCycleLR
+  max_lr: ${optimizer.lr}
+  pct_start: 0.3
+  anneal_strategy: cos
+  cycle_momentum: true
+  base_momentum: 0.85
+  max_momentum: 0.95
+  div_factor: 25.0
+  final_div_factor: 10000.0
+  last_epoch: -1
+optimizer:
+  _target_: torch.optim.sgd.SGD
+  lr: 0.3
+  momentum: 0.9
+  dampening: 0
+  weight_decay: 0.0005
+  nesterov: false
+module:
+  _target_: hannah.modules.vision.ImageClassifierModule
+  num_workers: 0
+  batch_size: 2048
+  shuffle_all_dataloaders: false
+trainer:
+  _target_: pytorch_lightning.trainer.Trainer
+  accelerator: auto
+  devices: 1
+  limit_train_batches: 1.0
+  limit_val_batches: 1.0
+  limit_test_batches: 1.0
+  max_epochs: 50
+  default_root_dir: .
+  fast_dev_run: false
+  overfit_batches: 0.0
+  benchmark: false
+  deterministic: warn
+  gradient_clip_val: 0
+  accumulate_grad_batches: 1
+  plugins: null
+  strategy: auto
+  reload_dataloaders_every_n_epochs: 0
+  precision: 16
+  enable_model_summary: false
+checkpoint:
+  _target_: pytorch_lightning.callbacks.ModelCheckpoint
+  dirpath: checkpoints
+  save_top_k: 1
+  verbose: true
+  monitor: val_error
+  mode: min
+  save_last: true
+augmentation:
+  batch_augment:
+    pipeline: null
+    transforms:
+      RandomHorizontalFlip:
+        p: 0.5
+      RandomAffine:
+        degrees:
+        - -15
+        - 15
+        translate:
+        - 0.1
+        - 0.1
+        scale:
+        - 0.9
+        - 1.1
+        shear:
+        - -5
+        - 5
+        p: 0.5
+      RandomCrop:
+        size:
+        - 32
+        - 32
+        padding: 4
+      RandomErasing:
+        p: 0.5
+experiment_id: test
+output_dir: trained_models
+auto_lr: false
+resume: false
+fx_mac_summary: false
+skip_test: false
+skip_val: false
+seed:
+- 1234
+validate_output: false
+monitor:
+  metric: val_accuracy
+  direction: maximize
+
+[2024-02-15 12:20:21,345][root][INFO] - Current working directory /local/gerum/hannah/experiments/cifar10/trained_models/test/resnet50
+[2024-02-15 12:20:22,389][root][ERROR] - Exception Message: Error locating target 'hannah.modules.vision.ImageClassifierModule', set env var HYDRA_FULL_ERROR=1 to see chained exception.
+full_key: module
+Traceback (most recent call last):
+  File "/local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/hydra/_internal/utils.py", line 644, in _locate
+    obj = getattr(obj, part)
+          ^^^^^^^^^^^^^^^^^^
+AttributeError: module 'hannah' has no attribute 'modules'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/local/gerum/hannah/external/hannah-tvm/external/tvm/python/tvm/micro/session.py", line 40, in <module>
+    from .base import _rpc_connect
+ImportError: cannot import name '_rpc_connect' from 'tvm.micro.base' (/local/gerum/hannah/external/hannah-tvm/external/tvm/python/tvm/micro/base.py)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/hydra/_internal/utils.py", line 650, in _locate
+    obj = import_module(mod)
+          ^^^^^^^^^^^^^^^^^^
+  File "/usr/lib64/python3.11/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/local/gerum/hannah/hannah/modules/__init__.py", line 19, in <module>
+    from .angle_classifier import (
+  File "/local/gerum/hannah/hannah/modules/angle_classifier.py", line 44, in <module>
+    from .classifier import StreamClassifierModule
+  File "/local/gerum/hannah/hannah/modules/classifier.py", line 51, in <module>
+    from .base import ClassifierModule
+  File "/local/gerum/hannah/hannah/modules/base.py", line 46, in <module>
+    from hannah_tvm.backend import export_relay
+  File "/local/gerum/hannah/external/hannah-tvm/hannah_tvm/backend.py", line 31, in <module>
+    from tvm.micro.testing.aot_test_utils import AOT_DEFAULT_RUNNER
+  File "/local/gerum/hannah/external/hannah-tvm/external/tvm/python/tvm/micro/__init__.py", line 29, in <module>
+    from .session import (
+  File "/local/gerum/hannah/external/hannah-tvm/external/tvm/python/tvm/micro/session.py", line 42, in <module>
+    raise ImportError("micro tvm is not enabled. Set USE_MICRO to ON in config.cmake")
+ImportError: micro tvm is not enabled. Set USE_MICRO to ON in config.cmake
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/hydra/_internal/instantiate/_instantiate2.py", line 134, in _resolve_target
+    target = _locate(target)
+             ^^^^^^^^^^^^^^^
+  File "/local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/hydra/_internal/utils.py", line 658, in _locate
+    raise ImportError(
+ImportError: Error loading 'hannah.modules.vision.ImageClassifierModule':
+ImportError('micro tvm is not enabled. Set USE_MICRO to ON in config.cmake')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/local/gerum/hannah/hannah/tools/train.py", line 44, in main
+    return train(config)
+           ^^^^^^^^^^^^^
+  File "/local/gerum/hannah/hannah/train.py", line 93, in train
+    lit_module = instantiate(
+                 ^^^^^^^^^^^^
+  File "/local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/hydra/_internal/instantiate/_instantiate2.py", line 226, in instantiate
+    return instantiate_node(
+           ^^^^^^^^^^^^^^^^^
+  File "/local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/hydra/_internal/instantiate/_instantiate2.py", line 333, in instantiate_node
+    _target_ = _resolve_target(node.get(_Keys.TARGET), full_key)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/hydra/_internal/instantiate/_instantiate2.py", line 139, in _resolve_target
+    raise InstantiationException(msg) from e
+hydra.errors.InstantiationException: Error locating target 'hannah.modules.vision.ImageClassifierModule', set env var HYDRA_FULL_ERROR=1 to see chained exception.
+full_key: module
+[2024-02-15 12:22:20,549][hannah.utils.utils][INFO] - Environment info:
+[2024-02-15 12:22:20,644][hannah.utils.utils][INFO] -   Number of GPUs: 2
+[2024-02-15 12:22:20,645][hannah.utils.utils][INFO] -   CUDA version: 12.1
+[2024-02-15 12:22:20,648][hannah.utils.utils][INFO] -   CUDNN version: 8907
+[2024-02-15 12:22:20,648][hannah.utils.utils][INFO] -   Kernel: 4.18.0-513.11.1.el8_9.x86_64
+[2024-02-15 12:22:20,648][hannah.utils.utils][INFO] -   Python: 3.11.5 (main, Nov 15 2023, 03:52:27) [GCC 8.5.0 20210514 (Red Hat 8.5.0-20)]
+[2024-02-15 12:22:20,648][hannah.utils.utils][INFO] -   PyTorch: 2.1.2+cu121
+[2024-02-15 12:22:20,649][hannah.utils.utils][INFO] -   Pytorch Lightning: 2.1.3
+[2024-02-15 12:22:20,649][hannah.utils.utils][INFO] -   Numpy: 1.23.5
+[2024-02-15 12:22:20,649][hannah.utils.utils][INFO] -   Hannah version info:
+[2024-02-15 12:22:20,650][hannah.utils.utils][INFO] -     Cannot find a Git repository.  You probably downloaded an archive
+[2024-02-15 12:22:20,650][hannah.utils.utils][INFO] -   Command line: /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/bin/hannah-train model=timm_resnet50
+[2024-02-15 12:22:20,650][hannah.utils.utils][INFO] -   
+[2024-02-15 12:22:20,652][lightning.fabric.utilities.seed][INFO] - Seed set to 1234
+[2024-02-15 12:22:20,653][root][INFO] - Configuration: 
+[2024-02-15 12:22:20,656][root][INFO] - dataset:
+  data_folder: ${hydra:runtime.cwd}/datasets/
+  cls: hannah.datasets.vision.Cifar10Dataset
+  dataset: cifar10
+  val_percent: 0.1
+features:
+  _target_: torch.nn.Identity
+model:
+  _target_: hannah.models.timm.TimmModel
+  name: resnet50
+scheduler:
+  _target_: torch.optim.lr_scheduler.OneCycleLR
+  max_lr: ${optimizer.lr}
+  pct_start: 0.3
+  anneal_strategy: cos
+  cycle_momentum: true
+  base_momentum: 0.85
+  max_momentum: 0.95
+  div_factor: 25.0
+  final_div_factor: 10000.0
+  last_epoch: -1
+optimizer:
+  _target_: torch.optim.sgd.SGD
+  lr: 0.3
+  momentum: 0.9
+  dampening: 0
+  weight_decay: 0.0005
+  nesterov: false
+module:
+  _target_: hannah.modules.vision.ImageClassifierModule
+  num_workers: 0
+  batch_size: 2048
+  shuffle_all_dataloaders: false
+trainer:
+  _target_: pytorch_lightning.trainer.Trainer
+  accelerator: auto
+  devices: 1
+  limit_train_batches: 1.0
+  limit_val_batches: 1.0
+  limit_test_batches: 1.0
+  max_epochs: 50
+  default_root_dir: .
+  fast_dev_run: false
+  overfit_batches: 0.0
+  benchmark: false
+  deterministic: warn
+  gradient_clip_val: 0
+  accumulate_grad_batches: 1
+  plugins: null
+  strategy: auto
+  reload_dataloaders_every_n_epochs: 0
+  precision: 16
+  enable_model_summary: false
+checkpoint:
+  _target_: pytorch_lightning.callbacks.ModelCheckpoint
+  dirpath: checkpoints
+  save_top_k: 1
+  verbose: true
+  monitor: val_error
+  mode: min
+  save_last: true
+augmentation:
+  batch_augment:
+    pipeline: null
+    transforms:
+      RandomHorizontalFlip:
+        p: 0.5
+      RandomAffine:
+        degrees:
+        - -15
+        - 15
+        translate:
+        - 0.1
+        - 0.1
+        scale:
+        - 0.9
+        - 1.1
+        shear:
+        - -5
+        - 5
+        p: 0.5
+      RandomCrop:
+        size:
+        - 32
+        - 32
+        padding: 4
+      RandomErasing:
+        p: 0.5
+experiment_id: test
+output_dir: trained_models
+auto_lr: false
+resume: false
+fx_mac_summary: false
+skip_test: false
+skip_val: false
+seed:
+- 1234
+validate_output: false
+monitor:
+  metric: val_accuracy
+  direction: maximize
+
+[2024-02-15 12:22:20,656][root][INFO] - Current working directory /local/gerum/hannah/experiments/cifar10/trained_models/test/resnet50
+[2024-02-15 12:22:21,927][hannah.callbacks.optimization][INFO] - Monitoring the following values for optimization
+[2024-02-15 12:22:21,927][hannah.callbacks.optimization][INFO] -   - val_accuracy direction: maximize(-1)
+[2024-02-15 12:22:21,986][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/lightning_fabric/connector.py:558: `precision=16` is supported for historical reasons but its usage is discouraged. Please set your precision to 16-mixed instead!
+
+[2024-02-15 12:22:22,007][pytorch_lightning.utilities.rank_zero][INFO] - Using 16bit Automatic Mixed Precision (AMP)
+[2024-02-15 12:22:22,013][pytorch_lightning.utilities.rank_zero][INFO] - GPU available: True (cuda), used: True
+[2024-02-15 12:22:22,014][pytorch_lightning.utilities.rank_zero][INFO] - TPU available: False, using: 0 TPU cores
+[2024-02-15 12:22:22,014][pytorch_lightning.utilities.rank_zero][INFO] - IPU available: False, using: 0 IPUs
+[2024-02-15 12:22:22,014][pytorch_lightning.utilities.rank_zero][INFO] - HPU available: False, using: 0 HPUs
+[2024-02-15 12:22:22,014][pytorch_lightning.utilities.rank_zero][INFO] - `Trainer(limit_train_batches=1.0)` was configured so 100% of the batches per epoch will be used..
+[2024-02-15 12:22:22,014][pytorch_lightning.utilities.rank_zero][INFO] - `Trainer(limit_val_batches=1.0)` was configured so 100% of the batches will be used..
+[2024-02-15 12:22:22,014][pytorch_lightning.utilities.rank_zero][INFO] - `Trainer(limit_test_batches=1.0)` was configured so 100% of the batches will be used..
+[2024-02-15 12:22:22,014][root][INFO] - Starting training
+[2024-02-15 12:22:23,631][py.warnings][WARNING] - /local/gerum/hannah/hannah/modules/vision/base.py:66: UserWarning: Vision datasets should return a length 4 tuple, will assume unlabeled data is None
+  warnings.warn(
+
+[2024-02-15 12:22:23,631][hannah.modules.vision.base][INFO] - Dataset lengths:
+[2024-02-15 12:22:23,631][hannah.modules.vision.base][INFO] -   Train Set (Labeled): 45000
+[2024-02-15 12:22:23,631][hannah.modules.vision.base][INFO] -   Train Set (Unlabled): 0
+[2024-02-15 12:22:23,631][hannah.modules.vision.base][INFO] -   Dev Set: 5000
+[2024-02-15 12:22:23,631][hannah.modules.vision.base][INFO] -   Test Set: 10000
+[2024-02-15 12:22:23,632][hannah.modules.vision.base][INFO] - Setting up model resnet50
+[2024-02-15 12:22:24,239][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:803: UserWarning: Overwriting focalnet_tiny_srf in registry with hannah.models._vendor.focalnet.focalnet_tiny_srf. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-02-15 12:22:24,239][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:824: UserWarning: Overwriting focalnet_small_srf in registry with hannah.models._vendor.focalnet.focalnet_small_srf. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-02-15 12:22:24,239][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:843: UserWarning: Overwriting focalnet_base_srf in registry with hannah.models._vendor.focalnet.focalnet_base_srf. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-02-15 12:22:24,239][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:862: UserWarning: Overwriting focalnet_tiny_lrf in registry with hannah.models._vendor.focalnet.focalnet_tiny_lrf. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-02-15 12:22:24,239][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:885: UserWarning: Overwriting focalnet_small_lrf in registry with hannah.models._vendor.focalnet.focalnet_small_lrf. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-02-15 12:22:24,239][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:906: UserWarning: Overwriting focalnet_base_lrf in registry with hannah.models._vendor.focalnet.focalnet_base_lrf. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-02-15 12:22:24,239][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:1010: UserWarning: Overwriting focalnet_large_fl3 in registry with hannah.models._vendor.focalnet.focalnet_large_fl3. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-02-15 12:22:24,240][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:1031: UserWarning: Overwriting focalnet_large_fl4 in registry with hannah.models._vendor.focalnet.focalnet_large_fl4. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-02-15 12:22:24,240][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:1052: UserWarning: Overwriting focalnet_xlarge_fl3 in registry with hannah.models._vendor.focalnet.focalnet_xlarge_fl3. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-02-15 12:22:24,240][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:1073: UserWarning: Overwriting focalnet_xlarge_fl4 in registry with hannah.models._vendor.focalnet.focalnet_xlarge_fl4. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-02-15 12:22:24,240][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:1094: UserWarning: Overwriting focalnet_huge_fl3 in registry with hannah.models._vendor.focalnet.focalnet_huge_fl3. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-02-15 12:22:24,240][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:1115: UserWarning: Overwriting focalnet_huge_fl4 in registry with hannah.models._vendor.focalnet.focalnet_huge_fl4. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-02-15 12:22:24,560][hannah.models.timm][INFO] - Using default logger for automatic stem creation
+[2024-02-15 12:22:24,560][hannah.models.timm][INFO] - Small input size detected trying to adopt small input size
+[2024-02-15 12:22:24,614][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/nn/modules/lazy.py:180: UserWarning: Lazy modules are a new feature under heavy development so changes to the API or functionality can happen at any moment.
+  warnings.warn('Lazy modules are a new feature under heavy development '
+
+[2024-02-15 12:22:24,801][hannah.modules.vision.base][INFO] - Instantiating input Normalizer with mean: (0.491, 0.482, 0.446), std: (0.247, 0.243, 0.261)
+[2024-02-15 12:22:24,808][hannah.modules.vision.base][INFO] - Running dummy forward to initialize lazy modules
+[2024-02-15 12:22:24,862][pytorch_lightning.accelerators.cuda][INFO] - LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+[2024-02-15 12:22:24,864][pytorch_lightning.utilities.rank_zero][INFO] - Loading `train_dataloader` to estimate number of stepping batches.
+[2024-02-15 12:22:24,865][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:441: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=191` in the `DataLoader` to improve performance.
+
+[2024-02-15 12:22:24,874][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/pytorch_lightning/loops/fit_loop.py:293: The number of training batches (21) is smaller than the logging interval Trainer(log_every_n_steps=50). Set a lower value for log_every_n_steps if you want to see logs for the training epoch.
+
+[2024-02-15 12:22:25,483][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/timm.py:313: TracerWarning: torch.tensor results are registered as constants in the trace. You can safely ignore this warning if you use this function to create tensors out of constant variables that would be the same every time you call this function. In any other case, this might cause the trace to be incorrect.
+  decoded = torch.tensor([])
+
+[2024-02-15 12:22:25,484][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/timm.py:317: TracerWarning: torch.tensor results are registered as constants in the trace. You can safely ignore this warning if you use this function to create tensors out of constant variables that would be the same every time you call this function. In any other case, this might cause the trace to be incorrect.
+  logits = torch.tensor([])
+
+[2024-02-15 12:22:25,490][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/timm.py:321: TracerWarning: torch.tensor results are registered as constants in the trace. You can safely ignore this warning if you use this function to create tensors out of constant variables that would be the same every time you call this function. In any other case, this might cause the trace to be incorrect.
+  projection = torch.tensor([])
+
+[2024-02-15 12:22:26,114][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:441: The 'val_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=191` in the `DataLoader` to improve performance.
+
+[2024-02-15 12:22:27,238][hannah.callbacks.summaries][INFO] - 
++-----+-------------------------------+-----------------------+--------------------------------------------------+------------------+--------------+------------------+--------------+------------------+----------+
+|     | Name                          | Type                  | Attrs                                            | IFM              |   IFM volume | OFM              |   OFM volume |   Weights volume |     MACs |
+|-----+-------------------------------+-----------------------+--------------------------------------------------+------------------+--------------+------------------+--------------+------------------+----------|
+|   0 | encoder.conv1                 | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 3, 32, 32)   |         3072 | (1, 64, 32, 32)  |        65536 |             1728 |  1769472 |
+|   1 | encoder.bn1                   | BatchNorm2d           |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|   2 | encoder.act1                  | ReLU                  |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|   3 | encoder.maxpool               | Identity              |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|   4 | encoder.layer1.0.conv1        | Conv2d                | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |             4096 |  4194304 |
+|   5 | encoder.layer1.0.bn1          | BatchNorm2d           |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|   6 | encoder.layer1.0.act1         | ReLU                  |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|   7 | encoder.layer1.0.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |            36864 | 37748736 |
+|   8 | encoder.layer1.0.bn2          | BatchNorm2d           |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|   9 | encoder.layer1.0.drop_block   | Identity              |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  10 | encoder.layer1.0.act2         | ReLU                  |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  11 | encoder.layer1.0.aa           | Identity              |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  12 | encoder.layer1.0.conv3        | Conv2d                | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 256, 32, 32) |       262144 |            16384 | 16777216 |
+|  13 | encoder.layer1.0.bn3          | BatchNorm2d           |                                                  | (1, 256, 32, 32) |       262144 | (1, 256, 32, 32) |       262144 |                0 |        0 |
+|  14 | encoder.layer1.0.downsample.0 | Conv2d                | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 256, 32, 32) |       262144 |            16384 | 16777216 |
+|  15 | encoder.layer1.0.downsample.1 | BatchNorm2d           |                                                  | (1, 256, 32, 32) |       262144 | (1, 256, 32, 32) |       262144 |                0 |        0 |
+|  16 | encoder.layer1.0.downsample   | Sequential            |                                                  | (1, 64, 32, 32)  |        65536 | (1, 256, 32, 32) |       262144 |                0 |        0 |
+|  17 | encoder.layer1.0.act3         | ReLU                  |                                                  | (1, 256, 32, 32) |       262144 | (1, 256, 32, 32) |       262144 |                0 |        0 |
+|  18 | encoder.layer1.0              | Bottleneck            |                                                  | (1, 64, 32, 32)  |        65536 | (1, 256, 32, 32) |       262144 |                0 |        0 |
+|  19 | encoder.layer1.1.conv1        | Conv2d                | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 32, 32) |       262144 | (1, 64, 32, 32)  |        65536 |            16384 | 16777216 |
+|  20 | encoder.layer1.1.bn1          | BatchNorm2d           |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  21 | encoder.layer1.1.act1         | ReLU                  |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  22 | encoder.layer1.1.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |            36864 | 37748736 |
+|  23 | encoder.layer1.1.bn2          | BatchNorm2d           |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  24 | encoder.layer1.1.drop_block   | Identity              |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  25 | encoder.layer1.1.act2         | ReLU                  |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  26 | encoder.layer1.1.aa           | Identity              |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  27 | encoder.layer1.1.conv3        | Conv2d                | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 256, 32, 32) |       262144 |            16384 | 16777216 |
+|  28 | encoder.layer1.1.bn3          | BatchNorm2d           |                                                  | (1, 256, 32, 32) |       262144 | (1, 256, 32, 32) |       262144 |                0 |        0 |
+|  29 | encoder.layer1.1.act3         | ReLU                  |                                                  | (1, 256, 32, 32) |       262144 | (1, 256, 32, 32) |       262144 |                0 |        0 |
+|  30 | encoder.layer1.1              | Bottleneck            |                                                  | (1, 256, 32, 32) |       262144 | (1, 256, 32, 32) |       262144 |                0 |        0 |
+|  31 | encoder.layer1.2.conv1        | Conv2d                | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 32, 32) |       262144 | (1, 64, 32, 32)  |        65536 |            16384 | 16777216 |
+|  32 | encoder.layer1.2.bn1          | BatchNorm2d           |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  33 | encoder.layer1.2.act1         | ReLU                  |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  34 | encoder.layer1.2.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |            36864 | 37748736 |
+|  35 | encoder.layer1.2.bn2          | BatchNorm2d           |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  36 | encoder.layer1.2.drop_block   | Identity              |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  37 | encoder.layer1.2.act2         | ReLU                  |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  38 | encoder.layer1.2.aa           | Identity              |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  39 | encoder.layer1.2.conv3        | Conv2d                | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 256, 32, 32) |       262144 |            16384 | 16777216 |
+|  40 | encoder.layer1.2.bn3          | BatchNorm2d           |                                                  | (1, 256, 32, 32) |       262144 | (1, 256, 32, 32) |       262144 |                0 |        0 |
+|  41 | encoder.layer1.2.act3         | ReLU                  |                                                  | (1, 256, 32, 32) |       262144 | (1, 256, 32, 32) |       262144 |                0 |        0 |
+|  42 | encoder.layer1.2              | Bottleneck            |                                                  | (1, 256, 32, 32) |       262144 | (1, 256, 32, 32) |       262144 |                0 |        0 |
+|  43 | encoder.layer1                | Sequential            |                                                  | (1, 64, 32, 32)  |        65536 | (1, 256, 32, 32) |       262144 |                0 |        0 |
+|  44 | encoder.layer2.0.conv1        | Conv2d                | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 32, 32) |       262144 | (1, 128, 32, 32) |       131072 |            32768 | 33554432 |
+|  45 | encoder.layer2.0.bn1          | BatchNorm2d           |                                                  | (1, 128, 32, 32) |       131072 | (1, 128, 32, 32) |       131072 |                0 |        0 |
+|  46 | encoder.layer2.0.act1         | ReLU                  |                                                  | (1, 128, 32, 32) |       131072 | (1, 128, 32, 32) |       131072 |                0 |        0 |
+|  47 | encoder.layer2.0.conv2        | Conv2d                | k=(3, 3), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 128, 32, 32) |       131072 | (1, 128, 16, 16) |        32768 |           147456 | 37748736 |
+|  48 | encoder.layer2.0.bn2          | BatchNorm2d           |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  49 | encoder.layer2.0.drop_block   | Identity              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  50 | encoder.layer2.0.act2         | ReLU                  |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  51 | encoder.layer2.0.aa           | Identity              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  52 | encoder.layer2.0.conv3        | Conv2d                | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 512, 16, 16) |       131072 |            65536 | 16777216 |
+|  53 | encoder.layer2.0.bn3          | BatchNorm2d           |                                                  | (1, 512, 16, 16) |       131072 | (1, 512, 16, 16) |       131072 |                0 |        0 |
+|  54 | encoder.layer2.0.downsample.0 | Conv2d                | k=(1, 1), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 256, 32, 32) |       262144 | (1, 512, 16, 16) |       131072 |           131072 | 33554432 |
+|  55 | encoder.layer2.0.downsample.1 | BatchNorm2d           |                                                  | (1, 512, 16, 16) |       131072 | (1, 512, 16, 16) |       131072 |                0 |        0 |
+|  56 | encoder.layer2.0.downsample   | Sequential            |                                                  | (1, 256, 32, 32) |       262144 | (1, 512, 16, 16) |       131072 |                0 |        0 |
+|  57 | encoder.layer2.0.act3         | ReLU                  |                                                  | (1, 512, 16, 16) |       131072 | (1, 512, 16, 16) |       131072 |                0 |        0 |
+|  58 | encoder.layer2.0              | Bottleneck            |                                                  | (1, 256, 32, 32) |       262144 | (1, 512, 16, 16) |       131072 |                0 |        0 |
+|  59 | encoder.layer2.1.conv1        | Conv2d                | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 512, 16, 16) |       131072 | (1, 128, 16, 16) |        32768 |            65536 | 16777216 |
+|  60 | encoder.layer2.1.bn1          | BatchNorm2d           |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  61 | encoder.layer2.1.act1         | ReLU                  |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  62 | encoder.layer2.1.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |           147456 | 37748736 |
+|  63 | encoder.layer2.1.bn2          | BatchNorm2d           |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  64 | encoder.layer2.1.drop_block   | Identity              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  65 | encoder.layer2.1.act2         | ReLU                  |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  66 | encoder.layer2.1.aa           | Identity              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  67 | encoder.layer2.1.conv3        | Conv2d                | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 512, 16, 16) |       131072 |            65536 | 16777216 |
+|  68 | encoder.layer2.1.bn3          | BatchNorm2d           |                                                  | (1, 512, 16, 16) |       131072 | (1, 512, 16, 16) |       131072 |                0 |        0 |
+|  69 | encoder.layer2.1.act3         | ReLU                  |                                                  | (1, 512, 16, 16) |       131072 | (1, 512, 16, 16) |       131072 |                0 |        0 |
+|  70 | encoder.layer2.1              | Bottleneck            |                                                  | (1, 512, 16, 16) |       131072 | (1, 512, 16, 16) |       131072 |                0 |        0 |
+|  71 | encoder.layer2.2.conv1        | Conv2d                | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 512, 16, 16) |       131072 | (1, 128, 16, 16) |        32768 |            65536 | 16777216 |
+|  72 | encoder.layer2.2.bn1          | BatchNorm2d           |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  73 | encoder.layer2.2.act1         | ReLU                  |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  74 | encoder.layer2.2.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |           147456 | 37748736 |
+|  75 | encoder.layer2.2.bn2          | BatchNorm2d           |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  76 | encoder.layer2.2.drop_block   | Identity              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  77 | encoder.layer2.2.act2         | ReLU                  |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  78 | encoder.layer2.2.aa           | Identity              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  79 | encoder.layer2.2.conv3        | Conv2d                | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 512, 16, 16) |       131072 |            65536 | 16777216 |
+|  80 | encoder.layer2.2.bn3          | BatchNorm2d           |                                                  | (1, 512, 16, 16) |       131072 | (1, 512, 16, 16) |       131072 |                0 |        0 |
+|  81 | encoder.layer2.2.act3         | ReLU                  |                                                  | (1, 512, 16, 16) |       131072 | (1, 512, 16, 16) |       131072 |                0 |        0 |
+|  82 | encoder.layer2.2              | Bottleneck            |                                                  | (1, 512, 16, 16) |       131072 | (1, 512, 16, 16) |       131072 |                0 |        0 |
+|  83 | encoder.layer2.3.conv1        | Conv2d                | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 512, 16, 16) |       131072 | (1, 128, 16, 16) |        32768 |            65536 | 16777216 |
+|  84 | encoder.layer2.3.bn1          | BatchNorm2d           |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  85 | encoder.layer2.3.act1         | ReLU                  |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  86 | encoder.layer2.3.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |           147456 | 37748736 |
+|  87 | encoder.layer2.3.bn2          | BatchNorm2d           |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  88 | encoder.layer2.3.drop_block   | Identity              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  89 | encoder.layer2.3.act2         | ReLU                  |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  90 | encoder.layer2.3.aa           | Identity              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  91 | encoder.layer2.3.conv3        | Conv2d                | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 512, 16, 16) |       131072 |            65536 | 16777216 |
+|  92 | encoder.layer2.3.bn3          | BatchNorm2d           |                                                  | (1, 512, 16, 16) |       131072 | (1, 512, 16, 16) |       131072 |                0 |        0 |
+|  93 | encoder.layer2.3.act3         | ReLU                  |                                                  | (1, 512, 16, 16) |       131072 | (1, 512, 16, 16) |       131072 |                0 |        0 |
+|  94 | encoder.layer2.3              | Bottleneck            |                                                  | (1, 512, 16, 16) |       131072 | (1, 512, 16, 16) |       131072 |                0 |        0 |
+|  95 | encoder.layer2                | Sequential            |                                                  | (1, 256, 32, 32) |       262144 | (1, 512, 16, 16) |       131072 |                0 |        0 |
+|  96 | encoder.layer3.0.conv1        | Conv2d                | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 512, 16, 16) |       131072 | (1, 256, 16, 16) |        65536 |           131072 | 33554432 |
+|  97 | encoder.layer3.0.bn1          | BatchNorm2d           |                                                  | (1, 256, 16, 16) |        65536 | (1, 256, 16, 16) |        65536 |                0 |        0 |
+|  98 | encoder.layer3.0.act1         | ReLU                  |                                                  | (1, 256, 16, 16) |        65536 | (1, 256, 16, 16) |        65536 |                0 |        0 |
+|  99 | encoder.layer3.0.conv2        | Conv2d                | k=(3, 3), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 256, 16, 16) |        65536 | (1, 256, 8, 8)   |        16384 |           589824 | 37748736 |
+| 100 | encoder.layer3.0.bn2          | BatchNorm2d           |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 101 | encoder.layer3.0.drop_block   | Identity              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 102 | encoder.layer3.0.act2         | ReLU                  |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 103 | encoder.layer3.0.aa           | Identity              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 104 | encoder.layer3.0.conv3        | Conv2d                | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 1024, 8, 8)  |        65536 |           262144 | 16777216 |
+| 105 | encoder.layer3.0.bn3          | BatchNorm2d           |                                                  | (1, 1024, 8, 8)  |        65536 | (1, 1024, 8, 8)  |        65536 |                0 |        0 |
+| 106 | encoder.layer3.0.downsample.0 | Conv2d                | k=(1, 1), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 512, 16, 16) |       131072 | (1, 1024, 8, 8)  |        65536 |           524288 | 33554432 |
+| 107 | encoder.layer3.0.downsample.1 | BatchNorm2d           |                                                  | (1, 1024, 8, 8)  |        65536 | (1, 1024, 8, 8)  |        65536 |                0 |        0 |
+| 108 | encoder.layer3.0.downsample   | Sequential            |                                                  | (1, 512, 16, 16) |       131072 | (1, 1024, 8, 8)  |        65536 |                0 |        0 |
+| 109 | encoder.layer3.0.act3         | ReLU                  |                                                  | (1, 1024, 8, 8)  |        65536 | (1, 1024, 8, 8)  |        65536 |                0 |        0 |
+| 110 | encoder.layer3.0              | Bottleneck            |                                                  | (1, 512, 16, 16) |       131072 | (1, 1024, 8, 8)  |        65536 |                0 |        0 |
+| 111 | encoder.layer3.1.conv1        | Conv2d                | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 1024, 8, 8)  |        65536 | (1, 256, 8, 8)   |        16384 |           262144 | 16777216 |
+| 112 | encoder.layer3.1.bn1          | BatchNorm2d           |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 113 | encoder.layer3.1.act1         | ReLU                  |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 114 | encoder.layer3.1.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |           589824 | 37748736 |
+| 115 | encoder.layer3.1.bn2          | BatchNorm2d           |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 116 | encoder.layer3.1.drop_block   | Identity              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 117 | encoder.layer3.1.act2         | ReLU                  |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 118 | encoder.layer3.1.aa           | Identity              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 119 | encoder.layer3.1.conv3        | Conv2d                | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 1024, 8, 8)  |        65536 |           262144 | 16777216 |
+| 120 | encoder.layer3.1.bn3          | BatchNorm2d           |                                                  | (1, 1024, 8, 8)  |        65536 | (1, 1024, 8, 8)  |        65536 |                0 |        0 |
+| 121 | encoder.layer3.1.act3         | ReLU                  |                                                  | (1, 1024, 8, 8)  |        65536 | (1, 1024, 8, 8)  |        65536 |                0 |        0 |
+| 122 | encoder.layer3.1              | Bottleneck            |                                                  | (1, 1024, 8, 8)  |        65536 | (1, 1024, 8, 8)  |        65536 |                0 |        0 |
+| 123 | encoder.layer3.2.conv1        | Conv2d                | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 1024, 8, 8)  |        65536 | (1, 256, 8, 8)   |        16384 |           262144 | 16777216 |
+| 124 | encoder.layer3.2.bn1          | BatchNorm2d           |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 125 | encoder.layer3.2.act1         | ReLU                  |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 126 | encoder.layer3.2.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |           589824 | 37748736 |
+| 127 | encoder.layer3.2.bn2          | BatchNorm2d           |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 128 | encoder.layer3.2.drop_block   | Identity              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 129 | encoder.layer3.2.act2         | ReLU                  |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 130 | encoder.layer3.2.aa           | Identity              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 131 | encoder.layer3.2.conv3        | Conv2d                | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 1024, 8, 8)  |        65536 |           262144 | 16777216 |
+| 132 | encoder.layer3.2.bn3          | BatchNorm2d           |                                                  | (1, 1024, 8, 8)  |        65536 | (1, 1024, 8, 8)  |        65536 |                0 |        0 |
+| 133 | encoder.layer3.2.act3         | ReLU                  |                                                  | (1, 1024, 8, 8)  |        65536 | (1, 1024, 8, 8)  |        65536 |                0 |        0 |
+| 134 | encoder.layer3.2              | Bottleneck            |                                                  | (1, 1024, 8, 8)  |        65536 | (1, 1024, 8, 8)  |        65536 |                0 |        0 |
+| 135 | encoder.layer3.3.conv1        | Conv2d                | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 1024, 8, 8)  |        65536 | (1, 256, 8, 8)   |        16384 |           262144 | 16777216 |
+| 136 | encoder.layer3.3.bn1          | BatchNorm2d           |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 137 | encoder.layer3.3.act1         | ReLU                  |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 138 | encoder.layer3.3.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |           589824 | 37748736 |
+| 139 | encoder.layer3.3.bn2          | BatchNorm2d           |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 140 | encoder.layer3.3.drop_block   | Identity              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 141 | encoder.layer3.3.act2         | ReLU                  |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 142 | encoder.layer3.3.aa           | Identity              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 143 | encoder.layer3.3.conv3        | Conv2d                | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 1024, 8, 8)  |        65536 |           262144 | 16777216 |
+| 144 | encoder.layer3.3.bn3          | BatchNorm2d           |                                                  | (1, 1024, 8, 8)  |        65536 | (1, 1024, 8, 8)  |        65536 |                0 |        0 |
+| 145 | encoder.layer3.3.act3         | ReLU                  |                                                  | (1, 1024, 8, 8)  |        65536 | (1, 1024, 8, 8)  |        65536 |                0 |        0 |
+| 146 | encoder.layer3.3              | Bottleneck            |                                                  | (1, 1024, 8, 8)  |        65536 | (1, 1024, 8, 8)  |        65536 |                0 |        0 |
+| 147 | encoder.layer3.4.conv1        | Conv2d                | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 1024, 8, 8)  |        65536 | (1, 256, 8, 8)   |        16384 |           262144 | 16777216 |
+| 148 | encoder.layer3.4.bn1          | BatchNorm2d           |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 149 | encoder.layer3.4.act1         | ReLU                  |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 150 | encoder.layer3.4.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |           589824 | 37748736 |
+| 151 | encoder.layer3.4.bn2          | BatchNorm2d           |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 152 | encoder.layer3.4.drop_block   | Identity              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 153 | encoder.layer3.4.act2         | ReLU                  |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 154 | encoder.layer3.4.aa           | Identity              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 155 | encoder.layer3.4.conv3        | Conv2d                | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 1024, 8, 8)  |        65536 |           262144 | 16777216 |
+| 156 | encoder.layer3.4.bn3          | BatchNorm2d           |                                                  | (1, 1024, 8, 8)  |        65536 | (1, 1024, 8, 8)  |        65536 |                0 |        0 |
+| 157 | encoder.layer3.4.act3         | ReLU                  |                                                  | (1, 1024, 8, 8)  |        65536 | (1, 1024, 8, 8)  |        65536 |                0 |        0 |
+| 158 | encoder.layer3.4              | Bottleneck            |                                                  | (1, 1024, 8, 8)  |        65536 | (1, 1024, 8, 8)  |        65536 |                0 |        0 |
+| 159 | encoder.layer3.5.conv1        | Conv2d                | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 1024, 8, 8)  |        65536 | (1, 256, 8, 8)   |        16384 |           262144 | 16777216 |
+| 160 | encoder.layer3.5.bn1          | BatchNorm2d           |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 161 | encoder.layer3.5.act1         | ReLU                  |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 162 | encoder.layer3.5.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |           589824 | 37748736 |
+| 163 | encoder.layer3.5.bn2          | BatchNorm2d           |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 164 | encoder.layer3.5.drop_block   | Identity              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 165 | encoder.layer3.5.act2         | ReLU                  |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 166 | encoder.layer3.5.aa           | Identity              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 167 | encoder.layer3.5.conv3        | Conv2d                | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 1024, 8, 8)  |        65536 |           262144 | 16777216 |
+| 168 | encoder.layer3.5.bn3          | BatchNorm2d           |                                                  | (1, 1024, 8, 8)  |        65536 | (1, 1024, 8, 8)  |        65536 |                0 |        0 |
+| 169 | encoder.layer3.5.act3         | ReLU                  |                                                  | (1, 1024, 8, 8)  |        65536 | (1, 1024, 8, 8)  |        65536 |                0 |        0 |
+| 170 | encoder.layer3.5              | Bottleneck            |                                                  | (1, 1024, 8, 8)  |        65536 | (1, 1024, 8, 8)  |        65536 |                0 |        0 |
+| 171 | encoder.layer3                | Sequential            |                                                  | (1, 512, 16, 16) |       131072 | (1, 1024, 8, 8)  |        65536 |                0 |        0 |
+| 172 | encoder.layer4.0.conv1        | Conv2d                | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 1024, 8, 8)  |        65536 | (1, 512, 8, 8)   |        32768 |           524288 | 33554432 |
+| 173 | encoder.layer4.0.bn1          | BatchNorm2d           |                                                  | (1, 512, 8, 8)   |        32768 | (1, 512, 8, 8)   |        32768 |                0 |        0 |
+| 174 | encoder.layer4.0.act1         | ReLU                  |                                                  | (1, 512, 8, 8)   |        32768 | (1, 512, 8, 8)   |        32768 |                0 |        0 |
+| 175 | encoder.layer4.0.conv2        | Conv2d                | k=(3, 3), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 512, 8, 8)   |        32768 | (1, 512, 4, 4)   |         8192 |          2359296 | 37748736 |
+| 176 | encoder.layer4.0.bn2          | BatchNorm2d           |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 177 | encoder.layer4.0.drop_block   | Identity              |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 178 | encoder.layer4.0.act2         | ReLU                  |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 179 | encoder.layer4.0.aa           | Identity              |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 180 | encoder.layer4.0.conv3        | Conv2d                | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 512, 4, 4)   |         8192 | (1, 2048, 4, 4)  |        32768 |          1048576 | 16777216 |
+| 181 | encoder.layer4.0.bn3          | BatchNorm2d           |                                                  | (1, 2048, 4, 4)  |        32768 | (1, 2048, 4, 4)  |        32768 |                0 |        0 |
+| 182 | encoder.layer4.0.downsample.0 | Conv2d                | k=(1, 1), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 1024, 8, 8)  |        65536 | (1, 2048, 4, 4)  |        32768 |          2097152 | 33554432 |
+| 183 | encoder.layer4.0.downsample.1 | BatchNorm2d           |                                                  | (1, 2048, 4, 4)  |        32768 | (1, 2048, 4, 4)  |        32768 |                0 |        0 |
+| 184 | encoder.layer4.0.downsample   | Sequential            |                                                  | (1, 1024, 8, 8)  |        65536 | (1, 2048, 4, 4)  |        32768 |                0 |        0 |
+| 185 | encoder.layer4.0.act3         | ReLU                  |                                                  | (1, 2048, 4, 4)  |        32768 | (1, 2048, 4, 4)  |        32768 |                0 |        0 |
+| 186 | encoder.layer4.0              | Bottleneck            |                                                  | (1, 1024, 8, 8)  |        65536 | (1, 2048, 4, 4)  |        32768 |                0 |        0 |
+| 187 | encoder.layer4.1.conv1        | Conv2d                | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 2048, 4, 4)  |        32768 | (1, 512, 4, 4)   |         8192 |          1048576 | 16777216 |
+| 188 | encoder.layer4.1.bn1          | BatchNorm2d           |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 189 | encoder.layer4.1.act1         | ReLU                  |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 190 | encoder.layer4.1.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |          2359296 | 37748736 |
+| 191 | encoder.layer4.1.bn2          | BatchNorm2d           |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 192 | encoder.layer4.1.drop_block   | Identity              |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 193 | encoder.layer4.1.act2         | ReLU                  |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 194 | encoder.layer4.1.aa           | Identity              |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 195 | encoder.layer4.1.conv3        | Conv2d                | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 512, 4, 4)   |         8192 | (1, 2048, 4, 4)  |        32768 |          1048576 | 16777216 |
+| 196 | encoder.layer4.1.bn3          | BatchNorm2d           |                                                  | (1, 2048, 4, 4)  |        32768 | (1, 2048, 4, 4)  |        32768 |                0 |        0 |
+| 197 | encoder.layer4.1.act3         | ReLU                  |                                                  | (1, 2048, 4, 4)  |        32768 | (1, 2048, 4, 4)  |        32768 |                0 |        0 |
+| 198 | encoder.layer4.1              | Bottleneck            |                                                  | (1, 2048, 4, 4)  |        32768 | (1, 2048, 4, 4)  |        32768 |                0 |        0 |
+| 199 | encoder.layer4.2.conv1        | Conv2d                | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 2048, 4, 4)  |        32768 | (1, 512, 4, 4)   |         8192 |          1048576 | 16777216 |
+| 200 | encoder.layer4.2.bn1          | BatchNorm2d           |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 201 | encoder.layer4.2.act1         | ReLU                  |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 202 | encoder.layer4.2.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |          2359296 | 37748736 |
+| 203 | encoder.layer4.2.bn2          | BatchNorm2d           |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 204 | encoder.layer4.2.drop_block   | Identity              |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 205 | encoder.layer4.2.act2         | ReLU                  |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 206 | encoder.layer4.2.aa           | Identity              |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 207 | encoder.layer4.2.conv3        | Conv2d                | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 512, 4, 4)   |         8192 | (1, 2048, 4, 4)  |        32768 |          1048576 | 16777216 |
+| 208 | encoder.layer4.2.bn3          | BatchNorm2d           |                                                  | (1, 2048, 4, 4)  |        32768 | (1, 2048, 4, 4)  |        32768 |                0 |        0 |
+| 209 | encoder.layer4.2.act3         | ReLU                  |                                                  | (1, 2048, 4, 4)  |        32768 | (1, 2048, 4, 4)  |        32768 |                0 |        0 |
+| 210 | encoder.layer4.2              | Bottleneck            |                                                  | (1, 2048, 4, 4)  |        32768 | (1, 2048, 4, 4)  |        32768 |                0 |        0 |
+| 211 | encoder.layer4                | Sequential            |                                                  | (1, 1024, 8, 8)  |        65536 | (1, 2048, 4, 4)  |        32768 |                0 |        0 |
+| 212 | encoder.global_pool.pool      | Identity              |                                                  | (1, 2048, 4, 4)  |        32768 | (1, 2048, 4, 4)  |        32768 |                0 |        0 |
+| 213 | encoder.global_pool.flatten   | Identity              |                                                  | (1, 2048, 4, 4)  |        32768 | (1, 2048, 4, 4)  |        32768 |                0 |        0 |
+| 214 | encoder.global_pool           | SelectAdaptivePool2d  |                                                  | (1, 2048, 4, 4)  |        32768 | (1, 2048, 4, 4)  |        32768 |                0 |        0 |
+| 215 | encoder.fc                    | Identity              |                                                  | (1, 2048, 4, 4)  |        32768 | (1, 2048, 4, 4)  |        32768 |                0 |        0 |
+| 216 | encoder                       | ResNet                |                                                  | (1, 3, 32, 32)   |         3072 | (1, 2048, 4, 4)  |        32768 |                0 |        0 |
+| 217 | classifier.pooling            | AdaptiveAvgPool2d     |                                                  | (1, 2048, 4, 4)  |        32768 | (1, 2048, 1, 1)  |         2048 |                0 |        0 |
+| 218 | classifier.flatten            | Flatten               |                                                  | (1, 2048, 1, 1)  |         2048 | (1, 2048)        |         2048 |                0 |        0 |
+| 219 | classifier.linear             | Linear                |                                                  | (1, 2048)        |         2048 | (1, 10)          |           10 |            20480 |    20480 |
+| 220 | classifier                    | DefaultClassifierHead |                                                  | (1, 2048, 4, 4)  |        32768 | (1, 10)          |           10 |                0 |        0 |
++-----+-------------------------------+-----------------------+--------------------------------------------------+------------------+--------------+------------------+--------------+------------------+----------+
+[2024-02-15 12:22:27,239][hannah.callbacks.summaries][INFO] - Total MACs: 1,297,829,888
+[2024-02-15 12:22:27,239][hannah.callbacks.summaries][INFO] - Total Weights: 23,467,712
+[2024-02-15 12:22:27,239][hannah.callbacks.summaries][INFO] - Total Activations: 13,728,788
+[2024-02-15 12:22:27,239][hannah.callbacks.summaries][INFO] - Estimated Activations: 524,288
+[2024-02-15 12:22:49,476][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 0, global step 21: 'val_error' reached 0.81201 (best 0.81201), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/test/resnet50/checkpoints/epoch=0-step=21.ckpt' as top 1
+[2024-02-15 12:22:53,642][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py:54: Detected KeyboardInterrupt, attempting graceful shutdown...
+
+[2024-02-15 12:22:53,649][lightning.fabric.utilities.seed][INFO] - Seed set to 1234
+[2024-02-15 12:22:53,649][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/checkpoint_connector.py:145: `.validate(ckpt_path=None)` was called without a model. The best model of the previous `fit` call will be used. You can pass `.validate(ckpt_path='best')` to use the best model or `.validate(ckpt_path='last')` to use the last model. If you pass a value, this warning will be silenced.
+
+[2024-02-15 12:22:53,651][pytorch_lightning.utilities.rank_zero][INFO] - Restoring states from the checkpoint path at /local/gerum/hannah/experiments/cifar10/trained_models/test/resnet50/checkpoints/epoch=0-step=21.ckpt
+[2024-02-15 12:22:53,771][pytorch_lightning.accelerators.cuda][INFO] - LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+[2024-02-15 12:22:54,150][lightning.fabric.utilities.seed][INFO] - Seed set to 1234
+[2024-02-15 12:22:54,150][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/checkpoint_connector.py:145: `.test(ckpt_path=None)` was called without a model. The best model of the previous `fit` call will be used. You can pass `.test(ckpt_path='best')` to use the best model or `.test(ckpt_path='last')` to use the last model. If you pass a value, this warning will be silenced.
+
+[2024-02-15 12:22:54,152][pytorch_lightning.utilities.rank_zero][INFO] - Restoring states from the checkpoint path at /local/gerum/hannah/experiments/cifar10/trained_models/test/resnet50/checkpoints/epoch=0-step=21.ckpt
+[2024-02-15 12:22:54,187][hannah.train][INFO] - Averaged Result Metrics:
+| Metric              |     Mean |   Std |   Count |
+|---------------------|----------|-------|---------|
+| val_classifier_loss | 2.08844  |     0 |       1 |
+| val_accuracy        | 0.187988 |     0 |       1 |
+| val_error           | 0.812012 |     0 |       1 |
+| val_f1              | 0.110673 |     0 |       1 |
+| val_precision       | 0.243306 |     0 |       1 |
+| val_recall          | 0.182946 |     0 |       1 |
+| val_loss            | 2.08844  |     0 |       1 |

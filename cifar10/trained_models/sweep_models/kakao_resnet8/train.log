@@ -1098,3 +1098,1020 @@ monitor:
 | val_precision       | 0.921227  |     0 |       1 |
 | val_recall          | 0.920908  |     0 |       1 |
 | val_loss            | 0.240081  |     0 |       1 |
+[2024-05-22 16:38:51,682][hannah.utils.utils][INFO] - Environment info:
+[2024-05-22 16:38:51,683][hannah.utils.utils][INFO] -   Number of GPUs: 2
+[2024-05-22 16:38:51,683][hannah.utils.utils][INFO] -   CUDA version: 12.1
+[2024-05-22 16:38:51,683][hannah.utils.utils][INFO] -   CUDNN version: 8907
+[2024-05-22 16:38:51,683][hannah.utils.utils][INFO] -   Kernel: 4.18.0-513.24.1.el8_9.x86_64
+[2024-05-22 16:38:51,683][hannah.utils.utils][INFO] -   Python: 3.11.5 (main, Nov 15 2023, 03:52:27) [GCC 8.5.0 20210514 (Red Hat 8.5.0-20)]
+[2024-05-22 16:38:51,683][hannah.utils.utils][INFO] -   PyTorch: 2.2.2+cu121
+[2024-05-22 16:38:51,683][hannah.utils.utils][INFO] -   Pytorch Lightning: 2.2.4
+[2024-05-22 16:38:51,683][hannah.utils.utils][INFO] -   Numpy: 1.26.4
+[2024-05-22 16:38:51,683][hannah.utils.utils][INFO] -   Hannah version info:
+[2024-05-22 16:38:51,683][hannah.utils.utils][INFO] -     Cannot find a Git repository.  You probably downloaded an archive
+[2024-05-22 16:38:51,683][hannah.utils.utils][INFO] -   Command line: /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/bin/hannah-train module.num_workers=32 module.batch_size=128 +experiment=sweep_models
+[2024-05-22 16:38:51,683][hannah.utils.utils][INFO] -   
+[2024-05-22 16:38:51,684][lightning.fabric.utilities.seed][INFO] - Seed set to 1234
+[2024-05-22 16:38:51,685][root][INFO] - Configuration: 
+[2024-05-22 16:38:51,687][root][INFO] - dataset:
+  data_folder: ${hydra:runtime.cwd}/datasets/
+  cls: hannah.datasets.vision.Cifar10Dataset
+  dataset: cifar10
+  val_percent: 0.1
+features:
+  _target_: torch.nn.Identity
+model:
+  _target_: hannah.models.kakao_resnet.resnet8
+  name: kakao_resnet8
+  width_multiplier: 1.0
+  input_kernel: 3
+  input_stride: 1
+scheduler:
+  _target_: torch.optim.lr_scheduler.OneCycleLR
+  max_lr: ${optimizer.lr}
+  pct_start: 0.3
+  anneal_strategy: cos
+  cycle_momentum: true
+  base_momentum: 0.85
+  max_momentum: 0.95
+  div_factor: 25.0
+  final_div_factor: 10000.0
+  last_epoch: -1
+optimizer:
+  _target_: torch.optim.sgd.SGD
+  lr: 0.3
+  momentum: 0.9
+  dampening: 0
+  weight_decay: 0.0005
+  nesterov: false
+module:
+  _target_: hannah.modules.vision.ImageClassifierModule
+  num_workers: 32
+  batch_size: 128
+  shuffle_all_dataloaders: false
+trainer:
+  _target_: pytorch_lightning.trainer.Trainer
+  accelerator: auto
+  devices: 1
+  limit_train_batches: 1.0
+  limit_val_batches: 1.0
+  limit_test_batches: 1.0
+  max_epochs: 50
+  default_root_dir: .
+  fast_dev_run: false
+  overfit_batches: 0.0
+  benchmark: false
+  deterministic: warn
+  gradient_clip_val: 0
+  accumulate_grad_batches: 1
+  plugins: null
+  strategy: auto
+  reload_dataloaders_every_n_epochs: 0
+  precision: 16
+checkpoint:
+  _target_: pytorch_lightning.callbacks.ModelCheckpoint
+  dirpath: checkpoints
+  save_top_k: 1
+  verbose: true
+  monitor: val_error
+  mode: min
+  save_last: true
+augmentation:
+  batch_augment:
+    pipeline: null
+    transforms:
+      RandomHorizontalFlip:
+        p: 0.5
+      RandomAffine:
+        degrees:
+        - -15
+        - 15
+        translate:
+        - 0.1
+        - 0.1
+        scale:
+        - 0.9
+        - 1.1
+        shear:
+        - -5
+        - 5
+        p: 0.5
+      RandomCrop:
+        size:
+        - 32
+        - 32
+        padding: 4
+      RandomErasing:
+        p: 0.5
+experiment_id: sweep_models
+output_dir: trained_models
+auto_lr: false
+resume: false
+fx_mac_summary: false
+skip_test: false
+skip_val: false
+seed:
+- 1234
+validate_output: false
+monitor:
+  metric: val_accuracy
+  direction: maximize
+
+[2024-05-22 16:38:51,688][root][INFO] - Current working directory /local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8
+[2024-05-22 16:38:51,694][hannah.callbacks.optimization][INFO] - Monitoring the following values for optimization
+[2024-05-22 16:38:51,694][hannah.callbacks.optimization][INFO] -   - val_accuracy direction: maximize(-1)
+[2024-05-22 16:38:51,697][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/lightning_fabric/connector.py:563: `precision=16` is supported for historical reasons but its usage is discouraged. Please set your precision to 16-mixed instead!
+
+[2024-05-22 16:38:51,697][pytorch_lightning.utilities.rank_zero][INFO] - Using 16bit Automatic Mixed Precision (AMP)
+[2024-05-22 16:38:51,705][pytorch_lightning.utilities.rank_zero][INFO] - GPU available: True (cuda), used: True
+[2024-05-22 16:38:51,705][pytorch_lightning.utilities.rank_zero][INFO] - TPU available: False, using: 0 TPU cores
+[2024-05-22 16:38:51,705][pytorch_lightning.utilities.rank_zero][INFO] - IPU available: False, using: 0 IPUs
+[2024-05-22 16:38:51,705][pytorch_lightning.utilities.rank_zero][INFO] - HPU available: False, using: 0 HPUs
+[2024-05-22 16:38:51,705][pytorch_lightning.utilities.rank_zero][INFO] - `Trainer(limit_train_batches=1.0)` was configured so 100% of the batches per epoch will be used..
+[2024-05-22 16:38:51,705][pytorch_lightning.utilities.rank_zero][INFO] - `Trainer(limit_val_batches=1.0)` was configured so 100% of the batches will be used..
+[2024-05-22 16:38:51,705][pytorch_lightning.utilities.rank_zero][INFO] - `Trainer(limit_test_batches=1.0)` was configured so 100% of the batches will be used..
+[2024-05-22 16:38:51,705][root][INFO] - Starting training
+[2024-05-22 16:38:52,910][py.warnings][WARNING] - /local/gerum/hannah/hannah/modules/vision/base.py:66: UserWarning: Vision datasets should return a length 4 tuple, will assume unlabeled data is None
+  warnings.warn(
+
+[2024-05-22 16:38:52,910][hannah.modules.vision.base][INFO] - Dataset lengths:
+[2024-05-22 16:38:52,910][hannah.modules.vision.base][INFO] -   Train Set (Labeled): 45000
+[2024-05-22 16:38:52,910][hannah.modules.vision.base][INFO] -   Train Set (Unlabled): 0
+[2024-05-22 16:38:52,910][hannah.modules.vision.base][INFO] -   Dev Set: 5000
+[2024-05-22 16:38:52,910][hannah.modules.vision.base][INFO] -   Test Set: 10000
+[2024-05-22 16:38:52,910][hannah.modules.vision.base][INFO] - Setting up model kakao_resnet8
+[2024-05-22 16:38:52,933][hannah.modules.vision.base][INFO] - Instantiating input Normalizer with mean: (0.491, 0.482, 0.446), std: (0.247, 0.243, 0.261)
+[2024-05-22 16:38:52,939][hannah.modules.vision.base][INFO] - Running dummy forward to initialize lazy modules
+[2024-05-22 16:38:52,945][pytorch_lightning.accelerators.cuda][INFO] - LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+[2024-05-22 16:38:52,951][pytorch_lightning.utilities.rank_zero][INFO] - Loading `train_dataloader` to estimate number of stepping batches.
+[2024-05-22 16:38:53,943][pytorch_lightning.callbacks.model_summary][INFO] - 
+   | Name                 | Type                           | Params | In sizes       | Out sizes
+------------------------------------------------------------------------------------------------------
+0  | val_metrics          | MetricCollection               | 0      | ?              | ?        
+1  | test_metrics         | MetricCollection               | 0      | ?              | ?        
+2  | train_metrics        | MetricCollection               | 0      | ?              | ?        
+3  | model                | Sequential                     | 2.3 M  | [1, 3, 32, 32] | [1, 10]  
+4  | input_normalizer     | Normalize                      | 0      | ?              | ?        
+5  | default_augmentation | Sequential                     | 0      | ?              | ?        
+6  | augmentations        | ModuleDict                     | 0      | ?              | ?        
+7  | test_confusion       | MulticlassConfusionMatrix      | 0      | ?              | ?        
+8  | test_roc             | MulticlassROC                  | 0      | ?              | ?        
+9  | test_pr_curve        | MulticlassPrecisionRecallCurve | 0      | ?              | ?        
+10 | metrics              | ModuleDict                     | 0      | ?              | ?        
+------------------------------------------------------------------------------------------------------
+2.3 M     Trainable params
+0         Non-trainable params
+2.3 M     Total params
+9.100     Total estimated model params size (MB)
+[2024-05-22 16:38:55,235][hannah.callbacks.summaries][INFO] - 
++----+--------------+-------------------+--------------------------------------------------+------------------+--------------+------------------+--------------+------------------+----------+
+|    | Name         | Type              | Attrs                                            | IFM              |   IFM volume | OFM              |   OFM volume |   Weights volume |     MACs |
+|----+--------------+-------------------+--------------------------------------------------+------------------+--------------+------------------+--------------+------------------+----------|
+|  0 | 0.0          | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 3, 32, 32)   |         3072 | (1, 64, 32, 32)  |        65536 |             1728 |  1769472 |
+|  1 | 0.1          | BatchNorm2d       |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  2 | 0.2          | ReLU              |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  3 | 0            | Sequential        |                                                  | (1, 3, 32, 32)   |         3072 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  4 | 1.0          | Conv2d            | k=(5, 5), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 128, 16, 16) |        32768 |           204800 | 52428800 |
+|  5 | 1.1          | BatchNorm2d       |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  6 | 1.2          | ReLU              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  7 | 1            | Sequential        |                                                  | (1, 64, 32, 32)  |        65536 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  8 | 2.module.0.0 | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |           147456 | 37748736 |
+|  9 | 2.module.0.1 | BatchNorm2d       |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 10 | 2.module.0.2 | ReLU              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 11 | 2.module.0   | Sequential        |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 12 | 2.module.1.0 | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |           147456 | 37748736 |
+| 13 | 2.module.1.1 | BatchNorm2d       |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 14 | 2.module.1.2 | ReLU              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 15 | 2.module.1   | Sequential        |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 16 | 2.module     | Sequential        |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 17 | 2            | Residual          |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 18 | 3.0          | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 256, 16, 16) |        65536 |           294912 | 75497472 |
+| 19 | 3.1          | BatchNorm2d       |                                                  | (1, 256, 16, 16) |        65536 | (1, 256, 16, 16) |        65536 |                0 |        0 |
+| 20 | 3.2          | ReLU              |                                                  | (1, 256, 16, 16) |        65536 | (1, 256, 16, 16) |        65536 |                0 |        0 |
+| 21 | 3            | Sequential        |                                                  | (1, 128, 16, 16) |        32768 | (1, 256, 16, 16) |        65536 |                0 |        0 |
+| 22 | 4            | MaxPool2d         |                                                  | (1, 256, 16, 16) |        65536 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 23 | 5.module.0.0 | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |           589824 | 37748736 |
+| 24 | 5.module.0.1 | BatchNorm2d       |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 25 | 5.module.0.2 | ReLU              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 26 | 5.module.0   | Sequential        |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 27 | 5.module.1.0 | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |           589824 | 37748736 |
+| 28 | 5.module.1.1 | BatchNorm2d       |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 29 | 5.module.1.2 | ReLU              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 30 | 5.module.1   | Sequential        |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 31 | 5.module     | Sequential        |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 32 | 5            | Residual          |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 33 | 6.0          | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 128, 6, 6)   |         4608 |           294912 | 10616832 |
+| 34 | 6.1          | BatchNorm2d       |                                                  | (1, 128, 6, 6)   |         4608 | (1, 128, 6, 6)   |         4608 |                0 |        0 |
+| 35 | 6.2          | ReLU              |                                                  | (1, 128, 6, 6)   |         4608 | (1, 128, 6, 6)   |         4608 |                0 |        0 |
+| 36 | 6            | Sequential        |                                                  | (1, 256, 8, 8)   |        16384 | (1, 128, 6, 6)   |         4608 |                0 |        0 |
+| 37 | 7            | AdaptiveMaxPool2d |                                                  | (1, 128, 6, 6)   |         4608 | (1, 128, 1, 1)   |          128 |                0 |        0 |
+| 38 | 8            | Flatten           |                                                  | (1, 128, 1, 1)   |          128 | (1, 128)         |          128 |                0 |        0 |
+| 39 | 9            | Linear            |                                                  | (1, 128)         |          128 | (1, 10)          |           10 |             1280 |     1280 |
+| 40 | 10           | Mul               |                                                  | (1, 10)          |           10 | (1, 10)          |           10 |                0 |        0 |
++----+--------------+-------------------+--------------------------------------------------+------------------+--------------+------------------+--------------+------------------+----------+
+[2024-05-22 16:38:55,236][hannah.callbacks.summaries][INFO] - Total MACs: 291,308,800
+[2024-05-22 16:38:55,236][hannah.callbacks.summaries][INFO] - Total Weights: 2,272,192
+[2024-05-22 16:38:55,236][hannah.callbacks.summaries][INFO] - Total Activations: 1,185,044
+[2024-05-22 16:38:55,236][hannah.callbacks.summaries][INFO] - Estimated Activations: 131,072
+[2024-05-22 16:38:55,611][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:39:11,164][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 0, global step 351: 'val_error' reached 0.49880 (best 0.49880), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=0-step=351.ckpt' as top 1
+[2024-05-22 16:39:11,406][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:39:27,184][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 1, global step 702: 'val_error' reached 0.47216 (best 0.47216), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=1-step=702.ckpt' as top 1
+[2024-05-22 16:39:27,368][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:39:43,080][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 2, global step 1053: 'val_error' reached 0.28886 (best 0.28886), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=2-step=1053.ckpt' as top 1
+[2024-05-22 16:39:43,229][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:39:58,930][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 3, global step 1404: 'val_error' reached 0.27204 (best 0.27204), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=3-step=1404.ckpt' as top 1
+[2024-05-22 16:39:59,094][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:40:15,090][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 4, global step 1755: 'val_error' reached 0.26863 (best 0.26863), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=4-step=1755.ckpt' as top 1
+[2024-05-22 16:40:15,234][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:40:30,656][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 5, global step 2106: 'val_error' reached 0.26462 (best 0.26462), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=5-step=2106.ckpt' as top 1
+[2024-05-22 16:40:30,808][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:40:46,695][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 6, global step 2457: 'val_error' reached 0.25761 (best 0.25761), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=6-step=2457.ckpt' as top 1
+[2024-05-22 16:40:46,866][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:41:02,780][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 7, global step 2808: 'val_error' was not in top 1
+[2024-05-22 16:41:02,960][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:41:18,845][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 8, global step 3159: 'val_error' reached 0.25741 (best 0.25741), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=8-step=3159.ckpt' as top 1
+[2024-05-22 16:41:19,018][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:41:35,033][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 9, global step 3510: 'val_error' was not in top 1
+[2024-05-22 16:41:35,171][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:41:51,128][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 10, global step 3861: 'val_error' was not in top 1
+[2024-05-22 16:41:51,252][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:42:06,941][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 11, global step 4212: 'val_error' reached 0.24599 (best 0.24599), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=11-step=4212.ckpt' as top 1
+[2024-05-22 16:42:07,093][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:42:23,138][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 12, global step 4563: 'val_error' was not in top 1
+[2024-05-22 16:42:23,259][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:42:39,039][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 13, global step 4914: 'val_error' was not in top 1
+[2024-05-22 16:42:39,165][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:42:54,970][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 14, global step 5265: 'val_error' reached 0.23458 (best 0.23458), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=14-step=5265.ckpt' as top 1
+[2024-05-22 16:42:55,126][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:43:10,846][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 15, global step 5616: 'val_error' was not in top 1
+[2024-05-22 16:43:10,981][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:43:26,846][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 16, global step 5967: 'val_error' reached 0.20533 (best 0.20533), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=16-step=5967.ckpt' as top 1
+[2024-05-22 16:43:27,000][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:43:43,075][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 17, global step 6318: 'val_error' was not in top 1
+[2024-05-22 16:43:43,199][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:43:59,137][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 18, global step 6669: 'val_error' was not in top 1
+[2024-05-22 16:43:59,309][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:44:15,182][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 19, global step 7020: 'val_error' was not in top 1
+[2024-05-22 16:44:15,316][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:44:31,274][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 20, global step 7371: 'val_error' was not in top 1
+[2024-05-22 16:44:31,435][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:44:46,888][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 21, global step 7722: 'val_error' was not in top 1
+[2024-05-22 16:44:47,048][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:45:02,780][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 22, global step 8073: 'val_error' was not in top 1
+[2024-05-22 16:45:02,902][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:45:18,749][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 23, global step 8424: 'val_error' reached 0.20373 (best 0.20373), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=23-step=8424.ckpt' as top 1
+[2024-05-22 16:45:18,898][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:45:34,811][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 24, global step 8775: 'val_error' was not in top 1
+[2024-05-22 16:45:34,964][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:45:50,825][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 25, global step 9126: 'val_error' was not in top 1
+[2024-05-22 16:45:50,938][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:46:07,055][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 26, global step 9477: 'val_error' was not in top 1
+[2024-05-22 16:46:07,183][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:46:23,018][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 27, global step 9828: 'val_error' was not in top 1
+[2024-05-22 16:46:23,141][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:46:39,004][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 28, global step 10179: 'val_error' was not in top 1
+[2024-05-22 16:46:39,141][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:46:55,092][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 29, global step 10530: 'val_error' was not in top 1
+[2024-05-22 16:46:55,232][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:47:10,996][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 30, global step 10881: 'val_error' was not in top 1
+[2024-05-22 16:47:11,126][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:47:26,942][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 31, global step 11232: 'val_error' reached 0.17648 (best 0.17648), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=31-step=11232.ckpt' as top 1
+[2024-05-22 16:47:27,110][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:47:43,119][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 32, global step 11583: 'val_error' reached 0.16647 (best 0.16647), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=32-step=11583.ckpt' as top 1
+[2024-05-22 16:47:43,273][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:47:58,658][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 33, global step 11934: 'val_error' was not in top 1
+[2024-05-22 16:47:58,774][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:48:14,840][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 34, global step 12285: 'val_error' reached 0.16567 (best 0.16567), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=34-step=12285.ckpt' as top 1
+[2024-05-22 16:48:14,992][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:48:30,537][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 35, global step 12636: 'val_error' was not in top 1
+[2024-05-22 16:48:30,679][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:48:46,141][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 36, global step 12987: 'val_error' reached 0.15946 (best 0.15946), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=36-step=12987.ckpt' as top 1
+[2024-05-22 16:48:46,315][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:49:02,240][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 37, global step 13338: 'val_error' was not in top 1
+[2024-05-22 16:49:02,431][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:49:18,223][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 38, global step 13689: 'val_error' reached 0.14183 (best 0.14183), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=38-step=13689.ckpt' as top 1
+[2024-05-22 16:49:18,400][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:49:34,379][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 39, global step 14040: 'val_error' was not in top 1
+[2024-05-22 16:49:34,512][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:49:50,341][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 40, global step 14391: 'val_error' reached 0.13381 (best 0.13381), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=40-step=14391.ckpt' as top 1
+[2024-05-22 16:49:50,497][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:50:05,937][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 41, global step 14742: 'val_error' was not in top 1
+[2024-05-22 16:50:06,079][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:50:21,796][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 42, global step 15093: 'val_error' reached 0.12700 (best 0.12700), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=42-step=15093.ckpt' as top 1
+[2024-05-22 16:50:21,964][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:50:37,973][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 43, global step 15444: 'val_error' reached 0.11038 (best 0.11038), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=43-step=15444.ckpt' as top 1
+[2024-05-22 16:50:38,127][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:50:54,234][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 44, global step 15795: 'val_error' reached 0.09956 (best 0.09956), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=44-step=15795.ckpt' as top 1
+[2024-05-22 16:50:54,388][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:51:10,100][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 45, global step 16146: 'val_error' reached 0.08914 (best 0.08914), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=45-step=16146.ckpt' as top 1
+[2024-05-22 16:51:10,256][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:51:25,599][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 46, global step 16497: 'val_error' reached 0.07973 (best 0.07973), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=46-step=16497.ckpt' as top 1
+[2024-05-22 16:51:25,749][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:51:41,671][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 47, global step 16848: 'val_error' reached 0.07652 (best 0.07652), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=47-step=16848.ckpt' as top 1
+[2024-05-22 16:51:41,847][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:51:57,510][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 48, global step 17199: 'val_error' reached 0.07252 (best 0.07252), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=48-step=17199.ckpt' as top 1
+[2024-05-22 16:51:57,680][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 16:52:13,739][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 49, global step 17550: 'val_error' reached 0.07192 (best 0.07192), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=49-step=17550.ckpt' as top 1
+[2024-05-22 16:52:13,804][pytorch_lightning.utilities.rank_zero][INFO] - `Trainer.fit` stopped: `max_epochs=50` reached.
+[2024-05-22 16:52:14,141][lightning.fabric.utilities.seed][INFO] - Seed set to 1234
+[2024-05-22 16:52:14,142][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/checkpoint_connector.py:145: `.validate(ckpt_path=None)` was called without a model. The best model of the previous `fit` call will be used. You can pass `.validate(ckpt_path='best')` to use the best model or `.validate(ckpt_path='last')` to use the last model. If you pass a value, this warning will be silenced.
+
+[2024-05-22 16:52:14,143][pytorch_lightning.utilities.rank_zero][INFO] - Restoring states from the checkpoint path at /local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=49-step=17550.ckpt
+[2024-05-22 16:52:14,154][pytorch_lightning.accelerators.cuda][INFO] - LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+[2024-05-22 16:52:14,338][pytorch_lightning.utilities.rank_zero][INFO] - Loaded model weights from the checkpoint at /local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=49-step=17550.ckpt
+[2024-05-22 16:52:15,714][lightning.fabric.utilities.seed][INFO] - Seed set to 1234
+[2024-05-22 16:52:15,715][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/checkpoint_connector.py:145: `.test(ckpt_path=None)` was called without a model. The best model of the previous `fit` call will be used. You can pass `.test(ckpt_path='best')` to use the best model or `.test(ckpt_path='last')` to use the last model. If you pass a value, this warning will be silenced.
+
+[2024-05-22 16:52:15,717][pytorch_lightning.utilities.rank_zero][INFO] - Restoring states from the checkpoint path at /local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=49-step=17550.ckpt
+[2024-05-22 16:52:15,731][pytorch_lightning.accelerators.cuda][INFO] - LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+[2024-05-22 16:52:15,916][pytorch_lightning.utilities.rank_zero][INFO] - Loaded model weights from the checkpoint at /local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=49-step=17550.ckpt
+[2024-05-22 16:52:17,381][hannah.callbacks.summaries][INFO] - 
++----+--------------+-------------------+--------------------------------------------------+------------------+--------------+------------------+--------------+------------------+----------+
+|    | Name         | Type              | Attrs                                            | IFM              |   IFM volume | OFM              |   OFM volume |   Weights volume |     MACs |
+|----+--------------+-------------------+--------------------------------------------------+------------------+--------------+------------------+--------------+------------------+----------|
+|  0 | 0.0          | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 3, 32, 32)   |         3072 | (1, 64, 32, 32)  |        65536 |             1728 |  1769472 |
+|  1 | 0.1          | BatchNorm2d       |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  2 | 0.2          | ReLU              |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  3 | 0            | Sequential        |                                                  | (1, 3, 32, 32)   |         3072 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  4 | 1.0          | Conv2d            | k=(5, 5), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 128, 16, 16) |        32768 |           204800 | 52428800 |
+|  5 | 1.1          | BatchNorm2d       |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  6 | 1.2          | ReLU              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  7 | 1            | Sequential        |                                                  | (1, 64, 32, 32)  |        65536 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  8 | 2.module.0.0 | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |           147456 | 37748736 |
+|  9 | 2.module.0.1 | BatchNorm2d       |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 10 | 2.module.0.2 | ReLU              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 11 | 2.module.0   | Sequential        |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 12 | 2.module.1.0 | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |           147456 | 37748736 |
+| 13 | 2.module.1.1 | BatchNorm2d       |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 14 | 2.module.1.2 | ReLU              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 15 | 2.module.1   | Sequential        |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 16 | 2.module     | Sequential        |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 17 | 2            | Residual          |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 18 | 3.0          | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 256, 16, 16) |        65536 |           294912 | 75497472 |
+| 19 | 3.1          | BatchNorm2d       |                                                  | (1, 256, 16, 16) |        65536 | (1, 256, 16, 16) |        65536 |                0 |        0 |
+| 20 | 3.2          | ReLU              |                                                  | (1, 256, 16, 16) |        65536 | (1, 256, 16, 16) |        65536 |                0 |        0 |
+| 21 | 3            | Sequential        |                                                  | (1, 128, 16, 16) |        32768 | (1, 256, 16, 16) |        65536 |                0 |        0 |
+| 22 | 4            | MaxPool2d         |                                                  | (1, 256, 16, 16) |        65536 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 23 | 5.module.0.0 | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |           589824 | 37748736 |
+| 24 | 5.module.0.1 | BatchNorm2d       |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 25 | 5.module.0.2 | ReLU              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 26 | 5.module.0   | Sequential        |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 27 | 5.module.1.0 | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |           589824 | 37748736 |
+| 28 | 5.module.1.1 | BatchNorm2d       |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 29 | 5.module.1.2 | ReLU              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 30 | 5.module.1   | Sequential        |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 31 | 5.module     | Sequential        |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 32 | 5            | Residual          |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 33 | 6.0          | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 128, 6, 6)   |         4608 |           294912 | 10616832 |
+| 34 | 6.1          | BatchNorm2d       |                                                  | (1, 128, 6, 6)   |         4608 | (1, 128, 6, 6)   |         4608 |                0 |        0 |
+| 35 | 6.2          | ReLU              |                                                  | (1, 128, 6, 6)   |         4608 | (1, 128, 6, 6)   |         4608 |                0 |        0 |
+| 36 | 6            | Sequential        |                                                  | (1, 256, 8, 8)   |        16384 | (1, 128, 6, 6)   |         4608 |                0 |        0 |
+| 37 | 7            | AdaptiveMaxPool2d |                                                  | (1, 128, 6, 6)   |         4608 | (1, 128, 1, 1)   |          128 |                0 |        0 |
+| 38 | 8            | Flatten           |                                                  | (1, 128, 1, 1)   |          128 | (1, 128)         |          128 |                0 |        0 |
+| 39 | 9            | Linear            |                                                  | (1, 128)         |          128 | (1, 10)          |           10 |             1280 |     1280 |
+| 40 | 10           | Mul               |                                                  | (1, 10)          |           10 | (1, 10)          |           10 |                0 |        0 |
++----+--------------+-------------------+--------------------------------------------------+------------------+--------------+------------------+--------------+------------------+----------+
+[2024-05-22 16:52:17,381][hannah.callbacks.summaries][INFO] - Total MACs: 291,308,800
+[2024-05-22 16:52:17,381][hannah.callbacks.summaries][INFO] - Total Weights: 2,272,192
+[2024-05-22 16:52:17,381][hannah.callbacks.summaries][INFO] - Total Activations: 1,185,044
+[2024-05-22 16:52:17,381][hannah.callbacks.summaries][INFO] - Estimated Activations: 131,072
+[2024-05-22 16:52:17,382][hannah.datasets.base][WARNING] - Datasets class names contain classes that are longer than the recommended lenght of 5 characters, consider implementing class_names_abbreviated in your dataset
+[2024-05-22 16:52:17,382][hannah.datasets.base][WARNING] - Datasets class names contain classes that are longer than the recommended lenght of 5 characters, consider implementing class_names_abbreviated in your dataset
+[2024-05-22 16:52:17,824][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/torchmetrics/utilities/prints.py:43: UserWarning: The ``compute`` method of metric MulticlassROC was called before the ``update`` method which may lead to errors, as metric states have not yet been updated.
+  warnings.warn(*args, **kwargs)  # noqa: B028
+
+[2024-05-22 16:52:17,825][hannah.datasets.base][WARNING] - Datasets class names contain classes that are longer than the recommended lenght of 5 characters, consider implementing class_names_abbreviated in your dataset
+[2024-05-22 16:52:17,924][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/torchmetrics/utilities/prints.py:43: UserWarning: The ``compute`` method of metric MulticlassPrecisionRecallCurve was called before the ``update`` method which may lead to errors, as metric states have not yet been updated.
+  warnings.warn(*args, **kwargs)  # noqa: B028
+
+[2024-05-22 16:52:17,925][hannah.datasets.base][WARNING] - Datasets class names contain classes that are longer than the recommended lenght of 5 characters, consider implementing class_names_abbreviated in your dataset
+[2024-05-22 16:52:18,163][hannah.train][INFO] - Averaged Result Metrics:
+| Metric               |      Mean |   Std |   Count |
+|----------------------|-----------|-------|---------|
+| test_classifier_loss | 0.198876  |     0 |       1 |
+| test_accuracy        | 0.929788  |     0 |       1 |
+| test_error           | 0.0702124 |     0 |       1 |
+| test_f1              | 0.929742  |     0 |       1 |
+| test_precision       | 0.929769  |     0 |       1 |
+| test_recall          | 0.92977   |     0 |       1 |
+| test_loss            | 0.198876  |     0 |       1 |
+[2024-05-22 16:52:18,177][hannah.train][INFO] - Averaged Result Metrics:
+| Metric              |      Mean |   Std |   Count |
+|---------------------|-----------|-------|---------|
+| val_classifier_loss | 0.218185  |     0 |       1 |
+| val_accuracy        | 0.928085  |     0 |       1 |
+| val_error           | 0.0719151 |     0 |       1 |
+| val_f1              | 0.927754  |     0 |       1 |
+| val_precision       | 0.928226  |     0 |       1 |
+| val_recall          | 0.927569  |     0 |       1 |
+| val_loss            | 0.218185  |     0 |       1 |
+[2024-05-22 17:14:26,787][hannah.utils.utils][INFO] - Environment info:
+[2024-05-22 17:14:26,787][hannah.utils.utils][INFO] -   Number of GPUs: 2
+[2024-05-22 17:14:26,787][hannah.utils.utils][INFO] -   CUDA version: 12.1
+[2024-05-22 17:14:26,787][hannah.utils.utils][INFO] -   CUDNN version: 8907
+[2024-05-22 17:14:26,787][hannah.utils.utils][INFO] -   Kernel: 4.18.0-513.24.1.el8_9.x86_64
+[2024-05-22 17:14:26,787][hannah.utils.utils][INFO] -   Python: 3.11.5 (main, Nov 15 2023, 03:52:27) [GCC 8.5.0 20210514 (Red Hat 8.5.0-20)]
+[2024-05-22 17:14:26,787][hannah.utils.utils][INFO] -   PyTorch: 2.2.2+cu121
+[2024-05-22 17:14:26,787][hannah.utils.utils][INFO] -   Pytorch Lightning: 2.2.4
+[2024-05-22 17:14:26,787][hannah.utils.utils][INFO] -   Numpy: 1.26.4
+[2024-05-22 17:14:26,787][hannah.utils.utils][INFO] -   Hannah version info:
+[2024-05-22 17:14:26,787][hannah.utils.utils][INFO] -     Cannot find a Git repository.  You probably downloaded an archive
+[2024-05-22 17:14:26,787][hannah.utils.utils][INFO] -   Command line: /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/bin/hannah-train module.num_workers=32 module.batch_size=128 +experiment=sweep_models
+[2024-05-22 17:14:26,788][hannah.utils.utils][INFO] -   
+[2024-05-22 17:14:26,788][lightning.fabric.utilities.seed][INFO] - Seed set to 1234
+[2024-05-22 17:14:26,796][root][INFO] - Configuration: 
+[2024-05-22 17:14:26,799][root][INFO] - dataset:
+  data_folder: ${hydra:runtime.cwd}/datasets/
+  cls: hannah.datasets.vision.Cifar10Dataset
+  dataset: cifar10
+  val_percent: 0.1
+  sensor:
+    resolution:
+    - 32
+    - 32
+features:
+  _target_: torch.nn.Identity
+model:
+  _target_: hannah.models.kakao_resnet.resnet8
+  name: kakao_resnet8
+  width_multiplier: 1.0
+  input_kernel: 3
+  input_stride: 1
+scheduler:
+  _target_: torch.optim.lr_scheduler.OneCycleLR
+  max_lr: ${optimizer.lr}
+  pct_start: 0.3
+  anneal_strategy: cos
+  cycle_momentum: true
+  base_momentum: 0.85
+  max_momentum: 0.95
+  div_factor: 25.0
+  final_div_factor: 10000.0
+  last_epoch: -1
+optimizer:
+  _target_: torch.optim.sgd.SGD
+  lr: 0.3
+  momentum: 0.9
+  dampening: 0
+  weight_decay: 0.0005
+  nesterov: false
+module:
+  _target_: hannah.modules.vision.ImageClassifierModule
+  num_workers: 32
+  batch_size: 128
+  shuffle_all_dataloaders: false
+trainer:
+  _target_: pytorch_lightning.trainer.Trainer
+  accelerator: auto
+  devices: 1
+  limit_train_batches: 1.0
+  limit_val_batches: 1.0
+  limit_test_batches: 1.0
+  max_epochs: 50
+  default_root_dir: .
+  fast_dev_run: false
+  overfit_batches: 0.0
+  benchmark: false
+  deterministic: warn
+  gradient_clip_val: 0
+  accumulate_grad_batches: 1
+  plugins: null
+  strategy: auto
+  reload_dataloaders_every_n_epochs: 0
+  precision: 16
+checkpoint:
+  _target_: pytorch_lightning.callbacks.ModelCheckpoint
+  dirpath: checkpoints
+  save_top_k: 1
+  verbose: true
+  monitor: val_error
+  mode: min
+  save_last: true
+augmentation:
+  batch_augment:
+    pipeline: null
+    transforms:
+      RandomHorizontalFlip:
+        p: 0.5
+      RandomAffine:
+        degrees:
+        - -15
+        - 15
+        translate:
+        - 0.1
+        - 0.1
+        scale:
+        - 0.9
+        - 1.1
+        shear:
+        - -5
+        - 5
+        p: 0.5
+      RandomCrop:
+        size:
+        - 32
+        - 32
+        padding: 4
+      RandomErasing:
+        p: 0.5
+experiment_id: sweep_models
+output_dir: trained_models
+auto_lr: false
+resume: false
+fx_mac_summary: false
+skip_test: false
+skip_val: false
+seed:
+- 1234
+validate_output: false
+monitor:
+  metric: val_accuracy
+  direction: maximize
+
+[2024-05-22 17:14:26,799][root][INFO] - Current working directory /local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8
+[2024-05-22 17:14:26,806][hannah.callbacks.optimization][INFO] - Monitoring the following values for optimization
+[2024-05-22 17:14:26,806][hannah.callbacks.optimization][INFO] -   - val_accuracy direction: maximize(-1)
+[2024-05-22 17:14:26,809][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/lightning_fabric/connector.py:563: `precision=16` is supported for historical reasons but its usage is discouraged. Please set your precision to 16-mixed instead!
+
+[2024-05-22 17:14:26,810][pytorch_lightning.utilities.rank_zero][INFO] - Using 16bit Automatic Mixed Precision (AMP)
+[2024-05-22 17:14:26,817][pytorch_lightning.utilities.rank_zero][INFO] - GPU available: True (cuda), used: True
+[2024-05-22 17:14:26,817][pytorch_lightning.utilities.rank_zero][INFO] - TPU available: False, using: 0 TPU cores
+[2024-05-22 17:14:26,817][pytorch_lightning.utilities.rank_zero][INFO] - IPU available: False, using: 0 IPUs
+[2024-05-22 17:14:26,817][pytorch_lightning.utilities.rank_zero][INFO] - HPU available: False, using: 0 HPUs
+[2024-05-22 17:14:26,817][pytorch_lightning.utilities.rank_zero][INFO] - `Trainer(limit_train_batches=1.0)` was configured so 100% of the batches per epoch will be used..
+[2024-05-22 17:14:26,817][pytorch_lightning.utilities.rank_zero][INFO] - `Trainer(limit_val_batches=1.0)` was configured so 100% of the batches will be used..
+[2024-05-22 17:14:26,817][pytorch_lightning.utilities.rank_zero][INFO] - `Trainer(limit_test_batches=1.0)` was configured so 100% of the batches will be used..
+[2024-05-22 17:14:26,817][root][INFO] - Starting training
+[2024-05-22 17:14:28,027][py.warnings][WARNING] - /local/gerum/hannah/hannah/modules/vision/base.py:63: UserWarning: Vision datasets should return a length 4 tuple, will assume unlabeled data is None
+  warnings.warn(
+
+[2024-05-22 17:14:28,027][hannah.modules.vision.base][INFO] - Dataset lengths:
+[2024-05-22 17:14:28,027][hannah.modules.vision.base][INFO] -   Train Set (Labeled): 45000
+[2024-05-22 17:14:28,027][hannah.modules.vision.base][INFO] -   Train Set (Unlabled): 0
+[2024-05-22 17:14:28,027][hannah.modules.vision.base][INFO] -   Dev Set: 5000
+[2024-05-22 17:14:28,027][hannah.modules.vision.base][INFO] -   Test Set: 10000
+[2024-05-22 17:14:28,028][hannah.modules.vision.base][INFO] - Setting up model kakao_resnet8
+[2024-05-22 17:14:28,051][hannah.modules.vision.base][INFO] - Instantiating input Normalizer with mean: (0.491, 0.482, 0.446), std: (0.247, 0.243, 0.261)
+[2024-05-22 17:14:28,055][hannah.modules.vision.base][INFO] - Running dummy forward to initialize lazy modules
+[2024-05-22 17:14:28,061][pytorch_lightning.accelerators.cuda][INFO] - LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+[2024-05-22 17:14:28,067][pytorch_lightning.utilities.rank_zero][INFO] - Loading `train_dataloader` to estimate number of stepping batches.
+[2024-05-22 17:14:28,937][pytorch_lightning.callbacks.model_summary][INFO] - 
+  | Name           | Type                           | Params | In sizes       | Out sizes
+-----------------------------------------------------------------------------------------------
+0 | val_metrics    | MetricCollection               | 0      | ?              | ?        
+1 | test_metrics   | MetricCollection               | 0      | ?              | ?        
+2 | train_metrics  | MetricCollection               | 0      | ?              | ?        
+3 | model          | Sequential                     | 2.3 M  | [1, 3, 32, 32] | [1, 10]  
+4 | test_confusion | MulticlassConfusionMatrix      | 0      | ?              | ?        
+5 | test_roc       | MulticlassROC                  | 0      | ?              | ?        
+6 | test_pr_curve  | MulticlassPrecisionRecallCurve | 0      | ?              | ?        
+7 | metrics        | ModuleDict                     | 0      | ?              | ?        
+-----------------------------------------------------------------------------------------------
+2.3 M     Trainable params
+0         Non-trainable params
+2.3 M     Total params
+9.100     Total estimated model params size (MB)
+[2024-05-22 17:14:30,151][hannah.callbacks.summaries][INFO] - 
++----+--------------+-------------------+--------------------------------------------------+------------------+--------------+------------------+--------------+------------------+----------+
+|    | Name         | Type              | Attrs                                            | IFM              |   IFM volume | OFM              |   OFM volume |   Weights volume |     MACs |
+|----+--------------+-------------------+--------------------------------------------------+------------------+--------------+------------------+--------------+------------------+----------|
+|  0 | 0.0          | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 3, 32, 32)   |         3072 | (1, 64, 32, 32)  |        65536 |             1728 |  1769472 |
+|  1 | 0.1          | BatchNorm2d       |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  2 | 0.2          | ReLU              |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  3 | 0            | Sequential        |                                                  | (1, 3, 32, 32)   |         3072 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  4 | 1.0          | Conv2d            | k=(5, 5), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 128, 16, 16) |        32768 |           204800 | 52428800 |
+|  5 | 1.1          | BatchNorm2d       |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  6 | 1.2          | ReLU              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  7 | 1            | Sequential        |                                                  | (1, 64, 32, 32)  |        65536 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  8 | 2.module.0.0 | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |           147456 | 37748736 |
+|  9 | 2.module.0.1 | BatchNorm2d       |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 10 | 2.module.0.2 | ReLU              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 11 | 2.module.0   | Sequential        |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 12 | 2.module.1.0 | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |           147456 | 37748736 |
+| 13 | 2.module.1.1 | BatchNorm2d       |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 14 | 2.module.1.2 | ReLU              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 15 | 2.module.1   | Sequential        |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 16 | 2.module     | Sequential        |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 17 | 2            | Residual          |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 18 | 3.0          | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 256, 16, 16) |        65536 |           294912 | 75497472 |
+| 19 | 3.1          | BatchNorm2d       |                                                  | (1, 256, 16, 16) |        65536 | (1, 256, 16, 16) |        65536 |                0 |        0 |
+| 20 | 3.2          | ReLU              |                                                  | (1, 256, 16, 16) |        65536 | (1, 256, 16, 16) |        65536 |                0 |        0 |
+| 21 | 3            | Sequential        |                                                  | (1, 128, 16, 16) |        32768 | (1, 256, 16, 16) |        65536 |                0 |        0 |
+| 22 | 4            | MaxPool2d         |                                                  | (1, 256, 16, 16) |        65536 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 23 | 5.module.0.0 | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |           589824 | 37748736 |
+| 24 | 5.module.0.1 | BatchNorm2d       |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 25 | 5.module.0.2 | ReLU              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 26 | 5.module.0   | Sequential        |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 27 | 5.module.1.0 | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |           589824 | 37748736 |
+| 28 | 5.module.1.1 | BatchNorm2d       |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 29 | 5.module.1.2 | ReLU              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 30 | 5.module.1   | Sequential        |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 31 | 5.module     | Sequential        |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 32 | 5            | Residual          |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 33 | 6.0          | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 128, 6, 6)   |         4608 |           294912 | 10616832 |
+| 34 | 6.1          | BatchNorm2d       |                                                  | (1, 128, 6, 6)   |         4608 | (1, 128, 6, 6)   |         4608 |                0 |        0 |
+| 35 | 6.2          | ReLU              |                                                  | (1, 128, 6, 6)   |         4608 | (1, 128, 6, 6)   |         4608 |                0 |        0 |
+| 36 | 6            | Sequential        |                                                  | (1, 256, 8, 8)   |        16384 | (1, 128, 6, 6)   |         4608 |                0 |        0 |
+| 37 | 7            | AdaptiveMaxPool2d |                                                  | (1, 128, 6, 6)   |         4608 | (1, 128, 1, 1)   |          128 |                0 |        0 |
+| 38 | 8            | Flatten           |                                                  | (1, 128, 1, 1)   |          128 | (1, 128)         |          128 |                0 |        0 |
+| 39 | 9            | Linear            |                                                  | (1, 128)         |          128 | (1, 10)          |           10 |             1280 |     1280 |
+| 40 | 10           | Mul               |                                                  | (1, 10)          |           10 | (1, 10)          |           10 |                0 |        0 |
++----+--------------+-------------------+--------------------------------------------------+------------------+--------------+------------------+--------------+------------------+----------+
+[2024-05-22 17:14:30,152][hannah.callbacks.summaries][INFO] - Total MACs: 291,308,800
+[2024-05-22 17:14:30,152][hannah.callbacks.summaries][INFO] - Total Weights: 2,272,192
+[2024-05-22 17:14:30,152][hannah.callbacks.summaries][INFO] - Total Activations: 1,185,044
+[2024-05-22 17:14:30,152][hannah.callbacks.summaries][INFO] - Estimated Activations: 131,072
+[2024-05-22 17:14:30,177][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:14:33,926][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 0, global step 351: 'val_error' reached 0.39503 (best 0.39503), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=0-step=351.ckpt' as top 1
+[2024-05-22 17:14:34,077][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:14:37,897][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 1, global step 702: 'val_error' reached 0.34856 (best 0.34856), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=1-step=702.ckpt' as top 1
+[2024-05-22 17:14:38,052][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:14:41,818][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 2, global step 1053: 'val_error' reached 0.24179 (best 0.24179), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=2-step=1053.ckpt' as top 1
+[2024-05-22 17:14:41,992][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:14:45,666][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 3, global step 1404: 'val_error' reached 0.24159 (best 0.24159), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=3-step=1404.ckpt' as top 1
+[2024-05-22 17:14:45,817][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:14:49,516][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 4, global step 1755: 'val_error' was not in top 1
+[2024-05-22 17:14:49,643][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:14:53,418][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 5, global step 2106: 'val_error' reached 0.20413 (best 0.20413), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=5-step=2106.ckpt' as top 1
+[2024-05-22 17:14:53,598][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:14:57,315][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 6, global step 2457: 'val_error' reached 0.17628 (best 0.17628), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=6-step=2457.ckpt' as top 1
+[2024-05-22 17:14:57,495][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:15:01,241][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 7, global step 2808: 'val_error' was not in top 1
+[2024-05-22 17:15:01,377][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:15:05,148][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 8, global step 3159: 'val_error' was not in top 1
+[2024-05-22 17:15:05,263][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:15:09,155][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 9, global step 3510: 'val_error' was not in top 1
+[2024-05-22 17:15:09,321][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:15:13,094][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 10, global step 3861: 'val_error' was not in top 1
+[2024-05-22 17:15:13,198][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:15:17,035][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 11, global step 4212: 'val_error' was not in top 1
+[2024-05-22 17:15:17,196][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:15:20,951][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 12, global step 4563: 'val_error' was not in top 1
+[2024-05-22 17:15:21,057][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:15:24,904][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 13, global step 4914: 'val_error' was not in top 1
+[2024-05-22 17:15:25,084][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:15:28,796][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 14, global step 5265: 'val_error' was not in top 1
+[2024-05-22 17:15:28,957][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:15:32,772][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 15, global step 5616: 'val_error' was not in top 1
+[2024-05-22 17:15:32,883][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:15:36,694][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 16, global step 5967: 'val_error' was not in top 1
+[2024-05-22 17:15:36,808][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:15:40,728][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 17, global step 6318: 'val_error' was not in top 1
+[2024-05-22 17:15:40,885][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:15:44,687][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 18, global step 6669: 'val_error' was not in top 1
+[2024-05-22 17:15:44,842][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:15:48,579][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 19, global step 7020: 'val_error' was not in top 1
+[2024-05-22 17:15:48,736][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:15:52,596][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 20, global step 7371: 'val_error' reached 0.17288 (best 0.17288), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=20-step=7371.ckpt' as top 1
+[2024-05-22 17:15:52,796][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:15:56,540][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 21, global step 7722: 'val_error' was not in top 1
+[2024-05-22 17:15:56,663][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:16:00,430][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 22, global step 8073: 'val_error' was not in top 1
+[2024-05-22 17:16:00,581][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:16:04,341][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 23, global step 8424: 'val_error' was not in top 1
+[2024-05-22 17:16:04,453][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:16:08,280][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 24, global step 8775: 'val_error' was not in top 1
+[2024-05-22 17:16:08,448][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:16:12,204][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 25, global step 9126: 'val_error' was not in top 1
+[2024-05-22 17:16:12,362][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:16:16,108][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 26, global step 9477: 'val_error' was not in top 1
+[2024-05-22 17:16:16,267][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:16:20,022][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 27, global step 9828: 'val_error' was not in top 1
+[2024-05-22 17:16:20,195][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:16:24,020][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 28, global step 10179: 'val_error' was not in top 1
+[2024-05-22 17:16:24,122][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:16:27,868][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 29, global step 10530: 'val_error' was not in top 1
+[2024-05-22 17:16:28,033][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:16:31,706][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 30, global step 10881: 'val_error' was not in top 1
+[2024-05-22 17:16:31,842][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:16:35,575][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 31, global step 11232: 'val_error' reached 0.15244 (best 0.15244), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=31-step=11232.ckpt' as top 1
+[2024-05-22 17:16:35,715][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:16:39,443][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 32, global step 11583: 'val_error' was not in top 1
+[2024-05-22 17:16:39,551][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:16:43,673][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 33, global step 11934: 'val_error' was not in top 1
+[2024-05-22 17:16:43,828][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:16:47,554][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 34, global step 12285: 'val_error' was not in top 1
+[2024-05-22 17:16:47,665][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:16:51,495][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 35, global step 12636: 'val_error' was not in top 1
+[2024-05-22 17:16:51,673][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:16:55,438][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 36, global step 12987: 'val_error' reached 0.13001 (best 0.13001), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=36-step=12987.ckpt' as top 1
+[2024-05-22 17:16:55,629][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:16:59,388][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 37, global step 13338: 'val_error' was not in top 1
+[2024-05-22 17:16:59,565][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:17:03,306][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 38, global step 13689: 'val_error' reached 0.12139 (best 0.12139), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=38-step=13689.ckpt' as top 1
+[2024-05-22 17:17:03,438][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:17:07,239][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 39, global step 14040: 'val_error' was not in top 1
+[2024-05-22 17:17:07,437][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:17:11,214][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 40, global step 14391: 'val_error' was not in top 1
+[2024-05-22 17:17:11,384][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:17:15,197][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 41, global step 14742: 'val_error' reached 0.11118 (best 0.11118), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=41-step=14742.ckpt' as top 1
+[2024-05-22 17:17:15,349][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:17:19,151][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 42, global step 15093: 'val_error' reached 0.10116 (best 0.10116), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=42-step=15093.ckpt' as top 1
+[2024-05-22 17:17:19,304][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:17:23,177][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 43, global step 15444: 'val_error' reached 0.10056 (best 0.10056), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=43-step=15444.ckpt' as top 1
+[2024-05-22 17:17:23,316][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:17:27,055][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 44, global step 15795: 'val_error' reached 0.09014 (best 0.09014), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=44-step=15795.ckpt' as top 1
+[2024-05-22 17:17:27,200][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:17:31,112][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 45, global step 16146: 'val_error' reached 0.07893 (best 0.07893), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=45-step=16146.ckpt' as top 1
+[2024-05-22 17:17:31,243][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:17:35,124][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 46, global step 16497: 'val_error' reached 0.07652 (best 0.07652), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=46-step=16497.ckpt' as top 1
+[2024-05-22 17:17:35,339][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:17:39,059][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 47, global step 16848: 'val_error' reached 0.07051 (best 0.07051), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=47-step=16848.ckpt' as top 1
+[2024-05-22 17:17:39,198][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:17:43,101][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 48, global step 17199: 'val_error' was not in top 1
+[2024-05-22 17:17:43,279][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/autograd/__init__.py:266: UserWarning: adaptive_max_pool2d_backward_cuda does not have a deterministic implementation, but you set 'torch.use_deterministic_algorithms(True, warn_only=True)'. You can file an issue at https://github.com/pytorch/pytorch/issues to help us prioritize adding deterministic support for this operation. (Triggered internally at ../aten/src/ATen/Context.cpp:79.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+[2024-05-22 17:17:47,075][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 49, global step 17550: 'val_error' reached 0.07011 (best 0.07011), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=49-step=17550.ckpt' as top 1
+[2024-05-22 17:17:47,140][pytorch_lightning.utilities.rank_zero][INFO] - `Trainer.fit` stopped: `max_epochs=50` reached.
+[2024-05-22 17:17:47,458][lightning.fabric.utilities.seed][INFO] - Seed set to 1234
+[2024-05-22 17:17:47,458][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/checkpoint_connector.py:145: `.validate(ckpt_path=None)` was called without a model. The best model of the previous `fit` call will be used. You can pass `.validate(ckpt_path='best')` to use the best model or `.validate(ckpt_path='last')` to use the last model. If you pass a value, this warning will be silenced.
+
+[2024-05-22 17:17:47,460][pytorch_lightning.utilities.rank_zero][INFO] - Restoring states from the checkpoint path at /local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=49-step=17550.ckpt
+[2024-05-22 17:17:47,470][pytorch_lightning.accelerators.cuda][INFO] - LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+[2024-05-22 17:17:47,643][pytorch_lightning.utilities.rank_zero][INFO] - Loaded model weights from the checkpoint at /local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=49-step=17550.ckpt
+[2024-05-22 17:17:48,921][lightning.fabric.utilities.seed][INFO] - Seed set to 1234
+[2024-05-22 17:17:48,921][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/checkpoint_connector.py:145: `.test(ckpt_path=None)` was called without a model. The best model of the previous `fit` call will be used. You can pass `.test(ckpt_path='best')` to use the best model or `.test(ckpt_path='last')` to use the last model. If you pass a value, this warning will be silenced.
+
+[2024-05-22 17:17:48,923][pytorch_lightning.utilities.rank_zero][INFO] - Restoring states from the checkpoint path at /local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=49-step=17550.ckpt
+[2024-05-22 17:17:48,937][pytorch_lightning.accelerators.cuda][INFO] - LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+[2024-05-22 17:17:49,111][pytorch_lightning.utilities.rank_zero][INFO] - Loaded model weights from the checkpoint at /local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/kakao_resnet8/checkpoints/epoch=49-step=17550.ckpt
+[2024-05-22 17:17:50,475][hannah.callbacks.summaries][INFO] - 
++----+--------------+-------------------+--------------------------------------------------+------------------+--------------+------------------+--------------+------------------+----------+
+|    | Name         | Type              | Attrs                                            | IFM              |   IFM volume | OFM              |   OFM volume |   Weights volume |     MACs |
+|----+--------------+-------------------+--------------------------------------------------+------------------+--------------+------------------+--------------+------------------+----------|
+|  0 | 0.0          | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 3, 32, 32)   |         3072 | (1, 64, 32, 32)  |        65536 |             1728 |  1769472 |
+|  1 | 0.1          | BatchNorm2d       |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  2 | 0.2          | ReLU              |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  3 | 0            | Sequential        |                                                  | (1, 3, 32, 32)   |         3072 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  4 | 1.0          | Conv2d            | k=(5, 5), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 128, 16, 16) |        32768 |           204800 | 52428800 |
+|  5 | 1.1          | BatchNorm2d       |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  6 | 1.2          | ReLU              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  7 | 1            | Sequential        |                                                  | (1, 64, 32, 32)  |        65536 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+|  8 | 2.module.0.0 | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |           147456 | 37748736 |
+|  9 | 2.module.0.1 | BatchNorm2d       |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 10 | 2.module.0.2 | ReLU              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 11 | 2.module.0   | Sequential        |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 12 | 2.module.1.0 | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |           147456 | 37748736 |
+| 13 | 2.module.1.1 | BatchNorm2d       |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 14 | 2.module.1.2 | ReLU              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 15 | 2.module.1   | Sequential        |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 16 | 2.module     | Sequential        |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 17 | 2            | Residual          |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 18 | 3.0          | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 256, 16, 16) |        65536 |           294912 | 75497472 |
+| 19 | 3.1          | BatchNorm2d       |                                                  | (1, 256, 16, 16) |        65536 | (1, 256, 16, 16) |        65536 |                0 |        0 |
+| 20 | 3.2          | ReLU              |                                                  | (1, 256, 16, 16) |        65536 | (1, 256, 16, 16) |        65536 |                0 |        0 |
+| 21 | 3            | Sequential        |                                                  | (1, 128, 16, 16) |        32768 | (1, 256, 16, 16) |        65536 |                0 |        0 |
+| 22 | 4            | MaxPool2d         |                                                  | (1, 256, 16, 16) |        65536 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 23 | 5.module.0.0 | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |           589824 | 37748736 |
+| 24 | 5.module.0.1 | BatchNorm2d       |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 25 | 5.module.0.2 | ReLU              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 26 | 5.module.0   | Sequential        |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 27 | 5.module.1.0 | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |           589824 | 37748736 |
+| 28 | 5.module.1.1 | BatchNorm2d       |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 29 | 5.module.1.2 | ReLU              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 30 | 5.module.1   | Sequential        |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 31 | 5.module     | Sequential        |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 32 | 5            | Residual          |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 33 | 6.0          | Conv2d            | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 128, 6, 6)   |         4608 |           294912 | 10616832 |
+| 34 | 6.1          | BatchNorm2d       |                                                  | (1, 128, 6, 6)   |         4608 | (1, 128, 6, 6)   |         4608 |                0 |        0 |
+| 35 | 6.2          | ReLU              |                                                  | (1, 128, 6, 6)   |         4608 | (1, 128, 6, 6)   |         4608 |                0 |        0 |
+| 36 | 6            | Sequential        |                                                  | (1, 256, 8, 8)   |        16384 | (1, 128, 6, 6)   |         4608 |                0 |        0 |
+| 37 | 7            | AdaptiveMaxPool2d |                                                  | (1, 128, 6, 6)   |         4608 | (1, 128, 1, 1)   |          128 |                0 |        0 |
+| 38 | 8            | Flatten           |                                                  | (1, 128, 1, 1)   |          128 | (1, 128)         |          128 |                0 |        0 |
+| 39 | 9            | Linear            |                                                  | (1, 128)         |          128 | (1, 10)          |           10 |             1280 |     1280 |
+| 40 | 10           | Mul               |                                                  | (1, 10)          |           10 | (1, 10)          |           10 |                0 |        0 |
++----+--------------+-------------------+--------------------------------------------------+------------------+--------------+------------------+--------------+------------------+----------+
+[2024-05-22 17:17:50,476][hannah.callbacks.summaries][INFO] - Total MACs: 291,308,800
+[2024-05-22 17:17:50,476][hannah.callbacks.summaries][INFO] - Total Weights: 2,272,192
+[2024-05-22 17:17:50,476][hannah.callbacks.summaries][INFO] - Total Activations: 1,185,044
+[2024-05-22 17:17:50,476][hannah.callbacks.summaries][INFO] - Estimated Activations: 131,072
+[2024-05-22 17:17:50,476][hannah.datasets.base][WARNING] - Datasets class names contain classes that are longer than the recommended lenght of 5 characters, consider implementing class_names_abbreviated in your dataset
+[2024-05-22 17:17:50,477][hannah.datasets.base][WARNING] - Datasets class names contain classes that are longer than the recommended lenght of 5 characters, consider implementing class_names_abbreviated in your dataset
+[2024-05-22 17:17:50,902][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/torchmetrics/utilities/prints.py:43: UserWarning: The ``compute`` method of metric MulticlassROC was called before the ``update`` method which may lead to errors, as metric states have not yet been updated.
+  warnings.warn(*args, **kwargs)  # noqa: B028
+
+[2024-05-22 17:17:50,903][hannah.datasets.base][WARNING] - Datasets class names contain classes that are longer than the recommended lenght of 5 characters, consider implementing class_names_abbreviated in your dataset
+[2024-05-22 17:17:51,003][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/torchmetrics/utilities/prints.py:43: UserWarning: The ``compute`` method of metric MulticlassPrecisionRecallCurve was called before the ``update`` method which may lead to errors, as metric states have not yet been updated.
+  warnings.warn(*args, **kwargs)  # noqa: B028
+
+[2024-05-22 17:17:51,003][hannah.datasets.base][WARNING] - Datasets class names contain classes that are longer than the recommended lenght of 5 characters, consider implementing class_names_abbreviated in your dataset
+[2024-05-22 17:17:51,253][hannah.train][INFO] - Averaged Result Metrics:
+| Metric               |      Mean |   Std |   Count |
+|----------------------|-----------|-------|---------|
+| test_classifier_loss | 0.210085  |     0 |       1 |
+| test_accuracy        | 0.930489  |     0 |       1 |
+| test_error           | 0.0695112 |     0 |       1 |
+| test_f1              | 0.930428  |     0 |       1 |
+| test_precision       | 0.930522  |     0 |       1 |
+| test_recall          | 0.930469  |     0 |       1 |
+| test_loss            | 0.210085  |     0 |       1 |
+[2024-05-22 17:17:51,267][hannah.train][INFO] - Averaged Result Metrics:
+| Metric              |      Mean |   Std |   Count |
+|---------------------|-----------|-------|---------|
+| val_classifier_loss | 0.222877  |     0 |       1 |
+| val_accuracy        | 0.929888  |     0 |       1 |
+| val_error           | 0.0701122 |     0 |       1 |
+| val_f1              | 0.929397  |     0 |       1 |
+| val_precision       | 0.929469  |     0 |       1 |
+| val_recall          | 0.929545  |     0 |       1 |
+| val_loss            | 0.222877  |     0 |       1 |

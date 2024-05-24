@@ -1,0 +1,898 @@
+[2024-05-24 10:15:27,514][hannah.utils.utils][INFO] - Environment info:
+[2024-05-24 10:15:27,601][hannah.utils.utils][INFO] -   Number of GPUs: 2
+[2024-05-24 10:15:27,602][hannah.utils.utils][INFO] -   CUDA version: 12.1
+[2024-05-24 10:15:27,606][hannah.utils.utils][INFO] -   CUDNN version: 8907
+[2024-05-24 10:15:27,606][hannah.utils.utils][INFO] -   Kernel: 4.18.0-513.24.1.el8_9.x86_64
+[2024-05-24 10:15:27,606][hannah.utils.utils][INFO] -   Python: 3.11.5 (main, Nov 15 2023, 03:52:27) [GCC 8.5.0 20210514 (Red Hat 8.5.0-20)]
+[2024-05-24 10:15:27,606][hannah.utils.utils][INFO] -   PyTorch: 2.2.2+cu121
+[2024-05-24 10:15:27,606][hannah.utils.utils][INFO] -   Pytorch Lightning: 2.2.4
+[2024-05-24 10:15:27,606][hannah.utils.utils][INFO] -   Numpy: 1.26.4
+[2024-05-24 10:15:27,606][hannah.utils.utils][INFO] -   Hannah version info:
+[2024-05-24 10:15:27,608][hannah.utils.utils][INFO] -     Cannot find a Git repository.  You probably downloaded an archive
+[2024-05-24 10:15:27,608][hannah.utils.utils][INFO] -   Command line: /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/bin/hannah-train dataset.data_folder=/data module.num_workers=64 module.batch_size=128 dataset.downsampling.enabled=False experiment_id=weighted_loss dataset.weighted_loss=true
+[2024-05-24 10:15:27,608][hannah.utils.utils][INFO] -   
+[2024-05-24 10:15:27,609][lightning.fabric.utilities.seed][INFO] - Seed set to 1234
+[2024-05-24 10:15:27,610][root][INFO] - Configuration: 
+[2024-05-24 10:15:27,613][root][INFO] - dataset:
+  sensor:
+    name: naneye-m
+    resolution:
+    - 320
+    - 320
+  cls: hannah.datasets.vision.DresdenCapsuleDataset
+  data_folder: /data
+  download_folder: MISSING
+  dataset: dresden_capsule
+  sampler: random
+  weighted_loss: true
+  task: sections
+  split: split_0
+  downsampling:
+    enabled: false
+    ratio:
+      binary: 1
+      sections:
+      - 1
+      - 1
+      - 0.05
+      - 0.01
+      - 0.005
+      technical_multilabel_bubbles_dirt:
+      - 1
+      - 1
+      technical_multiclass_view:
+      - 1
+      - 1
+      - 1
+    anomalies_fraction: 0.3
+  seed: 1234
+features:
+  _target_: torch.nn.Identity
+model:
+  _target_: hannah.models.timm.TimmModel
+  name: mobilenetv3_small_075
+  drop_rate: 0.3
+  drop_path_rate: 0.2
+scheduler:
+  _target_: torch.optim.lr_scheduler.OneCycleLR
+  max_lr: 0.001
+  pct_start: 0.3
+  anneal_strategy: cos
+  cycle_momentum: true
+  base_momentum: 0.85
+  max_momentum: 0.95
+  div_factor: 25.0
+  final_div_factor: 10000.0
+  last_epoch: -1
+optimizer:
+  _target_: torch.optim.adamw.AdamW
+  lr: 0.001
+  betas:
+  - 0.9
+  - 0.999
+  eps: 1.0e-08
+  weight_decay: 1.0e-05
+  amsgrad: false
+module:
+  _target_: hannah.modules.vision.ImageClassifierModule
+  num_workers: 64
+  batch_size: 128
+  shuffle_all_dataloaders: false
+trainer:
+  _target_: pytorch_lightning.trainer.Trainer
+  accelerator: auto
+  devices: 1
+  limit_train_batches: 1.0
+  limit_val_batches: 1.0
+  limit_test_batches: 1.0
+  max_epochs: 15
+  default_root_dir: .
+  fast_dev_run: false
+  overfit_batches: 0.0
+  benchmark: false
+  deterministic: warn
+  gradient_clip_val: 0
+  accumulate_grad_batches: 1
+  plugins: null
+  strategy: auto
+  reload_dataloaders_every_n_epochs: 0
+  precision: 32
+checkpoint:
+  _target_: pytorch_lightning.callbacks.ModelCheckpoint
+  dirpath: checkpoints
+  save_top_k: 1
+  verbose: true
+  monitor: val_error
+  mode: min
+  save_last: true
+experiment_id: weighted_loss
+output_dir: trained_models
+auto_lr: false
+resume: false
+fx_mac_summary: false
+skip_test: false
+skip_val: false
+seed:
+- 1234
+validate_output: false
+
+[2024-05-24 10:15:27,613][root][INFO] - Current working directory /local/gerum/hannah/experiments/dresden_capsule/trained_models/weighted_loss/mobilenetv3_small_075
+[2024-05-24 10:15:28,410][hannah.callbacks.optimization][INFO] - Monitoring the following values for optimization
+[2024-05-24 10:15:28,410][hannah.callbacks.optimization][INFO] -   - val_error direction: minimize(1)
+[2024-05-24 10:15:28,509][pytorch_lightning.utilities.rank_zero][INFO] - GPU available: True (cuda), used: True
+[2024-05-24 10:15:28,509][pytorch_lightning.utilities.rank_zero][INFO] - TPU available: False, using: 0 TPU cores
+[2024-05-24 10:15:28,509][pytorch_lightning.utilities.rank_zero][INFO] - IPU available: False, using: 0 IPUs
+[2024-05-24 10:15:28,509][pytorch_lightning.utilities.rank_zero][INFO] - HPU available: False, using: 0 HPUs
+[2024-05-24 10:15:28,509][pytorch_lightning.utilities.rank_zero][INFO] - `Trainer(limit_train_batches=1.0)` was configured so 100% of the batches per epoch will be used..
+[2024-05-24 10:15:28,509][pytorch_lightning.utilities.rank_zero][INFO] - `Trainer(limit_val_batches=1.0)` was configured so 100% of the batches will be used..
+[2024-05-24 10:15:28,509][pytorch_lightning.utilities.rank_zero][INFO] - `Trainer(limit_test_batches=1.0)` was configured so 100% of the batches will be used..
+[2024-05-24 10:15:28,509][root][INFO] - Starting training
+[2024-05-24 10:15:40,966][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/albumentations/core/validation.py:34: UserWarning: Argument 'limit' is not valid and will be ignored.
+  warn(
+
+[2024-05-24 10:15:41,012][py.warnings][WARNING] - /local/gerum/hannah/hannah/modules/vision/base.py:63: UserWarning: Vision datasets should return a length 4 tuple, will assume unlabeled data is None
+  warnings.warn(
+
+[2024-05-24 10:15:41,012][hannah.modules.vision.base][INFO] - Dataset lengths:
+[2024-05-24 10:15:41,012][hannah.modules.vision.base][INFO] -   Train Set (Labeled): 2616647
+[2024-05-24 10:15:41,012][hannah.modules.vision.base][INFO] -   Train Set (Unlabled): 0
+[2024-05-24 10:15:41,012][hannah.modules.vision.base][INFO] -   Dev Set: 662338
+[2024-05-24 10:15:41,012][hannah.modules.vision.base][INFO] -   Test Set: 234555
+[2024-05-24 10:15:41,030][hannah.modules.vision.base][INFO] - Setting up model mobilenetv3_small_075
+[2024-05-24 10:15:41,190][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:803: UserWarning: Overwriting focalnet_tiny_srf in registry with hannah.models._vendor.focalnet.focalnet_tiny_srf. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-24 10:15:41,191][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:824: UserWarning: Overwriting focalnet_small_srf in registry with hannah.models._vendor.focalnet.focalnet_small_srf. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-24 10:15:41,191][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:843: UserWarning: Overwriting focalnet_base_srf in registry with hannah.models._vendor.focalnet.focalnet_base_srf. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-24 10:15:41,191][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:862: UserWarning: Overwriting focalnet_tiny_lrf in registry with hannah.models._vendor.focalnet.focalnet_tiny_lrf. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-24 10:15:41,191][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:885: UserWarning: Overwriting focalnet_small_lrf in registry with hannah.models._vendor.focalnet.focalnet_small_lrf. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-24 10:15:41,191][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:906: UserWarning: Overwriting focalnet_base_lrf in registry with hannah.models._vendor.focalnet.focalnet_base_lrf. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-24 10:15:41,191][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:1010: UserWarning: Overwriting focalnet_large_fl3 in registry with hannah.models._vendor.focalnet.focalnet_large_fl3. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-24 10:15:41,191][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:1031: UserWarning: Overwriting focalnet_large_fl4 in registry with hannah.models._vendor.focalnet.focalnet_large_fl4. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-24 10:15:41,191][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:1052: UserWarning: Overwriting focalnet_xlarge_fl3 in registry with hannah.models._vendor.focalnet.focalnet_xlarge_fl3. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-24 10:15:41,191][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:1073: UserWarning: Overwriting focalnet_xlarge_fl4 in registry with hannah.models._vendor.focalnet.focalnet_xlarge_fl4. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-24 10:15:41,191][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:1094: UserWarning: Overwriting focalnet_huge_fl3 in registry with hannah.models._vendor.focalnet.focalnet_huge_fl3. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-24 10:15:41,191][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:1115: UserWarning: Overwriting focalnet_huge_fl4 in registry with hannah.models._vendor.focalnet.focalnet_huge_fl4. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-24 10:15:41,215][hannah.models.timm][INFO] - Using default logger for automatic stem creation
+[2024-05-24 10:15:41,244][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/nn/modules/lazy.py:181: UserWarning: Lazy modules are a new feature under heavy development so changes to the API or functionality can happen at any moment.
+  warnings.warn('Lazy modules are a new feature under heavy development '
+
+[2024-05-24 10:15:41,315][hannah.modules.base][INFO] - Using weighted loss with weights:
+[2024-05-24 10:15:41,315][hannah.modules.base][INFO] - - mouth [0]: 391.128113
+[2024-05-24 10:15:41,315][hannah.modules.base][INFO] - - esophagus [1]: 328.518158
+[2024-05-24 10:15:41,315][hannah.modules.base][INFO] - - stomach [2]: 2.569169
+[2024-05-24 10:15:41,315][hannah.modules.base][INFO] - - small intestine [3]: 0.543897
+[2024-05-24 10:15:41,315][hannah.modules.base][INFO] - - colon [4]: 0.361456
+[2024-05-24 10:15:41,508][hannah.modules.vision.base][INFO] - Instantiating input Normalizer with mean: (0.5, 0.5, 0.5), std: (0.5, 0.5, 0.5)
+[2024-05-24 10:15:41,512][hannah.modules.vision.base][INFO] - Running dummy forward to initialize lazy modules
+[2024-05-24 10:15:41,537][pytorch_lightning.accelerators.cuda][INFO] - LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+[2024-05-24 10:15:41,551][pytorch_lightning.utilities.rank_zero][INFO] - Loading `train_dataloader` to estimate number of stepping batches.
+[2024-05-24 10:15:43,740][pytorch_lightning.callbacks.model_summary][INFO] - 
+  | Name           | Type                           | Params | In sizes         | Out sizes                            
+-----------------------------------------------------------------------------------------------------------------------------
+0 | val_metrics    | MetricCollection               | 0      | ?                | ?                                    
+1 | test_metrics   | MetricCollection               | 0      | ?                | ?                                    
+2 | train_metrics  | MetricCollection               | 0      | ?                | ?                                    
+3 | model          | TimmModel                      | 1.0 M  | [1, 3, 320, 320] | [[1, 1024, 10, 10], [0], [0], [1, 5]]
+4 | test_confusion | MulticlassConfusionMatrix      | 0      | ?                | ?                                    
+5 | test_roc       | MulticlassROC                  | 0      | ?                | ?                                    
+6 | test_pr_curve  | MulticlassPrecisionRecallCurve | 0      | ?                | ?                                    
+7 | metrics        | ModuleDict                     | 0      | ?                | ?                                    
+-----------------------------------------------------------------------------------------------------------------------------
+1.0 M     Trainable params
+0         Non-trainable params
+1.0 M     Total params
+4.088     Total estimated model params size (MB)
+[2024-05-24 10:15:44,085][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/timm.py:312: TracerWarning: torch.tensor results are registered as constants in the trace. You can safely ignore this warning if you use this function to create tensors out of constant variables that would be the same every time you call this function. In any other case, this might cause the trace to be incorrect.
+  decoded = torch.tensor([])
+
+[2024-05-24 10:15:44,085][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/timm.py:316: TracerWarning: torch.tensor results are registered as constants in the trace. You can safely ignore this warning if you use this function to create tensors out of constant variables that would be the same every time you call this function. In any other case, this might cause the trace to be incorrect.
+  logits = torch.tensor([])
+
+[2024-05-24 10:15:44,087][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/timm.py:320: TracerWarning: torch.tensor results are registered as constants in the trace. You can safely ignore this warning if you use this function to create tensors out of constant variables that would be the same every time you call this function. In any other case, this might cause the trace to be incorrect.
+  projection = torch.tensor([])
+
+[2024-05-24 10:16:07,814][hannah.callbacks.summaries][INFO] - 
++-----+-----------------------------------+------------------------+---------------------------------------------------+-------------------+--------------+-------------------+--------------+------------------+----------+
+|     | Name                              | Type                   | Attrs                                             | IFM               |   IFM volume | OFM               |   OFM volume |   Weights volume |     MACs |
+|-----+-----------------------------------+------------------------+---------------------------------------------------+-------------------+--------------+-------------------+--------------+------------------+----------|
+|   0 | encoder.conv_stem                 | Conv2d                 | k=(3, 3), s=(2, 2), g=(1), dsc=(False), d=(1, 1)  | (1, 3, 320, 320)  |       307200 | (1, 16, 160, 160) |       409600 |              432 | 11059200 |
+|   1 | encoder.bn1.drop                  | Identity               |                                                   | (1, 16, 160, 160) |       409600 | (1, 16, 160, 160) |       409600 |                0 |        0 |
+|   2 | encoder.bn1.act                   | Hardswish              |                                                   | (1, 16, 160, 160) |       409600 | (1, 16, 160, 160) |       409600 |                0 |        0 |
+|   3 | encoder.bn1                       | BatchNormAct2d         |                                                   | (1, 16, 160, 160) |       409600 | (1, 16, 160, 160) |       409600 |                0 |        0 |
+|   4 | encoder.blocks.0.0.conv_dw        | Conv2d                 | k=(3, 3), s=(2, 2), g=(16), dsc=(True), d=(1, 1)  | (1, 16, 160, 160) |       409600 | (1, 16, 80, 80)   |       102400 |              144 |   921600 |
+|   5 | encoder.blocks.0.0.bn1.drop       | Identity               |                                                   | (1, 16, 80, 80)   |       102400 | (1, 16, 80, 80)   |       102400 |                0 |        0 |
+|   6 | encoder.blocks.0.0.bn1.act        | ReLU                   |                                                   | (1, 16, 80, 80)   |       102400 | (1, 16, 80, 80)   |       102400 |                0 |        0 |
+|   7 | encoder.blocks.0.0.bn1            | BatchNormAct2d         |                                                   | (1, 16, 80, 80)   |       102400 | (1, 16, 80, 80)   |       102400 |                0 |        0 |
+|   8 | encoder.blocks.0.0.se.conv_reduce | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 16, 1, 1)     |           16 | (1, 8, 1, 1)      |            8 |              128 |      128 |
+|   9 | encoder.blocks.0.0.se.act1        | ReLU                   |                                                   | (1, 8, 1, 1)      |            8 | (1, 8, 1, 1)      |            8 |                0 |        0 |
+|  10 | encoder.blocks.0.0.se.conv_expand | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 8, 1, 1)      |            8 | (1, 16, 1, 1)     |           16 |              128 |      128 |
+|  11 | encoder.blocks.0.0.se.gate        | Hardsigmoid            |                                                   | (1, 16, 1, 1)     |           16 | (1, 16, 1, 1)     |           16 |                0 |        0 |
+|  12 | encoder.blocks.0.0.se             | SqueezeExcite          |                                                   | (1, 16, 80, 80)   |       102400 | (1, 16, 80, 80)   |       102400 |                0 |        0 |
+|  13 | encoder.blocks.0.0.conv_pw        | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 16, 80, 80)   |       102400 | (1, 16, 80, 80)   |       102400 |              256 |  1638400 |
+|  14 | encoder.blocks.0.0.bn2.drop       | Identity               |                                                   | (1, 16, 80, 80)   |       102400 | (1, 16, 80, 80)   |       102400 |                0 |        0 |
+|  15 | encoder.blocks.0.0.bn2.act        | Identity               |                                                   | (1, 16, 80, 80)   |       102400 | (1, 16, 80, 80)   |       102400 |                0 |        0 |
+|  16 | encoder.blocks.0.0.bn2            | BatchNormAct2d         |                                                   | (1, 16, 80, 80)   |       102400 | (1, 16, 80, 80)   |       102400 |                0 |        0 |
+|  17 | encoder.blocks.0.0                | DepthwiseSeparableConv |                                                   | (1, 16, 160, 160) |       409600 | (1, 16, 80, 80)   |       102400 |                0 |        0 |
+|  18 | encoder.blocks.0                  | Sequential             |                                                   | (1, 16, 160, 160) |       409600 | (1, 16, 80, 80)   |       102400 |                0 |        0 |
+|  19 | encoder.blocks.1.0.conv_pw        | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 16, 80, 80)   |       102400 | (1, 72, 80, 80)   |       460800 |             1152 |  7372800 |
+|  20 | encoder.blocks.1.0.bn1.drop       | Identity               |                                                   | (1, 72, 80, 80)   |       460800 | (1, 72, 80, 80)   |       460800 |                0 |        0 |
+|  21 | encoder.blocks.1.0.bn1.act        | ReLU                   |                                                   | (1, 72, 80, 80)   |       460800 | (1, 72, 80, 80)   |       460800 |                0 |        0 |
+|  22 | encoder.blocks.1.0.bn1            | BatchNormAct2d         |                                                   | (1, 72, 80, 80)   |       460800 | (1, 72, 80, 80)   |       460800 |                0 |        0 |
+|  23 | encoder.blocks.1.0.conv_dw        | Conv2d                 | k=(3, 3), s=(2, 2), g=(72), dsc=(True), d=(1, 1)  | (1, 72, 80, 80)   |       460800 | (1, 72, 40, 40)   |       115200 |              648 |  1036800 |
+|  24 | encoder.blocks.1.0.bn2.drop       | Identity               |                                                   | (1, 72, 40, 40)   |       115200 | (1, 72, 40, 40)   |       115200 |                0 |        0 |
+|  25 | encoder.blocks.1.0.bn2.act        | ReLU                   |                                                   | (1, 72, 40, 40)   |       115200 | (1, 72, 40, 40)   |       115200 |                0 |        0 |
+|  26 | encoder.blocks.1.0.bn2            | BatchNormAct2d         |                                                   | (1, 72, 40, 40)   |       115200 | (1, 72, 40, 40)   |       115200 |                0 |        0 |
+|  27 | encoder.blocks.1.0.se             | Identity               |                                                   | (1, 72, 40, 40)   |       115200 | (1, 72, 40, 40)   |       115200 |                0 |        0 |
+|  28 | encoder.blocks.1.0.conv_pwl       | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 72, 40, 40)   |       115200 | (1, 24, 40, 40)   |        38400 |             1728 |  2764800 |
+|  29 | encoder.blocks.1.0.bn3.drop       | Identity               |                                                   | (1, 24, 40, 40)   |        38400 | (1, 24, 40, 40)   |        38400 |                0 |        0 |
+|  30 | encoder.blocks.1.0.bn3.act        | Identity               |                                                   | (1, 24, 40, 40)   |        38400 | (1, 24, 40, 40)   |        38400 |                0 |        0 |
+|  31 | encoder.blocks.1.0.bn3            | BatchNormAct2d         |                                                   | (1, 24, 40, 40)   |        38400 | (1, 24, 40, 40)   |        38400 |                0 |        0 |
+|  32 | encoder.blocks.1.0                | InvertedResidual       |                                                   | (1, 16, 80, 80)   |       102400 | (1, 24, 40, 40)   |        38400 |                0 |        0 |
+|  33 | encoder.blocks.1.1.conv_pw        | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 24, 40, 40)   |        38400 | (1, 88, 40, 40)   |       140800 |             2112 |  3379200 |
+|  34 | encoder.blocks.1.1.bn1.drop       | Identity               |                                                   | (1, 88, 40, 40)   |       140800 | (1, 88, 40, 40)   |       140800 |                0 |        0 |
+|  35 | encoder.blocks.1.1.bn1.act        | ReLU                   |                                                   | (1, 88, 40, 40)   |       140800 | (1, 88, 40, 40)   |       140800 |                0 |        0 |
+|  36 | encoder.blocks.1.1.bn1            | BatchNormAct2d         |                                                   | (1, 88, 40, 40)   |       140800 | (1, 88, 40, 40)   |       140800 |                0 |        0 |
+|  37 | encoder.blocks.1.1.conv_dw        | Conv2d                 | k=(3, 3), s=(1, 1), g=(88), dsc=(True), d=(1, 1)  | (1, 88, 40, 40)   |       140800 | (1, 88, 40, 40)   |       140800 |              792 |  1267200 |
+|  38 | encoder.blocks.1.1.bn2.drop       | Identity               |                                                   | (1, 88, 40, 40)   |       140800 | (1, 88, 40, 40)   |       140800 |                0 |        0 |
+|  39 | encoder.blocks.1.1.bn2.act        | ReLU                   |                                                   | (1, 88, 40, 40)   |       140800 | (1, 88, 40, 40)   |       140800 |                0 |        0 |
+|  40 | encoder.blocks.1.1.bn2            | BatchNormAct2d         |                                                   | (1, 88, 40, 40)   |       140800 | (1, 88, 40, 40)   |       140800 |                0 |        0 |
+|  41 | encoder.blocks.1.1.se             | Identity               |                                                   | (1, 88, 40, 40)   |       140800 | (1, 88, 40, 40)   |       140800 |                0 |        0 |
+|  42 | encoder.blocks.1.1.conv_pwl       | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 88, 40, 40)   |       140800 | (1, 24, 40, 40)   |        38400 |             2112 |  3379200 |
+|  43 | encoder.blocks.1.1.bn3.drop       | Identity               |                                                   | (1, 24, 40, 40)   |        38400 | (1, 24, 40, 40)   |        38400 |                0 |        0 |
+|  44 | encoder.blocks.1.1.bn3.act        | Identity               |                                                   | (1, 24, 40, 40)   |        38400 | (1, 24, 40, 40)   |        38400 |                0 |        0 |
+|  45 | encoder.blocks.1.1.bn3            | BatchNormAct2d         |                                                   | (1, 24, 40, 40)   |        38400 | (1, 24, 40, 40)   |        38400 |                0 |        0 |
+|  46 | encoder.blocks.1.1.drop_path      | DropPath               |                                                   | (1, 24, 40, 40)   |        38400 | (1, 24, 40, 40)   |        38400 |                0 |        0 |
+|  47 | encoder.blocks.1.1                | InvertedResidual       |                                                   | (1, 24, 40, 40)   |        38400 | (1, 24, 40, 40)   |        38400 |                0 |        0 |
+|  48 | encoder.blocks.1                  | Sequential             |                                                   | (1, 16, 80, 80)   |       102400 | (1, 24, 40, 40)   |        38400 |                0 |        0 |
+|  49 | encoder.blocks.2.0.conv_pw        | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 24, 40, 40)   |        38400 | (1, 96, 40, 40)   |       153600 |             2304 |  3686400 |
+|  50 | encoder.blocks.2.0.bn1.drop       | Identity               |                                                   | (1, 96, 40, 40)   |       153600 | (1, 96, 40, 40)   |       153600 |                0 |        0 |
+|  51 | encoder.blocks.2.0.bn1.act        | Hardswish              |                                                   | (1, 96, 40, 40)   |       153600 | (1, 96, 40, 40)   |       153600 |                0 |        0 |
+|  52 | encoder.blocks.2.0.bn1            | BatchNormAct2d         |                                                   | (1, 96, 40, 40)   |       153600 | (1, 96, 40, 40)   |       153600 |                0 |        0 |
+|  53 | encoder.blocks.2.0.conv_dw        | Conv2d                 | k=(5, 5), s=(2, 2), g=(96), dsc=(True), d=(1, 1)  | (1, 96, 40, 40)   |       153600 | (1, 96, 20, 20)   |        38400 |             2400 |   960000 |
+|  54 | encoder.blocks.2.0.bn2.drop       | Identity               |                                                   | (1, 96, 20, 20)   |        38400 | (1, 96, 20, 20)   |        38400 |                0 |        0 |
+|  55 | encoder.blocks.2.0.bn2.act        | Hardswish              |                                                   | (1, 96, 20, 20)   |        38400 | (1, 96, 20, 20)   |        38400 |                0 |        0 |
+|  56 | encoder.blocks.2.0.bn2            | BatchNormAct2d         |                                                   | (1, 96, 20, 20)   |        38400 | (1, 96, 20, 20)   |        38400 |                0 |        0 |
+|  57 | encoder.blocks.2.0.se.conv_reduce | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 96, 1, 1)     |           96 | (1, 24, 1, 1)     |           24 |             2304 |     2304 |
+|  58 | encoder.blocks.2.0.se.act1        | ReLU                   |                                                   | (1, 24, 1, 1)     |           24 | (1, 24, 1, 1)     |           24 |                0 |        0 |
+|  59 | encoder.blocks.2.0.se.conv_expand | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 24, 1, 1)     |           24 | (1, 96, 1, 1)     |           96 |             2304 |     2304 |
+|  60 | encoder.blocks.2.0.se.gate        | Hardsigmoid            |                                                   | (1, 96, 1, 1)     |           96 | (1, 96, 1, 1)     |           96 |                0 |        0 |
+|  61 | encoder.blocks.2.0.se             | SqueezeExcite          |                                                   | (1, 96, 20, 20)   |        38400 | (1, 96, 20, 20)   |        38400 |                0 |        0 |
+|  62 | encoder.blocks.2.0.conv_pwl       | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 96, 20, 20)   |        38400 | (1, 32, 20, 20)   |        12800 |             3072 |  1228800 |
+|  63 | encoder.blocks.2.0.bn3.drop       | Identity               |                                                   | (1, 32, 20, 20)   |        12800 | (1, 32, 20, 20)   |        12800 |                0 |        0 |
+|  64 | encoder.blocks.2.0.bn3.act        | Identity               |                                                   | (1, 32, 20, 20)   |        12800 | (1, 32, 20, 20)   |        12800 |                0 |        0 |
+|  65 | encoder.blocks.2.0.bn3            | BatchNormAct2d         |                                                   | (1, 32, 20, 20)   |        12800 | (1, 32, 20, 20)   |        12800 |                0 |        0 |
+|  66 | encoder.blocks.2.0                | InvertedResidual       |                                                   | (1, 24, 40, 40)   |        38400 | (1, 32, 20, 20)   |        12800 |                0 |        0 |
+|  67 | encoder.blocks.2.1.conv_pw        | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 32, 20, 20)   |        12800 | (1, 192, 20, 20)  |        76800 |             6144 |  2457600 |
+|  68 | encoder.blocks.2.1.bn1.drop       | Identity               |                                                   | (1, 192, 20, 20)  |        76800 | (1, 192, 20, 20)  |        76800 |                0 |        0 |
+|  69 | encoder.blocks.2.1.bn1.act        | Hardswish              |                                                   | (1, 192, 20, 20)  |        76800 | (1, 192, 20, 20)  |        76800 |                0 |        0 |
+|  70 | encoder.blocks.2.1.bn1            | BatchNormAct2d         |                                                   | (1, 192, 20, 20)  |        76800 | (1, 192, 20, 20)  |        76800 |                0 |        0 |
+|  71 | encoder.blocks.2.1.conv_dw        | Conv2d                 | k=(5, 5), s=(1, 1), g=(192), dsc=(True), d=(1, 1) | (1, 192, 20, 20)  |        76800 | (1, 192, 20, 20)  |        76800 |             4800 |  1920000 |
+|  72 | encoder.blocks.2.1.bn2.drop       | Identity               |                                                   | (1, 192, 20, 20)  |        76800 | (1, 192, 20, 20)  |        76800 |                0 |        0 |
+|  73 | encoder.blocks.2.1.bn2.act        | Hardswish              |                                                   | (1, 192, 20, 20)  |        76800 | (1, 192, 20, 20)  |        76800 |                0 |        0 |
+|  74 | encoder.blocks.2.1.bn2            | BatchNormAct2d         |                                                   | (1, 192, 20, 20)  |        76800 | (1, 192, 20, 20)  |        76800 |                0 |        0 |
+|  75 | encoder.blocks.2.1.se.conv_reduce | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 192, 1, 1)    |          192 | (1, 48, 1, 1)     |           48 |             9216 |     9216 |
+|  76 | encoder.blocks.2.1.se.act1        | ReLU                   |                                                   | (1, 48, 1, 1)     |           48 | (1, 48, 1, 1)     |           48 |                0 |        0 |
+|  77 | encoder.blocks.2.1.se.conv_expand | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 48, 1, 1)     |           48 | (1, 192, 1, 1)    |          192 |             9216 |     9216 |
+|  78 | encoder.blocks.2.1.se.gate        | Hardsigmoid            |                                                   | (1, 192, 1, 1)    |          192 | (1, 192, 1, 1)    |          192 |                0 |        0 |
+|  79 | encoder.blocks.2.1.se             | SqueezeExcite          |                                                   | (1, 192, 20, 20)  |        76800 | (1, 192, 20, 20)  |        76800 |                0 |        0 |
+|  80 | encoder.blocks.2.1.conv_pwl       | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 192, 20, 20)  |        76800 | (1, 32, 20, 20)   |        12800 |             6144 |  2457600 |
+|  81 | encoder.blocks.2.1.bn3.drop       | Identity               |                                                   | (1, 32, 20, 20)   |        12800 | (1, 32, 20, 20)   |        12800 |                0 |        0 |
+|  82 | encoder.blocks.2.1.bn3.act        | Identity               |                                                   | (1, 32, 20, 20)   |        12800 | (1, 32, 20, 20)   |        12800 |                0 |        0 |
+|  83 | encoder.blocks.2.1.bn3            | BatchNormAct2d         |                                                   | (1, 32, 20, 20)   |        12800 | (1, 32, 20, 20)   |        12800 |                0 |        0 |
+|  84 | encoder.blocks.2.1.drop_path      | DropPath               |                                                   | (1, 32, 20, 20)   |        12800 | (1, 32, 20, 20)   |        12800 |                0 |        0 |
+|  85 | encoder.blocks.2.1                | InvertedResidual       |                                                   | (1, 32, 20, 20)   |        12800 | (1, 32, 20, 20)   |        12800 |                0 |        0 |
+|  86 | encoder.blocks.2.2.conv_pw        | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 32, 20, 20)   |        12800 | (1, 192, 20, 20)  |        76800 |             6144 |  2457600 |
+|  87 | encoder.blocks.2.2.bn1.drop       | Identity               |                                                   | (1, 192, 20, 20)  |        76800 | (1, 192, 20, 20)  |        76800 |                0 |        0 |
+|  88 | encoder.blocks.2.2.bn1.act        | Hardswish              |                                                   | (1, 192, 20, 20)  |        76800 | (1, 192, 20, 20)  |        76800 |                0 |        0 |
+|  89 | encoder.blocks.2.2.bn1            | BatchNormAct2d         |                                                   | (1, 192, 20, 20)  |        76800 | (1, 192, 20, 20)  |        76800 |                0 |        0 |
+|  90 | encoder.blocks.2.2.conv_dw        | Conv2d                 | k=(5, 5), s=(1, 1), g=(192), dsc=(True), d=(1, 1) | (1, 192, 20, 20)  |        76800 | (1, 192, 20, 20)  |        76800 |             4800 |  1920000 |
+|  91 | encoder.blocks.2.2.bn2.drop       | Identity               |                                                   | (1, 192, 20, 20)  |        76800 | (1, 192, 20, 20)  |        76800 |                0 |        0 |
+|  92 | encoder.blocks.2.2.bn2.act        | Hardswish              |                                                   | (1, 192, 20, 20)  |        76800 | (1, 192, 20, 20)  |        76800 |                0 |        0 |
+|  93 | encoder.blocks.2.2.bn2            | BatchNormAct2d         |                                                   | (1, 192, 20, 20)  |        76800 | (1, 192, 20, 20)  |        76800 |                0 |        0 |
+|  94 | encoder.blocks.2.2.se.conv_reduce | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 192, 1, 1)    |          192 | (1, 48, 1, 1)     |           48 |             9216 |     9216 |
+|  95 | encoder.blocks.2.2.se.act1        | ReLU                   |                                                   | (1, 48, 1, 1)     |           48 | (1, 48, 1, 1)     |           48 |                0 |        0 |
+|  96 | encoder.blocks.2.2.se.conv_expand | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 48, 1, 1)     |           48 | (1, 192, 1, 1)    |          192 |             9216 |     9216 |
+|  97 | encoder.blocks.2.2.se.gate        | Hardsigmoid            |                                                   | (1, 192, 1, 1)    |          192 | (1, 192, 1, 1)    |          192 |                0 |        0 |
+|  98 | encoder.blocks.2.2.se             | SqueezeExcite          |                                                   | (1, 192, 20, 20)  |        76800 | (1, 192, 20, 20)  |        76800 |                0 |        0 |
+|  99 | encoder.blocks.2.2.conv_pwl       | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 192, 20, 20)  |        76800 | (1, 32, 20, 20)   |        12800 |             6144 |  2457600 |
+| 100 | encoder.blocks.2.2.bn3.drop       | Identity               |                                                   | (1, 32, 20, 20)   |        12800 | (1, 32, 20, 20)   |        12800 |                0 |        0 |
+| 101 | encoder.blocks.2.2.bn3.act        | Identity               |                                                   | (1, 32, 20, 20)   |        12800 | (1, 32, 20, 20)   |        12800 |                0 |        0 |
+| 102 | encoder.blocks.2.2.bn3            | BatchNormAct2d         |                                                   | (1, 32, 20, 20)   |        12800 | (1, 32, 20, 20)   |        12800 |                0 |        0 |
+| 103 | encoder.blocks.2.2.drop_path      | DropPath               |                                                   | (1, 32, 20, 20)   |        12800 | (1, 32, 20, 20)   |        12800 |                0 |        0 |
+| 104 | encoder.blocks.2.2                | InvertedResidual       |                                                   | (1, 32, 20, 20)   |        12800 | (1, 32, 20, 20)   |        12800 |                0 |        0 |
+| 105 | encoder.blocks.2                  | Sequential             |                                                   | (1, 24, 40, 40)   |        38400 | (1, 32, 20, 20)   |        12800 |                0 |        0 |
+| 106 | encoder.blocks.3.0.conv_pw        | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 32, 20, 20)   |        12800 | (1, 96, 20, 20)   |        38400 |             3072 |  1228800 |
+| 107 | encoder.blocks.3.0.bn1.drop       | Identity               |                                                   | (1, 96, 20, 20)   |        38400 | (1, 96, 20, 20)   |        38400 |                0 |        0 |
+| 108 | encoder.blocks.3.0.bn1.act        | Hardswish              |                                                   | (1, 96, 20, 20)   |        38400 | (1, 96, 20, 20)   |        38400 |                0 |        0 |
+| 109 | encoder.blocks.3.0.bn1            | BatchNormAct2d         |                                                   | (1, 96, 20, 20)   |        38400 | (1, 96, 20, 20)   |        38400 |                0 |        0 |
+| 110 | encoder.blocks.3.0.conv_dw        | Conv2d                 | k=(5, 5), s=(1, 1), g=(96), dsc=(True), d=(1, 1)  | (1, 96, 20, 20)   |        38400 | (1, 96, 20, 20)   |        38400 |             2400 |   960000 |
+| 111 | encoder.blocks.3.0.bn2.drop       | Identity               |                                                   | (1, 96, 20, 20)   |        38400 | (1, 96, 20, 20)   |        38400 |                0 |        0 |
+| 112 | encoder.blocks.3.0.bn2.act        | Hardswish              |                                                   | (1, 96, 20, 20)   |        38400 | (1, 96, 20, 20)   |        38400 |                0 |        0 |
+| 113 | encoder.blocks.3.0.bn2            | BatchNormAct2d         |                                                   | (1, 96, 20, 20)   |        38400 | (1, 96, 20, 20)   |        38400 |                0 |        0 |
+| 114 | encoder.blocks.3.0.se.conv_reduce | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 96, 1, 1)     |           96 | (1, 24, 1, 1)     |           24 |             2304 |     2304 |
+| 115 | encoder.blocks.3.0.se.act1        | ReLU                   |                                                   | (1, 24, 1, 1)     |           24 | (1, 24, 1, 1)     |           24 |                0 |        0 |
+| 116 | encoder.blocks.3.0.se.conv_expand | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 24, 1, 1)     |           24 | (1, 96, 1, 1)     |           96 |             2304 |     2304 |
+| 117 | encoder.blocks.3.0.se.gate        | Hardsigmoid            |                                                   | (1, 96, 1, 1)     |           96 | (1, 96, 1, 1)     |           96 |                0 |        0 |
+| 118 | encoder.blocks.3.0.se             | SqueezeExcite          |                                                   | (1, 96, 20, 20)   |        38400 | (1, 96, 20, 20)   |        38400 |                0 |        0 |
+| 119 | encoder.blocks.3.0.conv_pwl       | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 96, 20, 20)   |        38400 | (1, 40, 20, 20)   |        16000 |             3840 |  1536000 |
+| 120 | encoder.blocks.3.0.bn3.drop       | Identity               |                                                   | (1, 40, 20, 20)   |        16000 | (1, 40, 20, 20)   |        16000 |                0 |        0 |
+| 121 | encoder.blocks.3.0.bn3.act        | Identity               |                                                   | (1, 40, 20, 20)   |        16000 | (1, 40, 20, 20)   |        16000 |                0 |        0 |
+| 122 | encoder.blocks.3.0.bn3            | BatchNormAct2d         |                                                   | (1, 40, 20, 20)   |        16000 | (1, 40, 20, 20)   |        16000 |                0 |        0 |
+| 123 | encoder.blocks.3.0                | InvertedResidual       |                                                   | (1, 32, 20, 20)   |        12800 | (1, 40, 20, 20)   |        16000 |                0 |        0 |
+| 124 | encoder.blocks.3.1.conv_pw        | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 40, 20, 20)   |        16000 | (1, 120, 20, 20)  |        48000 |             4800 |  1920000 |
+| 125 | encoder.blocks.3.1.bn1.drop       | Identity               |                                                   | (1, 120, 20, 20)  |        48000 | (1, 120, 20, 20)  |        48000 |                0 |        0 |
+| 126 | encoder.blocks.3.1.bn1.act        | Hardswish              |                                                   | (1, 120, 20, 20)  |        48000 | (1, 120, 20, 20)  |        48000 |                0 |        0 |
+| 127 | encoder.blocks.3.1.bn1            | BatchNormAct2d         |                                                   | (1, 120, 20, 20)  |        48000 | (1, 120, 20, 20)  |        48000 |                0 |        0 |
+| 128 | encoder.blocks.3.1.conv_dw        | Conv2d                 | k=(5, 5), s=(1, 1), g=(120), dsc=(True), d=(1, 1) | (1, 120, 20, 20)  |        48000 | (1, 120, 20, 20)  |        48000 |             3000 |  1200000 |
+| 129 | encoder.blocks.3.1.bn2.drop       | Identity               |                                                   | (1, 120, 20, 20)  |        48000 | (1, 120, 20, 20)  |        48000 |                0 |        0 |
+| 130 | encoder.blocks.3.1.bn2.act        | Hardswish              |                                                   | (1, 120, 20, 20)  |        48000 | (1, 120, 20, 20)  |        48000 |                0 |        0 |
+| 131 | encoder.blocks.3.1.bn2            | BatchNormAct2d         |                                                   | (1, 120, 20, 20)  |        48000 | (1, 120, 20, 20)  |        48000 |                0 |        0 |
+| 132 | encoder.blocks.3.1.se.conv_reduce | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 120, 1, 1)    |          120 | (1, 32, 1, 1)     |           32 |             3840 |     3840 |
+| 133 | encoder.blocks.3.1.se.act1        | ReLU                   |                                                   | (1, 32, 1, 1)     |           32 | (1, 32, 1, 1)     |           32 |                0 |        0 |
+| 134 | encoder.blocks.3.1.se.conv_expand | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 32, 1, 1)     |           32 | (1, 120, 1, 1)    |          120 |             3840 |     3840 |
+| 135 | encoder.blocks.3.1.se.gate        | Hardsigmoid            |                                                   | (1, 120, 1, 1)    |          120 | (1, 120, 1, 1)    |          120 |                0 |        0 |
+| 136 | encoder.blocks.3.1.se             | SqueezeExcite          |                                                   | (1, 120, 20, 20)  |        48000 | (1, 120, 20, 20)  |        48000 |                0 |        0 |
+| 137 | encoder.blocks.3.1.conv_pwl       | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 120, 20, 20)  |        48000 | (1, 40, 20, 20)   |        16000 |             4800 |  1920000 |
+| 138 | encoder.blocks.3.1.bn3.drop       | Identity               |                                                   | (1, 40, 20, 20)   |        16000 | (1, 40, 20, 20)   |        16000 |                0 |        0 |
+| 139 | encoder.blocks.3.1.bn3.act        | Identity               |                                                   | (1, 40, 20, 20)   |        16000 | (1, 40, 20, 20)   |        16000 |                0 |        0 |
+| 140 | encoder.blocks.3.1.bn3            | BatchNormAct2d         |                                                   | (1, 40, 20, 20)   |        16000 | (1, 40, 20, 20)   |        16000 |                0 |        0 |
+| 141 | encoder.blocks.3.1.drop_path      | DropPath               |                                                   | (1, 40, 20, 20)   |        16000 | (1, 40, 20, 20)   |        16000 |                0 |        0 |
+| 142 | encoder.blocks.3.1                | InvertedResidual       |                                                   | (1, 40, 20, 20)   |        16000 | (1, 40, 20, 20)   |        16000 |                0 |        0 |
+| 143 | encoder.blocks.3                  | Sequential             |                                                   | (1, 32, 20, 20)   |        12800 | (1, 40, 20, 20)   |        16000 |                0 |        0 |
+| 144 | encoder.blocks.4.0.conv_pw        | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 40, 20, 20)   |        16000 | (1, 240, 20, 20)  |        96000 |             9600 |  3840000 |
+| 145 | encoder.blocks.4.0.bn1.drop       | Identity               |                                                   | (1, 240, 20, 20)  |        96000 | (1, 240, 20, 20)  |        96000 |                0 |        0 |
+| 146 | encoder.blocks.4.0.bn1.act        | Hardswish              |                                                   | (1, 240, 20, 20)  |        96000 | (1, 240, 20, 20)  |        96000 |                0 |        0 |
+| 147 | encoder.blocks.4.0.bn1            | BatchNormAct2d         |                                                   | (1, 240, 20, 20)  |        96000 | (1, 240, 20, 20)  |        96000 |                0 |        0 |
+| 148 | encoder.blocks.4.0.conv_dw        | Conv2d                 | k=(5, 5), s=(2, 2), g=(240), dsc=(True), d=(1, 1) | (1, 240, 20, 20)  |        96000 | (1, 240, 10, 10)  |        24000 |             6000 |   600000 |
+| 149 | encoder.blocks.4.0.bn2.drop       | Identity               |                                                   | (1, 240, 10, 10)  |        24000 | (1, 240, 10, 10)  |        24000 |                0 |        0 |
+| 150 | encoder.blocks.4.0.bn2.act        | Hardswish              |                                                   | (1, 240, 10, 10)  |        24000 | (1, 240, 10, 10)  |        24000 |                0 |        0 |
+| 151 | encoder.blocks.4.0.bn2            | BatchNormAct2d         |                                                   | (1, 240, 10, 10)  |        24000 | (1, 240, 10, 10)  |        24000 |                0 |        0 |
+| 152 | encoder.blocks.4.0.se.conv_reduce | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 240, 1, 1)    |          240 | (1, 64, 1, 1)     |           64 |            15360 |    15360 |
+| 153 | encoder.blocks.4.0.se.act1        | ReLU                   |                                                   | (1, 64, 1, 1)     |           64 | (1, 64, 1, 1)     |           64 |                0 |        0 |
+| 154 | encoder.blocks.4.0.se.conv_expand | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 64, 1, 1)     |           64 | (1, 240, 1, 1)    |          240 |            15360 |    15360 |
+| 155 | encoder.blocks.4.0.se.gate        | Hardsigmoid            |                                                   | (1, 240, 1, 1)    |          240 | (1, 240, 1, 1)    |          240 |                0 |        0 |
+| 156 | encoder.blocks.4.0.se             | SqueezeExcite          |                                                   | (1, 240, 10, 10)  |        24000 | (1, 240, 10, 10)  |        24000 |                0 |        0 |
+| 157 | encoder.blocks.4.0.conv_pwl       | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 240, 10, 10)  |        24000 | (1, 72, 10, 10)   |         7200 |            17280 |  1728000 |
+| 158 | encoder.blocks.4.0.bn3.drop       | Identity               |                                                   | (1, 72, 10, 10)   |         7200 | (1, 72, 10, 10)   |         7200 |                0 |        0 |
+| 159 | encoder.blocks.4.0.bn3.act        | Identity               |                                                   | (1, 72, 10, 10)   |         7200 | (1, 72, 10, 10)   |         7200 |                0 |        0 |
+| 160 | encoder.blocks.4.0.bn3            | BatchNormAct2d         |                                                   | (1, 72, 10, 10)   |         7200 | (1, 72, 10, 10)   |         7200 |                0 |        0 |
+| 161 | encoder.blocks.4.0                | InvertedResidual       |                                                   | (1, 40, 20, 20)   |        16000 | (1, 72, 10, 10)   |         7200 |                0 |        0 |
+| 162 | encoder.blocks.4.1.conv_pw        | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 72, 10, 10)   |         7200 | (1, 432, 10, 10)  |        43200 |            31104 |  3110400 |
+| 163 | encoder.blocks.4.1.bn1.drop       | Identity               |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 164 | encoder.blocks.4.1.bn1.act        | Hardswish              |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 165 | encoder.blocks.4.1.bn1            | BatchNormAct2d         |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 166 | encoder.blocks.4.1.conv_dw        | Conv2d                 | k=(5, 5), s=(1, 1), g=(432), dsc=(True), d=(1, 1) | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |            10800 |  1080000 |
+| 167 | encoder.blocks.4.1.bn2.drop       | Identity               |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 168 | encoder.blocks.4.1.bn2.act        | Hardswish              |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 169 | encoder.blocks.4.1.bn2            | BatchNormAct2d         |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 170 | encoder.blocks.4.1.se.conv_reduce | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 432, 1, 1)    |          432 | (1, 112, 1, 1)    |          112 |            48384 |    48384 |
+| 171 | encoder.blocks.4.1.se.act1        | ReLU                   |                                                   | (1, 112, 1, 1)    |          112 | (1, 112, 1, 1)    |          112 |                0 |        0 |
+| 172 | encoder.blocks.4.1.se.conv_expand | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 112, 1, 1)    |          112 | (1, 432, 1, 1)    |          432 |            48384 |    48384 |
+| 173 | encoder.blocks.4.1.se.gate        | Hardsigmoid            |                                                   | (1, 432, 1, 1)    |          432 | (1, 432, 1, 1)    |          432 |                0 |        0 |
+| 174 | encoder.blocks.4.1.se             | SqueezeExcite          |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 175 | encoder.blocks.4.1.conv_pwl       | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 432, 10, 10)  |        43200 | (1, 72, 10, 10)   |         7200 |            31104 |  3110400 |
+| 176 | encoder.blocks.4.1.bn3.drop       | Identity               |                                                   | (1, 72, 10, 10)   |         7200 | (1, 72, 10, 10)   |         7200 |                0 |        0 |
+| 177 | encoder.blocks.4.1.bn3.act        | Identity               |                                                   | (1, 72, 10, 10)   |         7200 | (1, 72, 10, 10)   |         7200 |                0 |        0 |
+| 178 | encoder.blocks.4.1.bn3            | BatchNormAct2d         |                                                   | (1, 72, 10, 10)   |         7200 | (1, 72, 10, 10)   |         7200 |                0 |        0 |
+| 179 | encoder.blocks.4.1.drop_path      | DropPath               |                                                   | (1, 72, 10, 10)   |         7200 | (1, 72, 10, 10)   |         7200 |                0 |        0 |
+| 180 | encoder.blocks.4.1                | InvertedResidual       |                                                   | (1, 72, 10, 10)   |         7200 | (1, 72, 10, 10)   |         7200 |                0 |        0 |
+| 181 | encoder.blocks.4.2.conv_pw        | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 72, 10, 10)   |         7200 | (1, 432, 10, 10)  |        43200 |            31104 |  3110400 |
+| 182 | encoder.blocks.4.2.bn1.drop       | Identity               |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 183 | encoder.blocks.4.2.bn1.act        | Hardswish              |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 184 | encoder.blocks.4.2.bn1            | BatchNormAct2d         |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 185 | encoder.blocks.4.2.conv_dw        | Conv2d                 | k=(5, 5), s=(1, 1), g=(432), dsc=(True), d=(1, 1) | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |            10800 |  1080000 |
+| 186 | encoder.blocks.4.2.bn2.drop       | Identity               |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 187 | encoder.blocks.4.2.bn2.act        | Hardswish              |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 188 | encoder.blocks.4.2.bn2            | BatchNormAct2d         |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 189 | encoder.blocks.4.2.se.conv_reduce | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 432, 1, 1)    |          432 | (1, 112, 1, 1)    |          112 |            48384 |    48384 |
+| 190 | encoder.blocks.4.2.se.act1        | ReLU                   |                                                   | (1, 112, 1, 1)    |          112 | (1, 112, 1, 1)    |          112 |                0 |        0 |
+| 191 | encoder.blocks.4.2.se.conv_expand | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 112, 1, 1)    |          112 | (1, 432, 1, 1)    |          432 |            48384 |    48384 |
+| 192 | encoder.blocks.4.2.se.gate        | Hardsigmoid            |                                                   | (1, 432, 1, 1)    |          432 | (1, 432, 1, 1)    |          432 |                0 |        0 |
+| 193 | encoder.blocks.4.2.se             | SqueezeExcite          |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 194 | encoder.blocks.4.2.conv_pwl       | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 432, 10, 10)  |        43200 | (1, 72, 10, 10)   |         7200 |            31104 |  3110400 |
+| 195 | encoder.blocks.4.2.bn3.drop       | Identity               |                                                   | (1, 72, 10, 10)   |         7200 | (1, 72, 10, 10)   |         7200 |                0 |        0 |
+| 196 | encoder.blocks.4.2.bn3.act        | Identity               |                                                   | (1, 72, 10, 10)   |         7200 | (1, 72, 10, 10)   |         7200 |                0 |        0 |
+| 197 | encoder.blocks.4.2.bn3            | BatchNormAct2d         |                                                   | (1, 72, 10, 10)   |         7200 | (1, 72, 10, 10)   |         7200 |                0 |        0 |
+| 198 | encoder.blocks.4.2.drop_path      | DropPath               |                                                   | (1, 72, 10, 10)   |         7200 | (1, 72, 10, 10)   |         7200 |                0 |        0 |
+| 199 | encoder.blocks.4.2                | InvertedResidual       |                                                   | (1, 72, 10, 10)   |         7200 | (1, 72, 10, 10)   |         7200 |                0 |        0 |
+| 200 | encoder.blocks.4                  | Sequential             |                                                   | (1, 40, 20, 20)   |        16000 | (1, 72, 10, 10)   |         7200 |                0 |        0 |
+| 201 | encoder.blocks.5.0.conv           | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 72, 10, 10)   |         7200 | (1, 432, 10, 10)  |        43200 |            31104 |  3110400 |
+| 202 | encoder.blocks.5.0.bn1.drop       | Identity               |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 203 | encoder.blocks.5.0.bn1.act        | Hardswish              |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 204 | encoder.blocks.5.0.bn1            | BatchNormAct2d         |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 205 | encoder.blocks.5.0                | ConvBnAct              |                                                   | (1, 72, 10, 10)   |         7200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 206 | encoder.blocks.5                  | Sequential             |                                                   | (1, 72, 10, 10)   |         7200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 207 | encoder.blocks                    | Sequential             |                                                   | (1, 16, 160, 160) |       409600 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 208 | encoder.global_pool.pool          | Identity               |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 209 | encoder.global_pool.flatten       | Identity               |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 210 | encoder.global_pool               | SelectAdaptivePool2d   |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 211 | encoder.conv_head                 | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 432, 10, 10)  |        43200 | (1, 1024, 10, 10) |       102400 |           442368 | 44236800 |
+| 212 | encoder.act2                      | Hardswish              |                                                   | (1, 1024, 10, 10) |       102400 | (1, 1024, 10, 10) |       102400 |                0 |        0 |
+| 213 | encoder.flatten                   | Identity               |                                                   | (1, 1024, 10, 10) |       102400 | (1, 1024, 10, 10) |       102400 |                0 |        0 |
+| 214 | encoder.classifier                | Identity               |                                                   | (1, 1024, 10, 10) |       102400 | (1, 1024, 10, 10) |       102400 |                0 |        0 |
+| 215 | encoder                           | MobileNetV3            |                                                   | (1, 3, 320, 320)  |       307200 | (1, 1024, 10, 10) |       102400 |                0 |        0 |
+| 216 | classifier.pooling                | AdaptiveAvgPool2d      |                                                   | (1, 1024, 10, 10) |       102400 | (1, 1024, 1, 1)   |         1024 |                0 |        0 |
+| 217 | classifier.flatten                | Flatten                |                                                   | (1, 1024, 1, 1)   |         1024 | (1, 1024)         |         1024 |                0 |        0 |
+| 218 | classifier.linear                 | Linear                 |                                                   | (1, 1024)         |         1024 | (1, 5)            |            5 |             5120 |     5120 |
+| 219 | classifier                        | DefaultClassifierHead  |                                                   | (1, 1024, 10, 10) |       102400 | (1, 5)            |            5 |                0 |        0 |
++-----+-----------------------------------+------------------------+---------------------------------------------------+-------------------+--------------+-------------------+--------------+------------------+----------+
+[2024-05-24 10:16:07,816][hannah.callbacks.summaries][INFO] - Total MACs: 129,529,792
+[2024-05-24 10:16:07,816][hannah.callbacks.summaries][INFO] - Total Weights: 1,009,000
+[2024-05-24 10:16:07,816][hannah.callbacks.summaries][INFO] - Total Activations: 12,969,834
+[2024-05-24 10:16:07,816][hannah.callbacks.summaries][INFO] - Estimated Activations: 921,600
+[2024-05-24 10:16:34,285][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py:54: Detected KeyboardInterrupt, attempting graceful shutdown...
+
+[2024-05-24 10:16:34,299][lightning.fabric.utilities.seed][INFO] - Seed set to 1234
+[2024-05-24 10:16:34,306][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/checkpoint_connector.py:145: `.validate(ckpt_path=None)` was called without a model. The best model of the previous `fit` call will be used. You can pass `.validate(ckpt_path='best')` to use the best model or `.validate(ckpt_path='last')` to use the last model. If you pass a value, this warning will be silenced.
+
+[2024-05-24 10:18:07,359][hannah.utils.utils][INFO] - Environment info:
+[2024-05-24 10:18:07,464][hannah.utils.utils][INFO] -   Number of GPUs: 2
+[2024-05-24 10:18:07,465][hannah.utils.utils][INFO] -   CUDA version: 12.1
+[2024-05-24 10:18:07,468][hannah.utils.utils][INFO] -   CUDNN version: 8907
+[2024-05-24 10:18:07,468][hannah.utils.utils][INFO] -   Kernel: 4.18.0-513.24.1.el8_9.x86_64
+[2024-05-24 10:18:07,468][hannah.utils.utils][INFO] -   Python: 3.11.5 (main, Nov 15 2023, 03:52:27) [GCC 8.5.0 20210514 (Red Hat 8.5.0-20)]
+[2024-05-24 10:18:07,468][hannah.utils.utils][INFO] -   PyTorch: 2.2.2+cu121
+[2024-05-24 10:18:07,468][hannah.utils.utils][INFO] -   Pytorch Lightning: 2.2.4
+[2024-05-24 10:18:07,468][hannah.utils.utils][INFO] -   Numpy: 1.26.4
+[2024-05-24 10:18:07,468][hannah.utils.utils][INFO] -   Hannah version info:
+[2024-05-24 10:18:07,470][hannah.utils.utils][INFO] -     Cannot find a Git repository.  You probably downloaded an archive
+[2024-05-24 10:18:07,470][hannah.utils.utils][INFO] -   Command line: /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/bin/hannah-train dataset.data_folder=/data module.num_workers=64 module.batch_size=128 dataset.downsampling.enabled=False experiment_id=weighted_loss dataset.weighted_loss=true
+[2024-05-24 10:18:07,470][hannah.utils.utils][INFO] -   
+[2024-05-24 10:18:07,471][lightning.fabric.utilities.seed][INFO] - Seed set to 1234
+[2024-05-24 10:18:07,472][root][INFO] - Configuration: 
+[2024-05-24 10:18:07,475][root][INFO] - dataset:
+  sensor:
+    name: naneye-m
+    resolution:
+    - 320
+    - 320
+  cls: hannah.datasets.vision.DresdenCapsuleDataset
+  data_folder: /data
+  download_folder: MISSING
+  dataset: dresden_capsule
+  sampler: random
+  weighted_loss: true
+  task: sections
+  split: split_0
+  downsampling:
+    enabled: false
+    ratio:
+      binary: 1
+      sections:
+      - 1
+      - 1
+      - 0.05
+      - 0.01
+      - 0.005
+      technical_multilabel_bubbles_dirt:
+      - 1
+      - 1
+      technical_multiclass_view:
+      - 1
+      - 1
+      - 1
+    anomalies_fraction: 0.3
+  seed: 1234
+features:
+  _target_: torch.nn.Identity
+model:
+  _target_: hannah.models.timm.TimmModel
+  name: mobilenetv3_small_075
+  drop_rate: 0.3
+  drop_path_rate: 0.2
+scheduler:
+  _target_: torch.optim.lr_scheduler.OneCycleLR
+  max_lr: 0.001
+  pct_start: 0.3
+  anneal_strategy: cos
+  cycle_momentum: true
+  base_momentum: 0.85
+  max_momentum: 0.95
+  div_factor: 25.0
+  final_div_factor: 10000.0
+  last_epoch: -1
+optimizer:
+  _target_: torch.optim.adamw.AdamW
+  lr: 0.001
+  betas:
+  - 0.9
+  - 0.999
+  eps: 1.0e-08
+  weight_decay: 1.0e-05
+  amsgrad: false
+module:
+  _target_: hannah.modules.vision.ImageClassifierModule
+  num_workers: 64
+  batch_size: 128
+  shuffle_all_dataloaders: false
+trainer:
+  _target_: pytorch_lightning.trainer.Trainer
+  accelerator: auto
+  devices: 1
+  limit_train_batches: 1.0
+  limit_val_batches: 1.0
+  limit_test_batches: 1.0
+  max_epochs: 15
+  default_root_dir: .
+  fast_dev_run: false
+  overfit_batches: 0.0
+  benchmark: false
+  deterministic: warn
+  gradient_clip_val: 0
+  accumulate_grad_batches: 1
+  plugins: null
+  strategy: auto
+  reload_dataloaders_every_n_epochs: 0
+  precision: 32
+checkpoint:
+  _target_: pytorch_lightning.callbacks.ModelCheckpoint
+  dirpath: checkpoints
+  save_top_k: 1
+  verbose: true
+  monitor: val_error
+  mode: min
+  save_last: true
+experiment_id: weighted_loss
+output_dir: trained_models
+auto_lr: false
+resume: false
+fx_mac_summary: false
+skip_test: false
+skip_val: false
+seed:
+- 1234
+validate_output: false
+
+[2024-05-24 10:18:07,476][root][INFO] - Current working directory /local/gerum/hannah/experiments/dresden_capsule/trained_models/weighted_loss/mobilenetv3_small_075
+[2024-05-24 10:18:08,201][hannah.callbacks.optimization][INFO] - Monitoring the following values for optimization
+[2024-05-24 10:18:08,201][hannah.callbacks.optimization][INFO] -   - val_error direction: minimize(1)
+[2024-05-24 10:18:08,299][pytorch_lightning.utilities.rank_zero][INFO] - GPU available: True (cuda), used: True
+[2024-05-24 10:18:08,299][pytorch_lightning.utilities.rank_zero][INFO] - TPU available: False, using: 0 TPU cores
+[2024-05-24 10:18:08,299][pytorch_lightning.utilities.rank_zero][INFO] - IPU available: False, using: 0 IPUs
+[2024-05-24 10:18:08,299][pytorch_lightning.utilities.rank_zero][INFO] - HPU available: False, using: 0 HPUs
+[2024-05-24 10:18:08,299][pytorch_lightning.utilities.rank_zero][INFO] - `Trainer(limit_train_batches=1.0)` was configured so 100% of the batches per epoch will be used..
+[2024-05-24 10:18:08,299][pytorch_lightning.utilities.rank_zero][INFO] - `Trainer(limit_val_batches=1.0)` was configured so 100% of the batches will be used..
+[2024-05-24 10:18:08,299][pytorch_lightning.utilities.rank_zero][INFO] - `Trainer(limit_test_batches=1.0)` was configured so 100% of the batches will be used..
+[2024-05-24 10:18:08,300][root][INFO] - Starting training
+[2024-05-24 10:18:20,880][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/albumentations/core/validation.py:34: UserWarning: Argument 'limit' is not valid and will be ignored.
+  warn(
+
+[2024-05-24 10:18:20,927][py.warnings][WARNING] - /local/gerum/hannah/hannah/modules/vision/base.py:63: UserWarning: Vision datasets should return a length 4 tuple, will assume unlabeled data is None
+  warnings.warn(
+
+[2024-05-24 10:18:20,927][hannah.modules.vision.base][INFO] - Dataset lengths:
+[2024-05-24 10:18:20,927][hannah.modules.vision.base][INFO] -   Train Set (Labeled): 2616647
+[2024-05-24 10:18:20,928][hannah.modules.vision.base][INFO] -   Train Set (Unlabled): 0
+[2024-05-24 10:18:20,928][hannah.modules.vision.base][INFO] -   Dev Set: 662338
+[2024-05-24 10:18:20,928][hannah.modules.vision.base][INFO] -   Test Set: 234555
+[2024-05-24 10:18:20,946][hannah.modules.vision.base][INFO] - Setting up model mobilenetv3_small_075
+[2024-05-24 10:18:21,109][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:803: UserWarning: Overwriting focalnet_tiny_srf in registry with hannah.models._vendor.focalnet.focalnet_tiny_srf. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-24 10:18:21,109][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:824: UserWarning: Overwriting focalnet_small_srf in registry with hannah.models._vendor.focalnet.focalnet_small_srf. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-24 10:18:21,109][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:843: UserWarning: Overwriting focalnet_base_srf in registry with hannah.models._vendor.focalnet.focalnet_base_srf. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-24 10:18:21,109][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:862: UserWarning: Overwriting focalnet_tiny_lrf in registry with hannah.models._vendor.focalnet.focalnet_tiny_lrf. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-24 10:18:21,109][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:885: UserWarning: Overwriting focalnet_small_lrf in registry with hannah.models._vendor.focalnet.focalnet_small_lrf. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-24 10:18:21,109][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:906: UserWarning: Overwriting focalnet_base_lrf in registry with hannah.models._vendor.focalnet.focalnet_base_lrf. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-24 10:18:21,109][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:1010: UserWarning: Overwriting focalnet_large_fl3 in registry with hannah.models._vendor.focalnet.focalnet_large_fl3. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-24 10:18:21,109][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:1031: UserWarning: Overwriting focalnet_large_fl4 in registry with hannah.models._vendor.focalnet.focalnet_large_fl4. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-24 10:18:21,109][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:1052: UserWarning: Overwriting focalnet_xlarge_fl3 in registry with hannah.models._vendor.focalnet.focalnet_xlarge_fl3. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-24 10:18:21,109][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:1073: UserWarning: Overwriting focalnet_xlarge_fl4 in registry with hannah.models._vendor.focalnet.focalnet_xlarge_fl4. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-24 10:18:21,110][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:1094: UserWarning: Overwriting focalnet_huge_fl3 in registry with hannah.models._vendor.focalnet.focalnet_huge_fl3. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-24 10:18:21,110][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:1115: UserWarning: Overwriting focalnet_huge_fl4 in registry with hannah.models._vendor.focalnet.focalnet_huge_fl4. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-24 10:18:21,133][hannah.models.timm][INFO] - Using default logger for automatic stem creation
+[2024-05-24 10:18:21,161][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/nn/modules/lazy.py:181: UserWarning: Lazy modules are a new feature under heavy development so changes to the API or functionality can happen at any moment.
+  warnings.warn('Lazy modules are a new feature under heavy development '
+
+[2024-05-24 10:18:21,234][hannah.modules.base][INFO] - Using weighted loss with weights:
+[2024-05-24 10:18:21,234][hannah.modules.base][INFO] - - mouth [0]: 391.128113
+[2024-05-24 10:18:21,234][hannah.modules.base][INFO] - - esophagus [1]: 328.518158
+[2024-05-24 10:18:21,234][hannah.modules.base][INFO] - - stomach [2]: 2.569169
+[2024-05-24 10:18:21,234][hannah.modules.base][INFO] - - small intestine [3]: 0.543897
+[2024-05-24 10:18:21,234][hannah.modules.base][INFO] - - colon [4]: 0.361456
+[2024-05-24 10:18:21,427][hannah.modules.vision.base][INFO] - Instantiating input Normalizer with mean: (0.5, 0.5, 0.5), std: (0.5, 0.5, 0.5)
+[2024-05-24 10:18:21,431][hannah.modules.vision.base][INFO] - Running dummy forward to initialize lazy modules
+[2024-05-24 10:18:21,456][pytorch_lightning.accelerators.cuda][INFO] - LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+[2024-05-24 10:18:21,471][pytorch_lightning.utilities.rank_zero][INFO] - Loading `train_dataloader` to estimate number of stepping batches.
+[2024-05-24 10:18:23,484][pytorch_lightning.callbacks.model_summary][INFO] - 
+  | Name           | Type                           | Params | In sizes         | Out sizes                            
+-----------------------------------------------------------------------------------------------------------------------------
+0 | val_metrics    | MetricCollection               | 0      | ?                | ?                                    
+1 | test_metrics   | MetricCollection               | 0      | ?                | ?                                    
+2 | train_metrics  | MetricCollection               | 0      | ?                | ?                                    
+3 | model          | TimmModel                      | 1.0 M  | [1, 3, 320, 320] | [[1, 1024, 10, 10], [0], [0], [1, 5]]
+4 | test_confusion | MulticlassConfusionMatrix      | 0      | ?                | ?                                    
+5 | test_roc       | MulticlassROC                  | 0      | ?                | ?                                    
+6 | test_pr_curve  | MulticlassPrecisionRecallCurve | 0      | ?                | ?                                    
+7 | metrics        | ModuleDict                     | 0      | ?                | ?                                    
+-----------------------------------------------------------------------------------------------------------------------------
+1.0 M     Trainable params
+0         Non-trainable params
+1.0 M     Total params
+4.088     Total estimated model params size (MB)
+[2024-05-24 10:18:23,782][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/timm.py:312: TracerWarning: torch.tensor results are registered as constants in the trace. You can safely ignore this warning if you use this function to create tensors out of constant variables that would be the same every time you call this function. In any other case, this might cause the trace to be incorrect.
+  decoded = torch.tensor([])
+
+[2024-05-24 10:18:23,783][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/timm.py:316: TracerWarning: torch.tensor results are registered as constants in the trace. You can safely ignore this warning if you use this function to create tensors out of constant variables that would be the same every time you call this function. In any other case, this might cause the trace to be incorrect.
+  logits = torch.tensor([])
+
+[2024-05-24 10:18:23,785][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/timm.py:320: TracerWarning: torch.tensor results are registered as constants in the trace. You can safely ignore this warning if you use this function to create tensors out of constant variables that would be the same every time you call this function. In any other case, this might cause the trace to be incorrect.
+  projection = torch.tensor([])
+
+[2024-05-24 10:18:45,342][hannah.callbacks.summaries][INFO] - 
++-----+-----------------------------------+------------------------+---------------------------------------------------+-------------------+--------------+-------------------+--------------+------------------+----------+
+|     | Name                              | Type                   | Attrs                                             | IFM               |   IFM volume | OFM               |   OFM volume |   Weights volume |     MACs |
+|-----+-----------------------------------+------------------------+---------------------------------------------------+-------------------+--------------+-------------------+--------------+------------------+----------|
+|   0 | encoder.conv_stem                 | Conv2d                 | k=(3, 3), s=(2, 2), g=(1), dsc=(False), d=(1, 1)  | (1, 3, 320, 320)  |       307200 | (1, 16, 160, 160) |       409600 |              432 | 11059200 |
+|   1 | encoder.bn1.drop                  | Identity               |                                                   | (1, 16, 160, 160) |       409600 | (1, 16, 160, 160) |       409600 |                0 |        0 |
+|   2 | encoder.bn1.act                   | Hardswish              |                                                   | (1, 16, 160, 160) |       409600 | (1, 16, 160, 160) |       409600 |                0 |        0 |
+|   3 | encoder.bn1                       | BatchNormAct2d         |                                                   | (1, 16, 160, 160) |       409600 | (1, 16, 160, 160) |       409600 |                0 |        0 |
+|   4 | encoder.blocks.0.0.conv_dw        | Conv2d                 | k=(3, 3), s=(2, 2), g=(16), dsc=(True), d=(1, 1)  | (1, 16, 160, 160) |       409600 | (1, 16, 80, 80)   |       102400 |              144 |   921600 |
+|   5 | encoder.blocks.0.0.bn1.drop       | Identity               |                                                   | (1, 16, 80, 80)   |       102400 | (1, 16, 80, 80)   |       102400 |                0 |        0 |
+|   6 | encoder.blocks.0.0.bn1.act        | ReLU                   |                                                   | (1, 16, 80, 80)   |       102400 | (1, 16, 80, 80)   |       102400 |                0 |        0 |
+|   7 | encoder.blocks.0.0.bn1            | BatchNormAct2d         |                                                   | (1, 16, 80, 80)   |       102400 | (1, 16, 80, 80)   |       102400 |                0 |        0 |
+|   8 | encoder.blocks.0.0.se.conv_reduce | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 16, 1, 1)     |           16 | (1, 8, 1, 1)      |            8 |              128 |      128 |
+|   9 | encoder.blocks.0.0.se.act1        | ReLU                   |                                                   | (1, 8, 1, 1)      |            8 | (1, 8, 1, 1)      |            8 |                0 |        0 |
+|  10 | encoder.blocks.0.0.se.conv_expand | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 8, 1, 1)      |            8 | (1, 16, 1, 1)     |           16 |              128 |      128 |
+|  11 | encoder.blocks.0.0.se.gate        | Hardsigmoid            |                                                   | (1, 16, 1, 1)     |           16 | (1, 16, 1, 1)     |           16 |                0 |        0 |
+|  12 | encoder.blocks.0.0.se             | SqueezeExcite          |                                                   | (1, 16, 80, 80)   |       102400 | (1, 16, 80, 80)   |       102400 |                0 |        0 |
+|  13 | encoder.blocks.0.0.conv_pw        | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 16, 80, 80)   |       102400 | (1, 16, 80, 80)   |       102400 |              256 |  1638400 |
+|  14 | encoder.blocks.0.0.bn2.drop       | Identity               |                                                   | (1, 16, 80, 80)   |       102400 | (1, 16, 80, 80)   |       102400 |                0 |        0 |
+|  15 | encoder.blocks.0.0.bn2.act        | Identity               |                                                   | (1, 16, 80, 80)   |       102400 | (1, 16, 80, 80)   |       102400 |                0 |        0 |
+|  16 | encoder.blocks.0.0.bn2            | BatchNormAct2d         |                                                   | (1, 16, 80, 80)   |       102400 | (1, 16, 80, 80)   |       102400 |                0 |        0 |
+|  17 | encoder.blocks.0.0                | DepthwiseSeparableConv |                                                   | (1, 16, 160, 160) |       409600 | (1, 16, 80, 80)   |       102400 |                0 |        0 |
+|  18 | encoder.blocks.0                  | Sequential             |                                                   | (1, 16, 160, 160) |       409600 | (1, 16, 80, 80)   |       102400 |                0 |        0 |
+|  19 | encoder.blocks.1.0.conv_pw        | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 16, 80, 80)   |       102400 | (1, 72, 80, 80)   |       460800 |             1152 |  7372800 |
+|  20 | encoder.blocks.1.0.bn1.drop       | Identity               |                                                   | (1, 72, 80, 80)   |       460800 | (1, 72, 80, 80)   |       460800 |                0 |        0 |
+|  21 | encoder.blocks.1.0.bn1.act        | ReLU                   |                                                   | (1, 72, 80, 80)   |       460800 | (1, 72, 80, 80)   |       460800 |                0 |        0 |
+|  22 | encoder.blocks.1.0.bn1            | BatchNormAct2d         |                                                   | (1, 72, 80, 80)   |       460800 | (1, 72, 80, 80)   |       460800 |                0 |        0 |
+|  23 | encoder.blocks.1.0.conv_dw        | Conv2d                 | k=(3, 3), s=(2, 2), g=(72), dsc=(True), d=(1, 1)  | (1, 72, 80, 80)   |       460800 | (1, 72, 40, 40)   |       115200 |              648 |  1036800 |
+|  24 | encoder.blocks.1.0.bn2.drop       | Identity               |                                                   | (1, 72, 40, 40)   |       115200 | (1, 72, 40, 40)   |       115200 |                0 |        0 |
+|  25 | encoder.blocks.1.0.bn2.act        | ReLU                   |                                                   | (1, 72, 40, 40)   |       115200 | (1, 72, 40, 40)   |       115200 |                0 |        0 |
+|  26 | encoder.blocks.1.0.bn2            | BatchNormAct2d         |                                                   | (1, 72, 40, 40)   |       115200 | (1, 72, 40, 40)   |       115200 |                0 |        0 |
+|  27 | encoder.blocks.1.0.se             | Identity               |                                                   | (1, 72, 40, 40)   |       115200 | (1, 72, 40, 40)   |       115200 |                0 |        0 |
+|  28 | encoder.blocks.1.0.conv_pwl       | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 72, 40, 40)   |       115200 | (1, 24, 40, 40)   |        38400 |             1728 |  2764800 |
+|  29 | encoder.blocks.1.0.bn3.drop       | Identity               |                                                   | (1, 24, 40, 40)   |        38400 | (1, 24, 40, 40)   |        38400 |                0 |        0 |
+|  30 | encoder.blocks.1.0.bn3.act        | Identity               |                                                   | (1, 24, 40, 40)   |        38400 | (1, 24, 40, 40)   |        38400 |                0 |        0 |
+|  31 | encoder.blocks.1.0.bn3            | BatchNormAct2d         |                                                   | (1, 24, 40, 40)   |        38400 | (1, 24, 40, 40)   |        38400 |                0 |        0 |
+|  32 | encoder.blocks.1.0                | InvertedResidual       |                                                   | (1, 16, 80, 80)   |       102400 | (1, 24, 40, 40)   |        38400 |                0 |        0 |
+|  33 | encoder.blocks.1.1.conv_pw        | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 24, 40, 40)   |        38400 | (1, 88, 40, 40)   |       140800 |             2112 |  3379200 |
+|  34 | encoder.blocks.1.1.bn1.drop       | Identity               |                                                   | (1, 88, 40, 40)   |       140800 | (1, 88, 40, 40)   |       140800 |                0 |        0 |
+|  35 | encoder.blocks.1.1.bn1.act        | ReLU                   |                                                   | (1, 88, 40, 40)   |       140800 | (1, 88, 40, 40)   |       140800 |                0 |        0 |
+|  36 | encoder.blocks.1.1.bn1            | BatchNormAct2d         |                                                   | (1, 88, 40, 40)   |       140800 | (1, 88, 40, 40)   |       140800 |                0 |        0 |
+|  37 | encoder.blocks.1.1.conv_dw        | Conv2d                 | k=(3, 3), s=(1, 1), g=(88), dsc=(True), d=(1, 1)  | (1, 88, 40, 40)   |       140800 | (1, 88, 40, 40)   |       140800 |              792 |  1267200 |
+|  38 | encoder.blocks.1.1.bn2.drop       | Identity               |                                                   | (1, 88, 40, 40)   |       140800 | (1, 88, 40, 40)   |       140800 |                0 |        0 |
+|  39 | encoder.blocks.1.1.bn2.act        | ReLU                   |                                                   | (1, 88, 40, 40)   |       140800 | (1, 88, 40, 40)   |       140800 |                0 |        0 |
+|  40 | encoder.blocks.1.1.bn2            | BatchNormAct2d         |                                                   | (1, 88, 40, 40)   |       140800 | (1, 88, 40, 40)   |       140800 |                0 |        0 |
+|  41 | encoder.blocks.1.1.se             | Identity               |                                                   | (1, 88, 40, 40)   |       140800 | (1, 88, 40, 40)   |       140800 |                0 |        0 |
+|  42 | encoder.blocks.1.1.conv_pwl       | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 88, 40, 40)   |       140800 | (1, 24, 40, 40)   |        38400 |             2112 |  3379200 |
+|  43 | encoder.blocks.1.1.bn3.drop       | Identity               |                                                   | (1, 24, 40, 40)   |        38400 | (1, 24, 40, 40)   |        38400 |                0 |        0 |
+|  44 | encoder.blocks.1.1.bn3.act        | Identity               |                                                   | (1, 24, 40, 40)   |        38400 | (1, 24, 40, 40)   |        38400 |                0 |        0 |
+|  45 | encoder.blocks.1.1.bn3            | BatchNormAct2d         |                                                   | (1, 24, 40, 40)   |        38400 | (1, 24, 40, 40)   |        38400 |                0 |        0 |
+|  46 | encoder.blocks.1.1.drop_path      | DropPath               |                                                   | (1, 24, 40, 40)   |        38400 | (1, 24, 40, 40)   |        38400 |                0 |        0 |
+|  47 | encoder.blocks.1.1                | InvertedResidual       |                                                   | (1, 24, 40, 40)   |        38400 | (1, 24, 40, 40)   |        38400 |                0 |        0 |
+|  48 | encoder.blocks.1                  | Sequential             |                                                   | (1, 16, 80, 80)   |       102400 | (1, 24, 40, 40)   |        38400 |                0 |        0 |
+|  49 | encoder.blocks.2.0.conv_pw        | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 24, 40, 40)   |        38400 | (1, 96, 40, 40)   |       153600 |             2304 |  3686400 |
+|  50 | encoder.blocks.2.0.bn1.drop       | Identity               |                                                   | (1, 96, 40, 40)   |       153600 | (1, 96, 40, 40)   |       153600 |                0 |        0 |
+|  51 | encoder.blocks.2.0.bn1.act        | Hardswish              |                                                   | (1, 96, 40, 40)   |       153600 | (1, 96, 40, 40)   |       153600 |                0 |        0 |
+|  52 | encoder.blocks.2.0.bn1            | BatchNormAct2d         |                                                   | (1, 96, 40, 40)   |       153600 | (1, 96, 40, 40)   |       153600 |                0 |        0 |
+|  53 | encoder.blocks.2.0.conv_dw        | Conv2d                 | k=(5, 5), s=(2, 2), g=(96), dsc=(True), d=(1, 1)  | (1, 96, 40, 40)   |       153600 | (1, 96, 20, 20)   |        38400 |             2400 |   960000 |
+|  54 | encoder.blocks.2.0.bn2.drop       | Identity               |                                                   | (1, 96, 20, 20)   |        38400 | (1, 96, 20, 20)   |        38400 |                0 |        0 |
+|  55 | encoder.blocks.2.0.bn2.act        | Hardswish              |                                                   | (1, 96, 20, 20)   |        38400 | (1, 96, 20, 20)   |        38400 |                0 |        0 |
+|  56 | encoder.blocks.2.0.bn2            | BatchNormAct2d         |                                                   | (1, 96, 20, 20)   |        38400 | (1, 96, 20, 20)   |        38400 |                0 |        0 |
+|  57 | encoder.blocks.2.0.se.conv_reduce | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 96, 1, 1)     |           96 | (1, 24, 1, 1)     |           24 |             2304 |     2304 |
+|  58 | encoder.blocks.2.0.se.act1        | ReLU                   |                                                   | (1, 24, 1, 1)     |           24 | (1, 24, 1, 1)     |           24 |                0 |        0 |
+|  59 | encoder.blocks.2.0.se.conv_expand | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 24, 1, 1)     |           24 | (1, 96, 1, 1)     |           96 |             2304 |     2304 |
+|  60 | encoder.blocks.2.0.se.gate        | Hardsigmoid            |                                                   | (1, 96, 1, 1)     |           96 | (1, 96, 1, 1)     |           96 |                0 |        0 |
+|  61 | encoder.blocks.2.0.se             | SqueezeExcite          |                                                   | (1, 96, 20, 20)   |        38400 | (1, 96, 20, 20)   |        38400 |                0 |        0 |
+|  62 | encoder.blocks.2.0.conv_pwl       | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 96, 20, 20)   |        38400 | (1, 32, 20, 20)   |        12800 |             3072 |  1228800 |
+|  63 | encoder.blocks.2.0.bn3.drop       | Identity               |                                                   | (1, 32, 20, 20)   |        12800 | (1, 32, 20, 20)   |        12800 |                0 |        0 |
+|  64 | encoder.blocks.2.0.bn3.act        | Identity               |                                                   | (1, 32, 20, 20)   |        12800 | (1, 32, 20, 20)   |        12800 |                0 |        0 |
+|  65 | encoder.blocks.2.0.bn3            | BatchNormAct2d         |                                                   | (1, 32, 20, 20)   |        12800 | (1, 32, 20, 20)   |        12800 |                0 |        0 |
+|  66 | encoder.blocks.2.0                | InvertedResidual       |                                                   | (1, 24, 40, 40)   |        38400 | (1, 32, 20, 20)   |        12800 |                0 |        0 |
+|  67 | encoder.blocks.2.1.conv_pw        | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 32, 20, 20)   |        12800 | (1, 192, 20, 20)  |        76800 |             6144 |  2457600 |
+|  68 | encoder.blocks.2.1.bn1.drop       | Identity               |                                                   | (1, 192, 20, 20)  |        76800 | (1, 192, 20, 20)  |        76800 |                0 |        0 |
+|  69 | encoder.blocks.2.1.bn1.act        | Hardswish              |                                                   | (1, 192, 20, 20)  |        76800 | (1, 192, 20, 20)  |        76800 |                0 |        0 |
+|  70 | encoder.blocks.2.1.bn1            | BatchNormAct2d         |                                                   | (1, 192, 20, 20)  |        76800 | (1, 192, 20, 20)  |        76800 |                0 |        0 |
+|  71 | encoder.blocks.2.1.conv_dw        | Conv2d                 | k=(5, 5), s=(1, 1), g=(192), dsc=(True), d=(1, 1) | (1, 192, 20, 20)  |        76800 | (1, 192, 20, 20)  |        76800 |             4800 |  1920000 |
+|  72 | encoder.blocks.2.1.bn2.drop       | Identity               |                                                   | (1, 192, 20, 20)  |        76800 | (1, 192, 20, 20)  |        76800 |                0 |        0 |
+|  73 | encoder.blocks.2.1.bn2.act        | Hardswish              |                                                   | (1, 192, 20, 20)  |        76800 | (1, 192, 20, 20)  |        76800 |                0 |        0 |
+|  74 | encoder.blocks.2.1.bn2            | BatchNormAct2d         |                                                   | (1, 192, 20, 20)  |        76800 | (1, 192, 20, 20)  |        76800 |                0 |        0 |
+|  75 | encoder.blocks.2.1.se.conv_reduce | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 192, 1, 1)    |          192 | (1, 48, 1, 1)     |           48 |             9216 |     9216 |
+|  76 | encoder.blocks.2.1.se.act1        | ReLU                   |                                                   | (1, 48, 1, 1)     |           48 | (1, 48, 1, 1)     |           48 |                0 |        0 |
+|  77 | encoder.blocks.2.1.se.conv_expand | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 48, 1, 1)     |           48 | (1, 192, 1, 1)    |          192 |             9216 |     9216 |
+|  78 | encoder.blocks.2.1.se.gate        | Hardsigmoid            |                                                   | (1, 192, 1, 1)    |          192 | (1, 192, 1, 1)    |          192 |                0 |        0 |
+|  79 | encoder.blocks.2.1.se             | SqueezeExcite          |                                                   | (1, 192, 20, 20)  |        76800 | (1, 192, 20, 20)  |        76800 |                0 |        0 |
+|  80 | encoder.blocks.2.1.conv_pwl       | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 192, 20, 20)  |        76800 | (1, 32, 20, 20)   |        12800 |             6144 |  2457600 |
+|  81 | encoder.blocks.2.1.bn3.drop       | Identity               |                                                   | (1, 32, 20, 20)   |        12800 | (1, 32, 20, 20)   |        12800 |                0 |        0 |
+|  82 | encoder.blocks.2.1.bn3.act        | Identity               |                                                   | (1, 32, 20, 20)   |        12800 | (1, 32, 20, 20)   |        12800 |                0 |        0 |
+|  83 | encoder.blocks.2.1.bn3            | BatchNormAct2d         |                                                   | (1, 32, 20, 20)   |        12800 | (1, 32, 20, 20)   |        12800 |                0 |        0 |
+|  84 | encoder.blocks.2.1.drop_path      | DropPath               |                                                   | (1, 32, 20, 20)   |        12800 | (1, 32, 20, 20)   |        12800 |                0 |        0 |
+|  85 | encoder.blocks.2.1                | InvertedResidual       |                                                   | (1, 32, 20, 20)   |        12800 | (1, 32, 20, 20)   |        12800 |                0 |        0 |
+|  86 | encoder.blocks.2.2.conv_pw        | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 32, 20, 20)   |        12800 | (1, 192, 20, 20)  |        76800 |             6144 |  2457600 |
+|  87 | encoder.blocks.2.2.bn1.drop       | Identity               |                                                   | (1, 192, 20, 20)  |        76800 | (1, 192, 20, 20)  |        76800 |                0 |        0 |
+|  88 | encoder.blocks.2.2.bn1.act        | Hardswish              |                                                   | (1, 192, 20, 20)  |        76800 | (1, 192, 20, 20)  |        76800 |                0 |        0 |
+|  89 | encoder.blocks.2.2.bn1            | BatchNormAct2d         |                                                   | (1, 192, 20, 20)  |        76800 | (1, 192, 20, 20)  |        76800 |                0 |        0 |
+|  90 | encoder.blocks.2.2.conv_dw        | Conv2d                 | k=(5, 5), s=(1, 1), g=(192), dsc=(True), d=(1, 1) | (1, 192, 20, 20)  |        76800 | (1, 192, 20, 20)  |        76800 |             4800 |  1920000 |
+|  91 | encoder.blocks.2.2.bn2.drop       | Identity               |                                                   | (1, 192, 20, 20)  |        76800 | (1, 192, 20, 20)  |        76800 |                0 |        0 |
+|  92 | encoder.blocks.2.2.bn2.act        | Hardswish              |                                                   | (1, 192, 20, 20)  |        76800 | (1, 192, 20, 20)  |        76800 |                0 |        0 |
+|  93 | encoder.blocks.2.2.bn2            | BatchNormAct2d         |                                                   | (1, 192, 20, 20)  |        76800 | (1, 192, 20, 20)  |        76800 |                0 |        0 |
+|  94 | encoder.blocks.2.2.se.conv_reduce | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 192, 1, 1)    |          192 | (1, 48, 1, 1)     |           48 |             9216 |     9216 |
+|  95 | encoder.blocks.2.2.se.act1        | ReLU                   |                                                   | (1, 48, 1, 1)     |           48 | (1, 48, 1, 1)     |           48 |                0 |        0 |
+|  96 | encoder.blocks.2.2.se.conv_expand | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 48, 1, 1)     |           48 | (1, 192, 1, 1)    |          192 |             9216 |     9216 |
+|  97 | encoder.blocks.2.2.se.gate        | Hardsigmoid            |                                                   | (1, 192, 1, 1)    |          192 | (1, 192, 1, 1)    |          192 |                0 |        0 |
+|  98 | encoder.blocks.2.2.se             | SqueezeExcite          |                                                   | (1, 192, 20, 20)  |        76800 | (1, 192, 20, 20)  |        76800 |                0 |        0 |
+|  99 | encoder.blocks.2.2.conv_pwl       | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 192, 20, 20)  |        76800 | (1, 32, 20, 20)   |        12800 |             6144 |  2457600 |
+| 100 | encoder.blocks.2.2.bn3.drop       | Identity               |                                                   | (1, 32, 20, 20)   |        12800 | (1, 32, 20, 20)   |        12800 |                0 |        0 |
+| 101 | encoder.blocks.2.2.bn3.act        | Identity               |                                                   | (1, 32, 20, 20)   |        12800 | (1, 32, 20, 20)   |        12800 |                0 |        0 |
+| 102 | encoder.blocks.2.2.bn3            | BatchNormAct2d         |                                                   | (1, 32, 20, 20)   |        12800 | (1, 32, 20, 20)   |        12800 |                0 |        0 |
+| 103 | encoder.blocks.2.2.drop_path      | DropPath               |                                                   | (1, 32, 20, 20)   |        12800 | (1, 32, 20, 20)   |        12800 |                0 |        0 |
+| 104 | encoder.blocks.2.2                | InvertedResidual       |                                                   | (1, 32, 20, 20)   |        12800 | (1, 32, 20, 20)   |        12800 |                0 |        0 |
+| 105 | encoder.blocks.2                  | Sequential             |                                                   | (1, 24, 40, 40)   |        38400 | (1, 32, 20, 20)   |        12800 |                0 |        0 |
+| 106 | encoder.blocks.3.0.conv_pw        | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 32, 20, 20)   |        12800 | (1, 96, 20, 20)   |        38400 |             3072 |  1228800 |
+| 107 | encoder.blocks.3.0.bn1.drop       | Identity               |                                                   | (1, 96, 20, 20)   |        38400 | (1, 96, 20, 20)   |        38400 |                0 |        0 |
+| 108 | encoder.blocks.3.0.bn1.act        | Hardswish              |                                                   | (1, 96, 20, 20)   |        38400 | (1, 96, 20, 20)   |        38400 |                0 |        0 |
+| 109 | encoder.blocks.3.0.bn1            | BatchNormAct2d         |                                                   | (1, 96, 20, 20)   |        38400 | (1, 96, 20, 20)   |        38400 |                0 |        0 |
+| 110 | encoder.blocks.3.0.conv_dw        | Conv2d                 | k=(5, 5), s=(1, 1), g=(96), dsc=(True), d=(1, 1)  | (1, 96, 20, 20)   |        38400 | (1, 96, 20, 20)   |        38400 |             2400 |   960000 |
+| 111 | encoder.blocks.3.0.bn2.drop       | Identity               |                                                   | (1, 96, 20, 20)   |        38400 | (1, 96, 20, 20)   |        38400 |                0 |        0 |
+| 112 | encoder.blocks.3.0.bn2.act        | Hardswish              |                                                   | (1, 96, 20, 20)   |        38400 | (1, 96, 20, 20)   |        38400 |                0 |        0 |
+| 113 | encoder.blocks.3.0.bn2            | BatchNormAct2d         |                                                   | (1, 96, 20, 20)   |        38400 | (1, 96, 20, 20)   |        38400 |                0 |        0 |
+| 114 | encoder.blocks.3.0.se.conv_reduce | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 96, 1, 1)     |           96 | (1, 24, 1, 1)     |           24 |             2304 |     2304 |
+| 115 | encoder.blocks.3.0.se.act1        | ReLU                   |                                                   | (1, 24, 1, 1)     |           24 | (1, 24, 1, 1)     |           24 |                0 |        0 |
+| 116 | encoder.blocks.3.0.se.conv_expand | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 24, 1, 1)     |           24 | (1, 96, 1, 1)     |           96 |             2304 |     2304 |
+| 117 | encoder.blocks.3.0.se.gate        | Hardsigmoid            |                                                   | (1, 96, 1, 1)     |           96 | (1, 96, 1, 1)     |           96 |                0 |        0 |
+| 118 | encoder.blocks.3.0.se             | SqueezeExcite          |                                                   | (1, 96, 20, 20)   |        38400 | (1, 96, 20, 20)   |        38400 |                0 |        0 |
+| 119 | encoder.blocks.3.0.conv_pwl       | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 96, 20, 20)   |        38400 | (1, 40, 20, 20)   |        16000 |             3840 |  1536000 |
+| 120 | encoder.blocks.3.0.bn3.drop       | Identity               |                                                   | (1, 40, 20, 20)   |        16000 | (1, 40, 20, 20)   |        16000 |                0 |        0 |
+| 121 | encoder.blocks.3.0.bn3.act        | Identity               |                                                   | (1, 40, 20, 20)   |        16000 | (1, 40, 20, 20)   |        16000 |                0 |        0 |
+| 122 | encoder.blocks.3.0.bn3            | BatchNormAct2d         |                                                   | (1, 40, 20, 20)   |        16000 | (1, 40, 20, 20)   |        16000 |                0 |        0 |
+| 123 | encoder.blocks.3.0                | InvertedResidual       |                                                   | (1, 32, 20, 20)   |        12800 | (1, 40, 20, 20)   |        16000 |                0 |        0 |
+| 124 | encoder.blocks.3.1.conv_pw        | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 40, 20, 20)   |        16000 | (1, 120, 20, 20)  |        48000 |             4800 |  1920000 |
+| 125 | encoder.blocks.3.1.bn1.drop       | Identity               |                                                   | (1, 120, 20, 20)  |        48000 | (1, 120, 20, 20)  |        48000 |                0 |        0 |
+| 126 | encoder.blocks.3.1.bn1.act        | Hardswish              |                                                   | (1, 120, 20, 20)  |        48000 | (1, 120, 20, 20)  |        48000 |                0 |        0 |
+| 127 | encoder.blocks.3.1.bn1            | BatchNormAct2d         |                                                   | (1, 120, 20, 20)  |        48000 | (1, 120, 20, 20)  |        48000 |                0 |        0 |
+| 128 | encoder.blocks.3.1.conv_dw        | Conv2d                 | k=(5, 5), s=(1, 1), g=(120), dsc=(True), d=(1, 1) | (1, 120, 20, 20)  |        48000 | (1, 120, 20, 20)  |        48000 |             3000 |  1200000 |
+| 129 | encoder.blocks.3.1.bn2.drop       | Identity               |                                                   | (1, 120, 20, 20)  |        48000 | (1, 120, 20, 20)  |        48000 |                0 |        0 |
+| 130 | encoder.blocks.3.1.bn2.act        | Hardswish              |                                                   | (1, 120, 20, 20)  |        48000 | (1, 120, 20, 20)  |        48000 |                0 |        0 |
+| 131 | encoder.blocks.3.1.bn2            | BatchNormAct2d         |                                                   | (1, 120, 20, 20)  |        48000 | (1, 120, 20, 20)  |        48000 |                0 |        0 |
+| 132 | encoder.blocks.3.1.se.conv_reduce | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 120, 1, 1)    |          120 | (1, 32, 1, 1)     |           32 |             3840 |     3840 |
+| 133 | encoder.blocks.3.1.se.act1        | ReLU                   |                                                   | (1, 32, 1, 1)     |           32 | (1, 32, 1, 1)     |           32 |                0 |        0 |
+| 134 | encoder.blocks.3.1.se.conv_expand | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 32, 1, 1)     |           32 | (1, 120, 1, 1)    |          120 |             3840 |     3840 |
+| 135 | encoder.blocks.3.1.se.gate        | Hardsigmoid            |                                                   | (1, 120, 1, 1)    |          120 | (1, 120, 1, 1)    |          120 |                0 |        0 |
+| 136 | encoder.blocks.3.1.se             | SqueezeExcite          |                                                   | (1, 120, 20, 20)  |        48000 | (1, 120, 20, 20)  |        48000 |                0 |        0 |
+| 137 | encoder.blocks.3.1.conv_pwl       | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 120, 20, 20)  |        48000 | (1, 40, 20, 20)   |        16000 |             4800 |  1920000 |
+| 138 | encoder.blocks.3.1.bn3.drop       | Identity               |                                                   | (1, 40, 20, 20)   |        16000 | (1, 40, 20, 20)   |        16000 |                0 |        0 |
+| 139 | encoder.blocks.3.1.bn3.act        | Identity               |                                                   | (1, 40, 20, 20)   |        16000 | (1, 40, 20, 20)   |        16000 |                0 |        0 |
+| 140 | encoder.blocks.3.1.bn3            | BatchNormAct2d         |                                                   | (1, 40, 20, 20)   |        16000 | (1, 40, 20, 20)   |        16000 |                0 |        0 |
+| 141 | encoder.blocks.3.1.drop_path      | DropPath               |                                                   | (1, 40, 20, 20)   |        16000 | (1, 40, 20, 20)   |        16000 |                0 |        0 |
+| 142 | encoder.blocks.3.1                | InvertedResidual       |                                                   | (1, 40, 20, 20)   |        16000 | (1, 40, 20, 20)   |        16000 |                0 |        0 |
+| 143 | encoder.blocks.3                  | Sequential             |                                                   | (1, 32, 20, 20)   |        12800 | (1, 40, 20, 20)   |        16000 |                0 |        0 |
+| 144 | encoder.blocks.4.0.conv_pw        | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 40, 20, 20)   |        16000 | (1, 240, 20, 20)  |        96000 |             9600 |  3840000 |
+| 145 | encoder.blocks.4.0.bn1.drop       | Identity               |                                                   | (1, 240, 20, 20)  |        96000 | (1, 240, 20, 20)  |        96000 |                0 |        0 |
+| 146 | encoder.blocks.4.0.bn1.act        | Hardswish              |                                                   | (1, 240, 20, 20)  |        96000 | (1, 240, 20, 20)  |        96000 |                0 |        0 |
+| 147 | encoder.blocks.4.0.bn1            | BatchNormAct2d         |                                                   | (1, 240, 20, 20)  |        96000 | (1, 240, 20, 20)  |        96000 |                0 |        0 |
+| 148 | encoder.blocks.4.0.conv_dw        | Conv2d                 | k=(5, 5), s=(2, 2), g=(240), dsc=(True), d=(1, 1) | (1, 240, 20, 20)  |        96000 | (1, 240, 10, 10)  |        24000 |             6000 |   600000 |
+| 149 | encoder.blocks.4.0.bn2.drop       | Identity               |                                                   | (1, 240, 10, 10)  |        24000 | (1, 240, 10, 10)  |        24000 |                0 |        0 |
+| 150 | encoder.blocks.4.0.bn2.act        | Hardswish              |                                                   | (1, 240, 10, 10)  |        24000 | (1, 240, 10, 10)  |        24000 |                0 |        0 |
+| 151 | encoder.blocks.4.0.bn2            | BatchNormAct2d         |                                                   | (1, 240, 10, 10)  |        24000 | (1, 240, 10, 10)  |        24000 |                0 |        0 |
+| 152 | encoder.blocks.4.0.se.conv_reduce | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 240, 1, 1)    |          240 | (1, 64, 1, 1)     |           64 |            15360 |    15360 |
+| 153 | encoder.blocks.4.0.se.act1        | ReLU                   |                                                   | (1, 64, 1, 1)     |           64 | (1, 64, 1, 1)     |           64 |                0 |        0 |
+| 154 | encoder.blocks.4.0.se.conv_expand | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 64, 1, 1)     |           64 | (1, 240, 1, 1)    |          240 |            15360 |    15360 |
+| 155 | encoder.blocks.4.0.se.gate        | Hardsigmoid            |                                                   | (1, 240, 1, 1)    |          240 | (1, 240, 1, 1)    |          240 |                0 |        0 |
+| 156 | encoder.blocks.4.0.se             | SqueezeExcite          |                                                   | (1, 240, 10, 10)  |        24000 | (1, 240, 10, 10)  |        24000 |                0 |        0 |
+| 157 | encoder.blocks.4.0.conv_pwl       | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 240, 10, 10)  |        24000 | (1, 72, 10, 10)   |         7200 |            17280 |  1728000 |
+| 158 | encoder.blocks.4.0.bn3.drop       | Identity               |                                                   | (1, 72, 10, 10)   |         7200 | (1, 72, 10, 10)   |         7200 |                0 |        0 |
+| 159 | encoder.blocks.4.0.bn3.act        | Identity               |                                                   | (1, 72, 10, 10)   |         7200 | (1, 72, 10, 10)   |         7200 |                0 |        0 |
+| 160 | encoder.blocks.4.0.bn3            | BatchNormAct2d         |                                                   | (1, 72, 10, 10)   |         7200 | (1, 72, 10, 10)   |         7200 |                0 |        0 |
+| 161 | encoder.blocks.4.0                | InvertedResidual       |                                                   | (1, 40, 20, 20)   |        16000 | (1, 72, 10, 10)   |         7200 |                0 |        0 |
+| 162 | encoder.blocks.4.1.conv_pw        | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 72, 10, 10)   |         7200 | (1, 432, 10, 10)  |        43200 |            31104 |  3110400 |
+| 163 | encoder.blocks.4.1.bn1.drop       | Identity               |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 164 | encoder.blocks.4.1.bn1.act        | Hardswish              |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 165 | encoder.blocks.4.1.bn1            | BatchNormAct2d         |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 166 | encoder.blocks.4.1.conv_dw        | Conv2d                 | k=(5, 5), s=(1, 1), g=(432), dsc=(True), d=(1, 1) | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |            10800 |  1080000 |
+| 167 | encoder.blocks.4.1.bn2.drop       | Identity               |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 168 | encoder.blocks.4.1.bn2.act        | Hardswish              |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 169 | encoder.blocks.4.1.bn2            | BatchNormAct2d         |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 170 | encoder.blocks.4.1.se.conv_reduce | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 432, 1, 1)    |          432 | (1, 112, 1, 1)    |          112 |            48384 |    48384 |
+| 171 | encoder.blocks.4.1.se.act1        | ReLU                   |                                                   | (1, 112, 1, 1)    |          112 | (1, 112, 1, 1)    |          112 |                0 |        0 |
+| 172 | encoder.blocks.4.1.se.conv_expand | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 112, 1, 1)    |          112 | (1, 432, 1, 1)    |          432 |            48384 |    48384 |
+| 173 | encoder.blocks.4.1.se.gate        | Hardsigmoid            |                                                   | (1, 432, 1, 1)    |          432 | (1, 432, 1, 1)    |          432 |                0 |        0 |
+| 174 | encoder.blocks.4.1.se             | SqueezeExcite          |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 175 | encoder.blocks.4.1.conv_pwl       | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 432, 10, 10)  |        43200 | (1, 72, 10, 10)   |         7200 |            31104 |  3110400 |
+| 176 | encoder.blocks.4.1.bn3.drop       | Identity               |                                                   | (1, 72, 10, 10)   |         7200 | (1, 72, 10, 10)   |         7200 |                0 |        0 |
+| 177 | encoder.blocks.4.1.bn3.act        | Identity               |                                                   | (1, 72, 10, 10)   |         7200 | (1, 72, 10, 10)   |         7200 |                0 |        0 |
+| 178 | encoder.blocks.4.1.bn3            | BatchNormAct2d         |                                                   | (1, 72, 10, 10)   |         7200 | (1, 72, 10, 10)   |         7200 |                0 |        0 |
+| 179 | encoder.blocks.4.1.drop_path      | DropPath               |                                                   | (1, 72, 10, 10)   |         7200 | (1, 72, 10, 10)   |         7200 |                0 |        0 |
+| 180 | encoder.blocks.4.1                | InvertedResidual       |                                                   | (1, 72, 10, 10)   |         7200 | (1, 72, 10, 10)   |         7200 |                0 |        0 |
+| 181 | encoder.blocks.4.2.conv_pw        | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 72, 10, 10)   |         7200 | (1, 432, 10, 10)  |        43200 |            31104 |  3110400 |
+| 182 | encoder.blocks.4.2.bn1.drop       | Identity               |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 183 | encoder.blocks.4.2.bn1.act        | Hardswish              |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 184 | encoder.blocks.4.2.bn1            | BatchNormAct2d         |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 185 | encoder.blocks.4.2.conv_dw        | Conv2d                 | k=(5, 5), s=(1, 1), g=(432), dsc=(True), d=(1, 1) | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |            10800 |  1080000 |
+| 186 | encoder.blocks.4.2.bn2.drop       | Identity               |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 187 | encoder.blocks.4.2.bn2.act        | Hardswish              |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 188 | encoder.blocks.4.2.bn2            | BatchNormAct2d         |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 189 | encoder.blocks.4.2.se.conv_reduce | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 432, 1, 1)    |          432 | (1, 112, 1, 1)    |          112 |            48384 |    48384 |
+| 190 | encoder.blocks.4.2.se.act1        | ReLU                   |                                                   | (1, 112, 1, 1)    |          112 | (1, 112, 1, 1)    |          112 |                0 |        0 |
+| 191 | encoder.blocks.4.2.se.conv_expand | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 112, 1, 1)    |          112 | (1, 432, 1, 1)    |          432 |            48384 |    48384 |
+| 192 | encoder.blocks.4.2.se.gate        | Hardsigmoid            |                                                   | (1, 432, 1, 1)    |          432 | (1, 432, 1, 1)    |          432 |                0 |        0 |
+| 193 | encoder.blocks.4.2.se             | SqueezeExcite          |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 194 | encoder.blocks.4.2.conv_pwl       | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 432, 10, 10)  |        43200 | (1, 72, 10, 10)   |         7200 |            31104 |  3110400 |
+| 195 | encoder.blocks.4.2.bn3.drop       | Identity               |                                                   | (1, 72, 10, 10)   |         7200 | (1, 72, 10, 10)   |         7200 |                0 |        0 |
+| 196 | encoder.blocks.4.2.bn3.act        | Identity               |                                                   | (1, 72, 10, 10)   |         7200 | (1, 72, 10, 10)   |         7200 |                0 |        0 |
+| 197 | encoder.blocks.4.2.bn3            | BatchNormAct2d         |                                                   | (1, 72, 10, 10)   |         7200 | (1, 72, 10, 10)   |         7200 |                0 |        0 |
+| 198 | encoder.blocks.4.2.drop_path      | DropPath               |                                                   | (1, 72, 10, 10)   |         7200 | (1, 72, 10, 10)   |         7200 |                0 |        0 |
+| 199 | encoder.blocks.4.2                | InvertedResidual       |                                                   | (1, 72, 10, 10)   |         7200 | (1, 72, 10, 10)   |         7200 |                0 |        0 |
+| 200 | encoder.blocks.4                  | Sequential             |                                                   | (1, 40, 20, 20)   |        16000 | (1, 72, 10, 10)   |         7200 |                0 |        0 |
+| 201 | encoder.blocks.5.0.conv           | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 72, 10, 10)   |         7200 | (1, 432, 10, 10)  |        43200 |            31104 |  3110400 |
+| 202 | encoder.blocks.5.0.bn1.drop       | Identity               |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 203 | encoder.blocks.5.0.bn1.act        | Hardswish              |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 204 | encoder.blocks.5.0.bn1            | BatchNormAct2d         |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 205 | encoder.blocks.5.0                | ConvBnAct              |                                                   | (1, 72, 10, 10)   |         7200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 206 | encoder.blocks.5                  | Sequential             |                                                   | (1, 72, 10, 10)   |         7200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 207 | encoder.blocks                    | Sequential             |                                                   | (1, 16, 160, 160) |       409600 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 208 | encoder.global_pool.pool          | Identity               |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 209 | encoder.global_pool.flatten       | Identity               |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 210 | encoder.global_pool               | SelectAdaptivePool2d   |                                                   | (1, 432, 10, 10)  |        43200 | (1, 432, 10, 10)  |        43200 |                0 |        0 |
+| 211 | encoder.conv_head                 | Conv2d                 | k=(1, 1), s=(1, 1), g=(1), dsc=(False), d=(1, 1)  | (1, 432, 10, 10)  |        43200 | (1, 1024, 10, 10) |       102400 |           442368 | 44236800 |
+| 212 | encoder.act2                      | Hardswish              |                                                   | (1, 1024, 10, 10) |       102400 | (1, 1024, 10, 10) |       102400 |                0 |        0 |
+| 213 | encoder.flatten                   | Identity               |                                                   | (1, 1024, 10, 10) |       102400 | (1, 1024, 10, 10) |       102400 |                0 |        0 |
+| 214 | encoder.classifier                | Identity               |                                                   | (1, 1024, 10, 10) |       102400 | (1, 1024, 10, 10) |       102400 |                0 |        0 |
+| 215 | encoder                           | MobileNetV3            |                                                   | (1, 3, 320, 320)  |       307200 | (1, 1024, 10, 10) |       102400 |                0 |        0 |
+| 216 | classifier.pooling                | AdaptiveAvgPool2d      |                                                   | (1, 1024, 10, 10) |       102400 | (1, 1024, 1, 1)   |         1024 |                0 |        0 |
+| 217 | classifier.flatten                | Flatten                |                                                   | (1, 1024, 1, 1)   |         1024 | (1, 1024)         |         1024 |                0 |        0 |
+| 218 | classifier.linear                 | Linear                 |                                                   | (1, 1024)         |         1024 | (1, 5)            |            5 |             5120 |     5120 |
+| 219 | classifier                        | DefaultClassifierHead  |                                                   | (1, 1024, 10, 10) |       102400 | (1, 5)            |            5 |                0 |        0 |
++-----+-----------------------------------+------------------------+---------------------------------------------------+-------------------+--------------+-------------------+--------------+------------------+----------+
+[2024-05-24 10:18:45,343][hannah.callbacks.summaries][INFO] - Total MACs: 129,529,792
+[2024-05-24 10:18:45,343][hannah.callbacks.summaries][INFO] - Total Weights: 1,009,000
+[2024-05-24 10:18:45,344][hannah.callbacks.summaries][INFO] - Total Activations: 12,969,834
+[2024-05-24 10:18:45,344][hannah.callbacks.summaries][INFO] - Estimated Activations: 921,600
+[2024-05-24 10:48:09,263][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 0, global step 20442: 'val_error' reached 0.22296 (best 0.22296), saving model to '/local/gerum/hannah/experiments/dresden_capsule/trained_models/weighted_loss/mobilenetv3_small_075/checkpoints/epoch=0-step=20442.ckpt' as top 1
+[2024-05-24 11:20:18,581][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 1, global step 40884: 'val_error' reached 0.16428 (best 0.16428), saving model to '/local/gerum/hannah/experiments/dresden_capsule/trained_models/weighted_loss/mobilenetv3_small_075/checkpoints/epoch=1-step=40884.ckpt' as top 1
+[2024-05-24 11:51:23,871][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 2, global step 61326: 'val_error' reached 0.12792 (best 0.12792), saving model to '/local/gerum/hannah/experiments/dresden_capsule/trained_models/weighted_loss/mobilenetv3_small_075/checkpoints/epoch=2-step=61326.ckpt' as top 1

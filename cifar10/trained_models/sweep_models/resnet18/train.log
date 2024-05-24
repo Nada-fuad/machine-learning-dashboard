@@ -1864,3 +1864,1066 @@ monitor:
 | val_precision       | 0.900657  |     0 |       1 |
 | val_recall          | 0.899864  |     0 |       1 |
 | val_loss            | 0.316974  |     0 |       1 |
+[2024-05-22 15:49:25,616][hannah.utils.utils][INFO] - Environment info:
+[2024-05-22 15:49:25,707][hannah.utils.utils][INFO] -   Number of GPUs: 2
+[2024-05-22 15:49:25,708][hannah.utils.utils][INFO] -   CUDA version: 12.1
+[2024-05-22 15:49:25,710][hannah.utils.utils][INFO] -   CUDNN version: 8907
+[2024-05-22 15:49:25,711][hannah.utils.utils][INFO] -   Kernel: 4.18.0-513.24.1.el8_9.x86_64
+[2024-05-22 15:49:25,711][hannah.utils.utils][INFO] -   Python: 3.11.5 (main, Nov 15 2023, 03:52:27) [GCC 8.5.0 20210514 (Red Hat 8.5.0-20)]
+[2024-05-22 15:49:25,711][hannah.utils.utils][INFO] -   PyTorch: 2.2.2+cu121
+[2024-05-22 15:49:25,711][hannah.utils.utils][INFO] -   Pytorch Lightning: 2.2.4
+[2024-05-22 15:49:25,711][hannah.utils.utils][INFO] -   Numpy: 1.26.4
+[2024-05-22 15:49:25,711][hannah.utils.utils][INFO] -   Hannah version info:
+[2024-05-22 15:49:25,712][hannah.utils.utils][INFO] -     Cannot find a Git repository.  You probably downloaded an archive
+[2024-05-22 15:49:25,712][hannah.utils.utils][INFO] -   Command line: /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/bin/hannah-train module.num_workers=32 module.batch_size=128 +experiment=sweep_models
+[2024-05-22 15:49:25,713][hannah.utils.utils][INFO] -   
+[2024-05-22 15:49:25,714][lightning.fabric.utilities.seed][INFO] - Seed set to 1234
+[2024-05-22 15:49:25,726][root][INFO] - Configuration: 
+[2024-05-22 15:49:25,729][root][INFO] - dataset:
+  data_folder: ${hydra:runtime.cwd}/datasets/
+  cls: hannah.datasets.vision.Cifar10Dataset
+  dataset: cifar10
+  val_percent: 0.1
+features:
+  _target_: torch.nn.Identity
+model:
+  _target_: hannah.models.timm.TimmModel
+  name: resnet18
+scheduler:
+  _target_: torch.optim.lr_scheduler.OneCycleLR
+  max_lr: ${optimizer.lr}
+  pct_start: 0.3
+  anneal_strategy: cos
+  cycle_momentum: true
+  base_momentum: 0.85
+  max_momentum: 0.95
+  div_factor: 25.0
+  final_div_factor: 10000.0
+  last_epoch: -1
+optimizer:
+  _target_: torch.optim.sgd.SGD
+  lr: 0.3
+  momentum: 0.9
+  dampening: 0
+  weight_decay: 0.0005
+  nesterov: false
+module:
+  _target_: hannah.modules.vision.ImageClassifierModule
+  num_workers: 32
+  batch_size: 128
+  shuffle_all_dataloaders: false
+trainer:
+  _target_: pytorch_lightning.trainer.Trainer
+  accelerator: auto
+  devices: 1
+  limit_train_batches: 1.0
+  limit_val_batches: 1.0
+  limit_test_batches: 1.0
+  max_epochs: 50
+  default_root_dir: .
+  fast_dev_run: false
+  overfit_batches: 0.0
+  benchmark: false
+  deterministic: warn
+  gradient_clip_val: 0
+  accumulate_grad_batches: 1
+  plugins: null
+  strategy: auto
+  reload_dataloaders_every_n_epochs: 0
+  precision: 16
+checkpoint:
+  _target_: pytorch_lightning.callbacks.ModelCheckpoint
+  dirpath: checkpoints
+  save_top_k: 1
+  verbose: true
+  monitor: val_error
+  mode: min
+  save_last: true
+augmentation:
+  batch_augment:
+    pipeline: null
+    transforms:
+      RandomHorizontalFlip:
+        p: 0.5
+      RandomAffine:
+        degrees:
+        - -15
+        - 15
+        translate:
+        - 0.1
+        - 0.1
+        scale:
+        - 0.9
+        - 1.1
+        shear:
+        - -5
+        - 5
+        p: 0.5
+      RandomCrop:
+        size:
+        - 32
+        - 32
+        padding: 4
+      RandomErasing:
+        p: 0.5
+experiment_id: sweep_models
+output_dir: trained_models
+auto_lr: false
+resume: false
+fx_mac_summary: false
+skip_test: false
+skip_val: false
+seed:
+- 1234
+validate_output: false
+monitor:
+  metric: val_accuracy
+  direction: maximize
+
+[2024-05-22 15:49:25,729][root][INFO] - Current working directory /local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18
+[2024-05-22 15:49:26,577][hannah.callbacks.optimization][INFO] - Monitoring the following values for optimization
+[2024-05-22 15:49:26,577][hannah.callbacks.optimization][INFO] -   - val_accuracy direction: maximize(-1)
+[2024-05-22 15:49:26,643][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/lightning_fabric/connector.py:563: `precision=16` is supported for historical reasons but its usage is discouraged. Please set your precision to 16-mixed instead!
+
+[2024-05-22 15:49:26,667][pytorch_lightning.utilities.rank_zero][INFO] - Using 16bit Automatic Mixed Precision (AMP)
+[2024-05-22 15:49:26,674][pytorch_lightning.utilities.rank_zero][INFO] - GPU available: True (cuda), used: True
+[2024-05-22 15:49:26,674][pytorch_lightning.utilities.rank_zero][INFO] - TPU available: False, using: 0 TPU cores
+[2024-05-22 15:49:26,674][pytorch_lightning.utilities.rank_zero][INFO] - IPU available: False, using: 0 IPUs
+[2024-05-22 15:49:26,674][pytorch_lightning.utilities.rank_zero][INFO] - HPU available: False, using: 0 HPUs
+[2024-05-22 15:49:26,675][pytorch_lightning.utilities.rank_zero][INFO] - `Trainer(limit_train_batches=1.0)` was configured so 100% of the batches per epoch will be used..
+[2024-05-22 15:49:26,675][pytorch_lightning.utilities.rank_zero][INFO] - `Trainer(limit_val_batches=1.0)` was configured so 100% of the batches will be used..
+[2024-05-22 15:49:26,675][pytorch_lightning.utilities.rank_zero][INFO] - `Trainer(limit_test_batches=1.0)` was configured so 100% of the batches will be used..
+[2024-05-22 15:49:26,675][root][INFO] - Starting training
+[2024-05-22 15:49:28,037][py.warnings][WARNING] - /local/gerum/hannah/hannah/modules/vision/base.py:66: UserWarning: Vision datasets should return a length 4 tuple, will assume unlabeled data is None
+  warnings.warn(
+
+[2024-05-22 15:49:28,037][hannah.modules.vision.base][INFO] - Dataset lengths:
+[2024-05-22 15:49:28,038][hannah.modules.vision.base][INFO] -   Train Set (Labeled): 45000
+[2024-05-22 15:49:28,038][hannah.modules.vision.base][INFO] -   Train Set (Unlabled): 0
+[2024-05-22 15:49:28,038][hannah.modules.vision.base][INFO] -   Dev Set: 5000
+[2024-05-22 15:49:28,038][hannah.modules.vision.base][INFO] -   Test Set: 10000
+[2024-05-22 15:49:28,038][hannah.modules.vision.base][INFO] - Setting up model resnet18
+[2024-05-22 15:49:28,367][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:803: UserWarning: Overwriting focalnet_tiny_srf in registry with hannah.models._vendor.focalnet.focalnet_tiny_srf. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-22 15:49:28,367][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:824: UserWarning: Overwriting focalnet_small_srf in registry with hannah.models._vendor.focalnet.focalnet_small_srf. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-22 15:49:28,367][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:843: UserWarning: Overwriting focalnet_base_srf in registry with hannah.models._vendor.focalnet.focalnet_base_srf. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-22 15:49:28,367][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:862: UserWarning: Overwriting focalnet_tiny_lrf in registry with hannah.models._vendor.focalnet.focalnet_tiny_lrf. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-22 15:49:28,367][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:885: UserWarning: Overwriting focalnet_small_lrf in registry with hannah.models._vendor.focalnet.focalnet_small_lrf. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-22 15:49:28,368][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:906: UserWarning: Overwriting focalnet_base_lrf in registry with hannah.models._vendor.focalnet.focalnet_base_lrf. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-22 15:49:28,368][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:1010: UserWarning: Overwriting focalnet_large_fl3 in registry with hannah.models._vendor.focalnet.focalnet_large_fl3. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-22 15:49:28,368][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:1031: UserWarning: Overwriting focalnet_large_fl4 in registry with hannah.models._vendor.focalnet.focalnet_large_fl4. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-22 15:49:28,368][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:1052: UserWarning: Overwriting focalnet_xlarge_fl3 in registry with hannah.models._vendor.focalnet.focalnet_xlarge_fl3. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-22 15:49:28,368][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:1073: UserWarning: Overwriting focalnet_xlarge_fl4 in registry with hannah.models._vendor.focalnet.focalnet_xlarge_fl4. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-22 15:49:28,368][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:1094: UserWarning: Overwriting focalnet_huge_fl3 in registry with hannah.models._vendor.focalnet.focalnet_huge_fl3. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-22 15:49:28,368][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:1115: UserWarning: Overwriting focalnet_huge_fl4 in registry with hannah.models._vendor.focalnet.focalnet_huge_fl4. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-22 15:49:28,502][hannah.models.timm][INFO] - Using default logger for automatic stem creation
+[2024-05-22 15:49:28,502][hannah.models.timm][INFO] - Small input size detected trying to adopt small input size
+[2024-05-22 15:49:28,519][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/nn/modules/lazy.py:181: UserWarning: Lazy modules are a new feature under heavy development so changes to the API or functionality can happen at any moment.
+  warnings.warn('Lazy modules are a new feature under heavy development '
+
+[2024-05-22 15:49:28,700][hannah.modules.vision.base][INFO] - Instantiating input Normalizer with mean: (0.491, 0.482, 0.446), std: (0.247, 0.243, 0.261)
+[2024-05-22 15:49:28,707][hannah.modules.vision.base][INFO] - Running dummy forward to initialize lazy modules
+[2024-05-22 15:49:28,718][pytorch_lightning.accelerators.cuda][INFO] - LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+[2024-05-22 15:49:28,732][pytorch_lightning.utilities.rank_zero][INFO] - Loading `train_dataloader` to estimate number of stepping batches.
+[2024-05-22 15:49:29,420][pytorch_lightning.callbacks.model_summary][INFO] - 
+   | Name                 | Type                           | Params | In sizes       | Out sizes                          
+--------------------------------------------------------------------------------------------------------------------------------
+0  | val_metrics          | MetricCollection               | 0      | ?              | ?                                  
+1  | test_metrics         | MetricCollection               | 0      | ?              | ?                                  
+2  | train_metrics        | MetricCollection               | 0      | ?              | ?                                  
+3  | model                | TimmModel                      | 11.2 M | [1, 3, 32, 32] | [[1, 512, 4, 4], [0], [0], [1, 10]]
+4  | input_normalizer     | Normalize                      | 0      | ?              | ?                                  
+5  | default_augmentation | Sequential                     | 0      | ?              | ?                                  
+6  | augmentations        | ModuleDict                     | 0      | ?              | ?                                  
+7  | test_confusion       | MulticlassConfusionMatrix      | 0      | ?              | ?                                  
+8  | test_roc             | MulticlassROC                  | 0      | ?              | ?                                  
+9  | test_pr_curve        | MulticlassPrecisionRecallCurve | 0      | ?              | ?                                  
+10 | metrics              | ModuleDict                     | 0      | ?              | ?                                  
+--------------------------------------------------------------------------------------------------------------------------------
+11.2 M    Trainable params
+0         Non-trainable params
+11.2 M    Total params
+44.696    Total estimated model params size (MB)
+[2024-05-22 15:49:29,563][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/timm.py:312: TracerWarning: torch.tensor results are registered as constants in the trace. You can safely ignore this warning if you use this function to create tensors out of constant variables that would be the same every time you call this function. In any other case, this might cause the trace to be incorrect.
+  decoded = torch.tensor([])
+
+[2024-05-22 15:49:29,564][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/timm.py:316: TracerWarning: torch.tensor results are registered as constants in the trace. You can safely ignore this warning if you use this function to create tensors out of constant variables that would be the same every time you call this function. In any other case, this might cause the trace to be incorrect.
+  logits = torch.tensor([])
+
+[2024-05-22 15:49:29,568][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/timm.py:320: TracerWarning: torch.tensor results are registered as constants in the trace. You can safely ignore this warning if you use this function to create tensors out of constant variables that would be the same every time you call this function. In any other case, this might cause the trace to be incorrect.
+  projection = torch.tensor([])
+
+[2024-05-22 15:49:30,731][hannah.callbacks.summaries][INFO] - 
++----+-------------------------------+-----------------------+--------------------------------------------------+------------------+--------------+------------------+--------------+------------------+----------+
+|    | Name                          | Type                  | Attrs                                            | IFM              |   IFM volume | OFM              |   OFM volume |   Weights volume |     MACs |
+|----+-------------------------------+-----------------------+--------------------------------------------------+------------------+--------------+------------------+--------------+------------------+----------|
+|  0 | encoder.conv1                 | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 3, 32, 32)   |         3072 | (1, 64, 32, 32)  |        65536 |             1728 |  1769472 |
+|  1 | encoder.bn1                   | BatchNorm2d           |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  2 | encoder.act1                  | ReLU                  |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  3 | encoder.maxpool               | Identity              |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  4 | encoder.layer1.0.conv1        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |            36864 | 37748736 |
+|  5 | encoder.layer1.0.bn1          | BatchNorm2d           |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  6 | encoder.layer1.0.drop_block   | Identity              |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  7 | encoder.layer1.0.act1         | ReLU                  |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  8 | encoder.layer1.0.aa           | Identity              |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  9 | encoder.layer1.0.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |            36864 | 37748736 |
+| 10 | encoder.layer1.0.bn2          | BatchNorm2d           |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 11 | encoder.layer1.0.act2         | ReLU                  |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 12 | encoder.layer1.0              | BasicBlock            |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 13 | encoder.layer1.1.conv1        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |            36864 | 37748736 |
+| 14 | encoder.layer1.1.bn1          | BatchNorm2d           |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 15 | encoder.layer1.1.drop_block   | Identity              |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 16 | encoder.layer1.1.act1         | ReLU                  |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 17 | encoder.layer1.1.aa           | Identity              |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 18 | encoder.layer1.1.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |            36864 | 37748736 |
+| 19 | encoder.layer1.1.bn2          | BatchNorm2d           |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 20 | encoder.layer1.1.act2         | ReLU                  |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 21 | encoder.layer1.1              | BasicBlock            |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 22 | encoder.layer1                | Sequential            |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 23 | encoder.layer2.0.conv1        | Conv2d                | k=(3, 3), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 128, 16, 16) |        32768 |            73728 | 18874368 |
+| 24 | encoder.layer2.0.bn1          | BatchNorm2d           |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 25 | encoder.layer2.0.drop_block   | Identity              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 26 | encoder.layer2.0.act1         | ReLU                  |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 27 | encoder.layer2.0.aa           | Identity              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 28 | encoder.layer2.0.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |           147456 | 37748736 |
+| 29 | encoder.layer2.0.bn2          | BatchNorm2d           |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 30 | encoder.layer2.0.downsample.0 | Conv2d                | k=(1, 1), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 128, 16, 16) |        32768 |             8192 |  2097152 |
+| 31 | encoder.layer2.0.downsample.1 | BatchNorm2d           |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 32 | encoder.layer2.0.downsample   | Sequential            |                                                  | (1, 64, 32, 32)  |        65536 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 33 | encoder.layer2.0.act2         | ReLU                  |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 34 | encoder.layer2.0              | BasicBlock            |                                                  | (1, 64, 32, 32)  |        65536 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 35 | encoder.layer2.1.conv1        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |           147456 | 37748736 |
+| 36 | encoder.layer2.1.bn1          | BatchNorm2d           |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 37 | encoder.layer2.1.drop_block   | Identity              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 38 | encoder.layer2.1.act1         | ReLU                  |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 39 | encoder.layer2.1.aa           | Identity              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 40 | encoder.layer2.1.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |           147456 | 37748736 |
+| 41 | encoder.layer2.1.bn2          | BatchNorm2d           |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 42 | encoder.layer2.1.act2         | ReLU                  |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 43 | encoder.layer2.1              | BasicBlock            |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 44 | encoder.layer2                | Sequential            |                                                  | (1, 64, 32, 32)  |        65536 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 45 | encoder.layer3.0.conv1        | Conv2d                | k=(3, 3), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 256, 8, 8)   |        16384 |           294912 | 18874368 |
+| 46 | encoder.layer3.0.bn1          | BatchNorm2d           |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 47 | encoder.layer3.0.drop_block   | Identity              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 48 | encoder.layer3.0.act1         | ReLU                  |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 49 | encoder.layer3.0.aa           | Identity              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 50 | encoder.layer3.0.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |           589824 | 37748736 |
+| 51 | encoder.layer3.0.bn2          | BatchNorm2d           |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 52 | encoder.layer3.0.downsample.0 | Conv2d                | k=(1, 1), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 256, 8, 8)   |        16384 |            32768 |  2097152 |
+| 53 | encoder.layer3.0.downsample.1 | BatchNorm2d           |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 54 | encoder.layer3.0.downsample   | Sequential            |                                                  | (1, 128, 16, 16) |        32768 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 55 | encoder.layer3.0.act2         | ReLU                  |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 56 | encoder.layer3.0              | BasicBlock            |                                                  | (1, 128, 16, 16) |        32768 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 57 | encoder.layer3.1.conv1        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |           589824 | 37748736 |
+| 58 | encoder.layer3.1.bn1          | BatchNorm2d           |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 59 | encoder.layer3.1.drop_block   | Identity              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 60 | encoder.layer3.1.act1         | ReLU                  |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 61 | encoder.layer3.1.aa           | Identity              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 62 | encoder.layer3.1.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |           589824 | 37748736 |
+| 63 | encoder.layer3.1.bn2          | BatchNorm2d           |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 64 | encoder.layer3.1.act2         | ReLU                  |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 65 | encoder.layer3.1              | BasicBlock            |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 66 | encoder.layer3                | Sequential            |                                                  | (1, 128, 16, 16) |        32768 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 67 | encoder.layer4.0.conv1        | Conv2d                | k=(3, 3), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 512, 4, 4)   |         8192 |          1179648 | 18874368 |
+| 68 | encoder.layer4.0.bn1          | BatchNorm2d           |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 69 | encoder.layer4.0.drop_block   | Identity              |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 70 | encoder.layer4.0.act1         | ReLU                  |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 71 | encoder.layer4.0.aa           | Identity              |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 72 | encoder.layer4.0.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |          2359296 | 37748736 |
+| 73 | encoder.layer4.0.bn2          | BatchNorm2d           |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 74 | encoder.layer4.0.downsample.0 | Conv2d                | k=(1, 1), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 512, 4, 4)   |         8192 |           131072 |  2097152 |
+| 75 | encoder.layer4.0.downsample.1 | BatchNorm2d           |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 76 | encoder.layer4.0.downsample   | Sequential            |                                                  | (1, 256, 8, 8)   |        16384 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 77 | encoder.layer4.0.act2         | ReLU                  |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 78 | encoder.layer4.0              | BasicBlock            |                                                  | (1, 256, 8, 8)   |        16384 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 79 | encoder.layer4.1.conv1        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |          2359296 | 37748736 |
+| 80 | encoder.layer4.1.bn1          | BatchNorm2d           |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 81 | encoder.layer4.1.drop_block   | Identity              |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 82 | encoder.layer4.1.act1         | ReLU                  |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 83 | encoder.layer4.1.aa           | Identity              |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 84 | encoder.layer4.1.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |          2359296 | 37748736 |
+| 85 | encoder.layer4.1.bn2          | BatchNorm2d           |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 86 | encoder.layer4.1.act2         | ReLU                  |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 87 | encoder.layer4.1              | BasicBlock            |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 88 | encoder.layer4                | Sequential            |                                                  | (1, 256, 8, 8)   |        16384 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 89 | encoder.global_pool.pool      | Identity              |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 90 | encoder.global_pool.flatten   | Identity              |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 91 | encoder.global_pool           | SelectAdaptivePool2d  |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 92 | encoder.fc                    | Identity              |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 93 | encoder                       | ResNet                |                                                  | (1, 3, 32, 32)   |         3072 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 94 | classifier.pooling            | AdaptiveAvgPool2d     |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 1, 1)   |          512 |                0 |        0 |
+| 95 | classifier.flatten            | Flatten               |                                                  | (1, 512, 1, 1)   |          512 | (1, 512)         |          512 |                0 |        0 |
+| 96 | classifier.linear             | Linear                |                                                  | (1, 512)         |          512 | (1, 10)          |           10 |             5120 |     5120 |
+| 97 | classifier                    | DefaultClassifierHead |                                                  | (1, 512, 4, 4)   |         8192 | (1, 10)          |           10 |                0 |        0 |
++----+-------------------------------+-----------------------+--------------------------------------------------+------------------+--------------+------------------+--------------+------------------+----------+
+[2024-05-22 15:49:30,732][hannah.callbacks.summaries][INFO] - Total MACs: 555,422,720
+[2024-05-22 15:49:30,732][hannah.callbacks.summaries][INFO] - Total Weights: 11,164,352
+[2024-05-22 15:49:30,732][hannah.callbacks.summaries][INFO] - Total Activations: 2,813,972
+[2024-05-22 15:49:30,732][hannah.callbacks.summaries][INFO] - Estimated Activations: 131,072
+[2024-05-22 15:49:48,762][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 0, global step 351: 'val_error' reached 0.66627 (best 0.66627), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=0-step=351.ckpt' as top 1
+[2024-05-22 15:50:06,928][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 1, global step 702: 'val_error' reached 0.57873 (best 0.57873), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=1-step=702.ckpt' as top 1
+[2024-05-22 15:50:25,215][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 2, global step 1053: 'val_error' reached 0.51182 (best 0.51182), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=2-step=1053.ckpt' as top 1
+[2024-05-22 15:50:43,417][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 3, global step 1404: 'val_error' reached 0.38502 (best 0.38502), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=3-step=1404.ckpt' as top 1
+[2024-05-22 15:51:01,545][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 4, global step 1755: 'val_error' was not in top 1
+[2024-05-22 15:51:19,721][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 5, global step 2106: 'val_error' reached 0.32232 (best 0.32232), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=5-step=2106.ckpt' as top 1
+[2024-05-22 15:51:38,081][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 6, global step 2457: 'val_error' reached 0.30329 (best 0.30329), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=6-step=2457.ckpt' as top 1
+[2024-05-22 15:51:56,345][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 7, global step 2808: 'val_error' was not in top 1
+[2024-05-22 15:52:14,462][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 8, global step 3159: 'val_error' was not in top 1
+[2024-05-22 15:52:32,849][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 9, global step 3510: 'val_error' was not in top 1
+[2024-05-22 15:52:51,009][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 10, global step 3861: 'val_error' was not in top 1
+[2024-05-22 15:53:09,183][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 11, global step 4212: 'val_error' was not in top 1
+[2024-05-22 15:53:27,366][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 12, global step 4563: 'val_error' reached 0.25982 (best 0.25982), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=12-step=4563.ckpt' as top 1
+[2024-05-22 15:53:45,453][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 13, global step 4914: 'val_error' reached 0.25341 (best 0.25341), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=13-step=4914.ckpt' as top 1
+[2024-05-22 15:54:03,493][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 14, global step 5265: 'val_error' was not in top 1
+[2024-05-22 15:54:21,647][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 15, global step 5616: 'val_error' was not in top 1
+[2024-05-22 15:54:39,775][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 16, global step 5967: 'val_error' was not in top 1
+[2024-05-22 15:54:57,752][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 17, global step 6318: 'val_error' was not in top 1
+[2024-05-22 15:55:15,695][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 18, global step 6669: 'val_error' reached 0.24579 (best 0.24579), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=18-step=6669.ckpt' as top 1
+[2024-05-22 15:55:33,766][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 19, global step 7020: 'val_error' was not in top 1
+[2024-05-22 15:55:51,709][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 20, global step 7371: 'val_error' was not in top 1
+[2024-05-22 15:56:09,860][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 21, global step 7722: 'val_error' was not in top 1
+[2024-05-22 15:56:27,807][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 22, global step 8073: 'val_error' reached 0.22436 (best 0.22436), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=22-step=8073.ckpt' as top 1
+[2024-05-22 15:56:45,803][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 23, global step 8424: 'val_error' was not in top 1
+[2024-05-22 15:57:03,581][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 24, global step 8775: 'val_error' reached 0.19892 (best 0.19892), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=24-step=8775.ckpt' as top 1
+[2024-05-22 15:57:21,829][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 25, global step 9126: 'val_error' was not in top 1
+[2024-05-22 15:57:39,783][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 26, global step 9477: 'val_error' was not in top 1
+[2024-05-22 15:57:57,863][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 27, global step 9828: 'val_error' was not in top 1
+[2024-05-22 15:58:16,187][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 28, global step 10179: 'val_error' was not in top 1
+[2024-05-22 15:58:34,467][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 29, global step 10530: 'val_error' was not in top 1
+[2024-05-22 15:58:52,472][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 30, global step 10881: 'val_error' was not in top 1
+[2024-05-22 15:59:10,927][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 31, global step 11232: 'val_error' reached 0.19411 (best 0.19411), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=31-step=11232.ckpt' as top 1
+[2024-05-22 15:59:29,401][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 32, global step 11583: 'val_error' was not in top 1
+[2024-05-22 15:59:47,225][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 33, global step 11934: 'val_error' was not in top 1
+[2024-05-22 16:00:05,311][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 34, global step 12285: 'val_error' reached 0.18510 (best 0.18510), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=34-step=12285.ckpt' as top 1
+[2024-05-22 16:00:23,698][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 35, global step 12636: 'val_error' reached 0.17147 (best 0.17147), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=35-step=12636.ckpt' as top 1
+[2024-05-22 16:00:41,921][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 36, global step 12987: 'val_error' reached 0.17047 (best 0.17047), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=36-step=12987.ckpt' as top 1
+[2024-05-22 16:01:00,017][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 37, global step 13338: 'val_error' was not in top 1
+[2024-05-22 16:01:18,581][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 38, global step 13689: 'val_error' was not in top 1
+[2024-05-22 16:01:36,667][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 39, global step 14040: 'val_error' reached 0.16827 (best 0.16827), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=39-step=14040.ckpt' as top 1
+[2024-05-22 16:01:54,667][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 40, global step 14391: 'val_error' reached 0.15946 (best 0.15946), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=40-step=14391.ckpt' as top 1
+[2024-05-22 16:02:12,893][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 41, global step 14742: 'val_error' reached 0.12640 (best 0.12640), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=41-step=14742.ckpt' as top 1
+[2024-05-22 16:02:31,210][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 42, global step 15093: 'val_error' reached 0.11879 (best 0.11879), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=42-step=15093.ckpt' as top 1
+[2024-05-22 16:02:49,604][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 43, global step 15444: 'val_error' reached 0.10537 (best 0.10537), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=43-step=15444.ckpt' as top 1
+[2024-05-22 16:03:07,506][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 44, global step 15795: 'val_error' reached 0.10076 (best 0.10076), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=44-step=15795.ckpt' as top 1
+[2024-05-22 16:03:25,477][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 45, global step 16146: 'val_error' reached 0.08894 (best 0.08894), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=45-step=16146.ckpt' as top 1
+[2024-05-22 16:03:43,287][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 46, global step 16497: 'val_error' reached 0.07292 (best 0.07292), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=46-step=16497.ckpt' as top 1
+[2024-05-22 16:04:01,550][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 47, global step 16848: 'val_error' was not in top 1
+[2024-05-22 16:04:19,361][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 48, global step 17199: 'val_error' reached 0.06711 (best 0.06711), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=48-step=17199.ckpt' as top 1
+[2024-05-22 16:04:37,351][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 49, global step 17550: 'val_error' reached 0.06671 (best 0.06671), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=49-step=17550.ckpt' as top 1
+[2024-05-22 16:04:37,668][pytorch_lightning.utilities.rank_zero][INFO] - `Trainer.fit` stopped: `max_epochs=50` reached.
+[2024-05-22 16:04:37,883][lightning.fabric.utilities.seed][INFO] - Seed set to 1234
+[2024-05-22 16:04:37,884][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/checkpoint_connector.py:145: `.validate(ckpt_path=None)` was called without a model. The best model of the previous `fit` call will be used. You can pass `.validate(ckpt_path='best')` to use the best model or `.validate(ckpt_path='last')` to use the last model. If you pass a value, this warning will be silenced.
+
+[2024-05-22 16:04:37,885][pytorch_lightning.utilities.rank_zero][INFO] - Restoring states from the checkpoint path at /local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=49-step=17550.ckpt
+[2024-05-22 16:04:37,929][pytorch_lightning.accelerators.cuda][INFO] - LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+[2024-05-22 16:04:38,055][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/timm.py:312: TracerWarning: torch.tensor results are registered as constants in the trace. You can safely ignore this warning if you use this function to create tensors out of constant variables that would be the same every time you call this function. In any other case, this might cause the trace to be incorrect.
+  decoded = torch.tensor([])
+
+[2024-05-22 16:04:38,056][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/timm.py:316: TracerWarning: torch.tensor results are registered as constants in the trace. You can safely ignore this warning if you use this function to create tensors out of constant variables that would be the same every time you call this function. In any other case, this might cause the trace to be incorrect.
+  logits = torch.tensor([])
+
+[2024-05-22 16:04:38,058][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/timm.py:320: TracerWarning: torch.tensor results are registered as constants in the trace. You can safely ignore this warning if you use this function to create tensors out of constant variables that would be the same every time you call this function. In any other case, this might cause the trace to be incorrect.
+  projection = torch.tensor([])
+
+[2024-05-22 16:04:38,278][pytorch_lightning.utilities.rank_zero][INFO] - Loaded model weights from the checkpoint at /local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=49-step=17550.ckpt
+[2024-05-22 16:04:39,496][lightning.fabric.utilities.seed][INFO] - Seed set to 1234
+[2024-05-22 16:04:39,497][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/checkpoint_connector.py:145: `.test(ckpt_path=None)` was called without a model. The best model of the previous `fit` call will be used. You can pass `.test(ckpt_path='best')` to use the best model or `.test(ckpt_path='last')` to use the last model. If you pass a value, this warning will be silenced.
+
+[2024-05-22 16:04:39,498][pytorch_lightning.utilities.rank_zero][INFO] - Restoring states from the checkpoint path at /local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=49-step=17550.ckpt
+[2024-05-22 16:04:39,537][pytorch_lightning.accelerators.cuda][INFO] - LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+[2024-05-22 16:04:39,660][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/timm.py:312: TracerWarning: torch.tensor results are registered as constants in the trace. You can safely ignore this warning if you use this function to create tensors out of constant variables that would be the same every time you call this function. In any other case, this might cause the trace to be incorrect.
+  decoded = torch.tensor([])
+
+[2024-05-22 16:04:39,660][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/timm.py:316: TracerWarning: torch.tensor results are registered as constants in the trace. You can safely ignore this warning if you use this function to create tensors out of constant variables that would be the same every time you call this function. In any other case, this might cause the trace to be incorrect.
+  logits = torch.tensor([])
+
+[2024-05-22 16:04:39,662][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/timm.py:320: TracerWarning: torch.tensor results are registered as constants in the trace. You can safely ignore this warning if you use this function to create tensors out of constant variables that would be the same every time you call this function. In any other case, this might cause the trace to be incorrect.
+  projection = torch.tensor([])
+
+[2024-05-22 16:04:39,882][pytorch_lightning.utilities.rank_zero][INFO] - Loaded model weights from the checkpoint at /local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=49-step=17550.ckpt
+[2024-05-22 16:04:41,350][hannah.callbacks.summaries][INFO] - 
++----+-------------------------------+-----------------------+--------------------------------------------------+------------------+--------------+------------------+--------------+------------------+----------+
+|    | Name                          | Type                  | Attrs                                            | IFM              |   IFM volume | OFM              |   OFM volume |   Weights volume |     MACs |
+|----+-------------------------------+-----------------------+--------------------------------------------------+------------------+--------------+------------------+--------------+------------------+----------|
+|  0 | encoder.conv1                 | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 3, 32, 32)   |         3072 | (1, 64, 32, 32)  |        65536 |             1728 |  1769472 |
+|  1 | encoder.bn1                   | BatchNorm2d           |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  2 | encoder.act1                  | ReLU                  |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  3 | encoder.maxpool               | Identity              |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  4 | encoder.layer1.0.conv1        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |            36864 | 37748736 |
+|  5 | encoder.layer1.0.bn1          | BatchNorm2d           |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  6 | encoder.layer1.0.drop_block   | Identity              |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  7 | encoder.layer1.0.act1         | ReLU                  |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  8 | encoder.layer1.0.aa           | Identity              |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  9 | encoder.layer1.0.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |            36864 | 37748736 |
+| 10 | encoder.layer1.0.bn2          | BatchNorm2d           |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 11 | encoder.layer1.0.act2         | ReLU                  |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 12 | encoder.layer1.0              | BasicBlock            |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 13 | encoder.layer1.1.conv1        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |            36864 | 37748736 |
+| 14 | encoder.layer1.1.bn1          | BatchNorm2d           |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 15 | encoder.layer1.1.drop_block   | Identity              |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 16 | encoder.layer1.1.act1         | ReLU                  |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 17 | encoder.layer1.1.aa           | Identity              |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 18 | encoder.layer1.1.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |            36864 | 37748736 |
+| 19 | encoder.layer1.1.bn2          | BatchNorm2d           |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 20 | encoder.layer1.1.act2         | ReLU                  |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 21 | encoder.layer1.1              | BasicBlock            |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 22 | encoder.layer1                | Sequential            |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 23 | encoder.layer2.0.conv1        | Conv2d                | k=(3, 3), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 128, 16, 16) |        32768 |            73728 | 18874368 |
+| 24 | encoder.layer2.0.bn1          | BatchNorm2d           |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 25 | encoder.layer2.0.drop_block   | Identity              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 26 | encoder.layer2.0.act1         | ReLU                  |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 27 | encoder.layer2.0.aa           | Identity              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 28 | encoder.layer2.0.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |           147456 | 37748736 |
+| 29 | encoder.layer2.0.bn2          | BatchNorm2d           |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 30 | encoder.layer2.0.downsample.0 | Conv2d                | k=(1, 1), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 128, 16, 16) |        32768 |             8192 |  2097152 |
+| 31 | encoder.layer2.0.downsample.1 | BatchNorm2d           |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 32 | encoder.layer2.0.downsample   | Sequential            |                                                  | (1, 64, 32, 32)  |        65536 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 33 | encoder.layer2.0.act2         | ReLU                  |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 34 | encoder.layer2.0              | BasicBlock            |                                                  | (1, 64, 32, 32)  |        65536 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 35 | encoder.layer2.1.conv1        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |           147456 | 37748736 |
+| 36 | encoder.layer2.1.bn1          | BatchNorm2d           |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 37 | encoder.layer2.1.drop_block   | Identity              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 38 | encoder.layer2.1.act1         | ReLU                  |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 39 | encoder.layer2.1.aa           | Identity              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 40 | encoder.layer2.1.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |           147456 | 37748736 |
+| 41 | encoder.layer2.1.bn2          | BatchNorm2d           |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 42 | encoder.layer2.1.act2         | ReLU                  |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 43 | encoder.layer2.1              | BasicBlock            |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 44 | encoder.layer2                | Sequential            |                                                  | (1, 64, 32, 32)  |        65536 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 45 | encoder.layer3.0.conv1        | Conv2d                | k=(3, 3), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 256, 8, 8)   |        16384 |           294912 | 18874368 |
+| 46 | encoder.layer3.0.bn1          | BatchNorm2d           |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 47 | encoder.layer3.0.drop_block   | Identity              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 48 | encoder.layer3.0.act1         | ReLU                  |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 49 | encoder.layer3.0.aa           | Identity              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 50 | encoder.layer3.0.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |           589824 | 37748736 |
+| 51 | encoder.layer3.0.bn2          | BatchNorm2d           |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 52 | encoder.layer3.0.downsample.0 | Conv2d                | k=(1, 1), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 256, 8, 8)   |        16384 |            32768 |  2097152 |
+| 53 | encoder.layer3.0.downsample.1 | BatchNorm2d           |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 54 | encoder.layer3.0.downsample   | Sequential            |                                                  | (1, 128, 16, 16) |        32768 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 55 | encoder.layer3.0.act2         | ReLU                  |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 56 | encoder.layer3.0              | BasicBlock            |                                                  | (1, 128, 16, 16) |        32768 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 57 | encoder.layer3.1.conv1        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |           589824 | 37748736 |
+| 58 | encoder.layer3.1.bn1          | BatchNorm2d           |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 59 | encoder.layer3.1.drop_block   | Identity              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 60 | encoder.layer3.1.act1         | ReLU                  |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 61 | encoder.layer3.1.aa           | Identity              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 62 | encoder.layer3.1.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |           589824 | 37748736 |
+| 63 | encoder.layer3.1.bn2          | BatchNorm2d           |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 64 | encoder.layer3.1.act2         | ReLU                  |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 65 | encoder.layer3.1              | BasicBlock            |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 66 | encoder.layer3                | Sequential            |                                                  | (1, 128, 16, 16) |        32768 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 67 | encoder.layer4.0.conv1        | Conv2d                | k=(3, 3), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 512, 4, 4)   |         8192 |          1179648 | 18874368 |
+| 68 | encoder.layer4.0.bn1          | BatchNorm2d           |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 69 | encoder.layer4.0.drop_block   | Identity              |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 70 | encoder.layer4.0.act1         | ReLU                  |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 71 | encoder.layer4.0.aa           | Identity              |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 72 | encoder.layer4.0.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |          2359296 | 37748736 |
+| 73 | encoder.layer4.0.bn2          | BatchNorm2d           |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 74 | encoder.layer4.0.downsample.0 | Conv2d                | k=(1, 1), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 512, 4, 4)   |         8192 |           131072 |  2097152 |
+| 75 | encoder.layer4.0.downsample.1 | BatchNorm2d           |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 76 | encoder.layer4.0.downsample   | Sequential            |                                                  | (1, 256, 8, 8)   |        16384 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 77 | encoder.layer4.0.act2         | ReLU                  |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 78 | encoder.layer4.0              | BasicBlock            |                                                  | (1, 256, 8, 8)   |        16384 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 79 | encoder.layer4.1.conv1        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |          2359296 | 37748736 |
+| 80 | encoder.layer4.1.bn1          | BatchNorm2d           |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 81 | encoder.layer4.1.drop_block   | Identity              |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 82 | encoder.layer4.1.act1         | ReLU                  |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 83 | encoder.layer4.1.aa           | Identity              |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 84 | encoder.layer4.1.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |          2359296 | 37748736 |
+| 85 | encoder.layer4.1.bn2          | BatchNorm2d           |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 86 | encoder.layer4.1.act2         | ReLU                  |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 87 | encoder.layer4.1              | BasicBlock            |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 88 | encoder.layer4                | Sequential            |                                                  | (1, 256, 8, 8)   |        16384 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 89 | encoder.global_pool.pool      | Identity              |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 90 | encoder.global_pool.flatten   | Identity              |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 91 | encoder.global_pool           | SelectAdaptivePool2d  |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 92 | encoder.fc                    | Identity              |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 93 | encoder                       | ResNet                |                                                  | (1, 3, 32, 32)   |         3072 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 94 | classifier.pooling            | AdaptiveAvgPool2d     |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 1, 1)   |          512 |                0 |        0 |
+| 95 | classifier.flatten            | Flatten               |                                                  | (1, 512, 1, 1)   |          512 | (1, 512)         |          512 |                0 |        0 |
+| 96 | classifier.linear             | Linear                |                                                  | (1, 512)         |          512 | (1, 10)          |           10 |             5120 |     5120 |
+| 97 | classifier                    | DefaultClassifierHead |                                                  | (1, 512, 4, 4)   |         8192 | (1, 10)          |           10 |                0 |        0 |
++----+-------------------------------+-----------------------+--------------------------------------------------+------------------+--------------+------------------+--------------+------------------+----------+
+[2024-05-22 16:04:41,351][hannah.callbacks.summaries][INFO] - Total MACs: 555,422,720
+[2024-05-22 16:04:41,351][hannah.callbacks.summaries][INFO] - Total Weights: 11,164,352
+[2024-05-22 16:04:41,351][hannah.callbacks.summaries][INFO] - Total Activations: 2,813,972
+[2024-05-22 16:04:41,351][hannah.callbacks.summaries][INFO] - Estimated Activations: 131,072
+[2024-05-22 16:04:41,352][hannah.datasets.base][WARNING] - Datasets class names contain classes that are longer than the recommended lenght of 5 characters, consider implementing class_names_abbreviated in your dataset
+[2024-05-22 16:04:41,352][hannah.datasets.base][WARNING] - Datasets class names contain classes that are longer than the recommended lenght of 5 characters, consider implementing class_names_abbreviated in your dataset
+[2024-05-22 16:04:41,859][hannah.datasets.base][WARNING] - Datasets class names contain classes that are longer than the recommended lenght of 5 characters, consider implementing class_names_abbreviated in your dataset
+[2024-05-22 16:04:42,214][hannah.datasets.base][WARNING] - Datasets class names contain classes that are longer than the recommended lenght of 5 characters, consider implementing class_names_abbreviated in your dataset
+[2024-05-22 16:04:42,460][hannah.train][INFO] - Averaged Result Metrics:
+| Metric               |     Mean |   Std |   Count |
+|----------------------|----------|-------|---------|
+| test_classifier_loss | 0.194417 |     0 |       1 |
+| test_accuracy        | 0.934395 |     0 |       1 |
+| test_error           | 0.065605 |     0 |       1 |
+| test_f1              | 0.934433 |     0 |       1 |
+| test_precision       | 0.93461  |     0 |       1 |
+| test_recall          | 0.934376 |     0 |       1 |
+| test_loss            | 0.194417 |     0 |       1 |
+[2024-05-22 16:04:42,471][hannah.train][INFO] - Averaged Result Metrics:
+| Metric              |      Mean |   Std |   Count |
+|---------------------|-----------|-------|---------|
+| val_classifier_loss | 0.199147  |     0 |       1 |
+| val_accuracy        | 0.933293  |     0 |       1 |
+| val_error           | 0.0667067 |     0 |       1 |
+| val_f1              | 0.932888  |     0 |       1 |
+| val_precision       | 0.933319  |     0 |       1 |
+| val_recall          | 0.932693  |     0 |       1 |
+| val_loss            | 0.199147  |     0 |       1 |
+[2024-05-22 16:54:54,563][hannah.utils.utils][INFO] - Environment info:
+[2024-05-22 16:54:54,656][hannah.utils.utils][INFO] -   Number of GPUs: 2
+[2024-05-22 16:54:54,657][hannah.utils.utils][INFO] -   CUDA version: 12.1
+[2024-05-22 16:54:54,659][hannah.utils.utils][INFO] -   CUDNN version: 8907
+[2024-05-22 16:54:54,660][hannah.utils.utils][INFO] -   Kernel: 4.18.0-513.24.1.el8_9.x86_64
+[2024-05-22 16:54:54,660][hannah.utils.utils][INFO] -   Python: 3.11.5 (main, Nov 15 2023, 03:52:27) [GCC 8.5.0 20210514 (Red Hat 8.5.0-20)]
+[2024-05-22 16:54:54,660][hannah.utils.utils][INFO] -   PyTorch: 2.2.2+cu121
+[2024-05-22 16:54:54,660][hannah.utils.utils][INFO] -   Pytorch Lightning: 2.2.4
+[2024-05-22 16:54:54,660][hannah.utils.utils][INFO] -   Numpy: 1.26.4
+[2024-05-22 16:54:54,660][hannah.utils.utils][INFO] -   Hannah version info:
+[2024-05-22 16:54:54,661][hannah.utils.utils][INFO] -     Cannot find a Git repository.  You probably downloaded an archive
+[2024-05-22 16:54:54,661][hannah.utils.utils][INFO] -   Command line: /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/bin/hannah-train module.num_workers=32 module.batch_size=128 +experiment=sweep_models
+[2024-05-22 16:54:54,661][hannah.utils.utils][INFO] -   
+[2024-05-22 16:54:54,662][lightning.fabric.utilities.seed][INFO] - Seed set to 1234
+[2024-05-22 16:54:54,695][root][INFO] - Configuration: 
+[2024-05-22 16:54:54,698][root][INFO] - dataset:
+  data_folder: ${hydra:runtime.cwd}/datasets/
+  cls: hannah.datasets.vision.Cifar10Dataset
+  dataset: cifar10
+  val_percent: 0.1
+  sensor:
+    resolution:
+    - 32
+    - 32
+features:
+  _target_: torch.nn.Identity
+model:
+  _target_: hannah.models.timm.TimmModel
+  name: resnet18
+scheduler:
+  _target_: torch.optim.lr_scheduler.OneCycleLR
+  max_lr: ${optimizer.lr}
+  pct_start: 0.3
+  anneal_strategy: cos
+  cycle_momentum: true
+  base_momentum: 0.85
+  max_momentum: 0.95
+  div_factor: 25.0
+  final_div_factor: 10000.0
+  last_epoch: -1
+optimizer:
+  _target_: torch.optim.sgd.SGD
+  lr: 0.3
+  momentum: 0.9
+  dampening: 0
+  weight_decay: 0.0005
+  nesterov: false
+module:
+  _target_: hannah.modules.vision.ImageClassifierModule
+  num_workers: 32
+  batch_size: 128
+  shuffle_all_dataloaders: false
+trainer:
+  _target_: pytorch_lightning.trainer.Trainer
+  accelerator: auto
+  devices: 1
+  limit_train_batches: 1.0
+  limit_val_batches: 1.0
+  limit_test_batches: 1.0
+  max_epochs: 50
+  default_root_dir: .
+  fast_dev_run: false
+  overfit_batches: 0.0
+  benchmark: false
+  deterministic: warn
+  gradient_clip_val: 0
+  accumulate_grad_batches: 1
+  plugins: null
+  strategy: auto
+  reload_dataloaders_every_n_epochs: 0
+  precision: 16
+checkpoint:
+  _target_: pytorch_lightning.callbacks.ModelCheckpoint
+  dirpath: checkpoints
+  save_top_k: 1
+  verbose: true
+  monitor: val_error
+  mode: min
+  save_last: true
+augmentation:
+  batch_augment:
+    pipeline: null
+    transforms:
+      RandomHorizontalFlip:
+        p: 0.5
+      RandomAffine:
+        degrees:
+        - -15
+        - 15
+        translate:
+        - 0.1
+        - 0.1
+        scale:
+        - 0.9
+        - 1.1
+        shear:
+        - -5
+        - 5
+        p: 0.5
+      RandomCrop:
+        size:
+        - 32
+        - 32
+        padding: 4
+      RandomErasing:
+        p: 0.5
+experiment_id: sweep_models
+output_dir: trained_models
+auto_lr: false
+resume: false
+fx_mac_summary: false
+skip_test: false
+skip_val: false
+seed:
+- 1234
+validate_output: false
+monitor:
+  metric: val_accuracy
+  direction: maximize
+
+[2024-05-22 16:54:54,698][root][INFO] - Current working directory /local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18
+[2024-05-22 16:54:55,478][hannah.callbacks.optimization][INFO] - Monitoring the following values for optimization
+[2024-05-22 16:54:55,478][hannah.callbacks.optimization][INFO] -   - val_accuracy direction: maximize(-1)
+[2024-05-22 16:54:55,534][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/lightning_fabric/connector.py:563: `precision=16` is supported for historical reasons but its usage is discouraged. Please set your precision to 16-mixed instead!
+
+[2024-05-22 16:54:55,558][pytorch_lightning.utilities.rank_zero][INFO] - Using 16bit Automatic Mixed Precision (AMP)
+[2024-05-22 16:54:55,565][pytorch_lightning.utilities.rank_zero][INFO] - GPU available: True (cuda), used: True
+[2024-05-22 16:54:55,565][pytorch_lightning.utilities.rank_zero][INFO] - TPU available: False, using: 0 TPU cores
+[2024-05-22 16:54:55,565][pytorch_lightning.utilities.rank_zero][INFO] - IPU available: False, using: 0 IPUs
+[2024-05-22 16:54:55,565][pytorch_lightning.utilities.rank_zero][INFO] - HPU available: False, using: 0 HPUs
+[2024-05-22 16:54:55,566][pytorch_lightning.utilities.rank_zero][INFO] - `Trainer(limit_train_batches=1.0)` was configured so 100% of the batches per epoch will be used..
+[2024-05-22 16:54:55,566][pytorch_lightning.utilities.rank_zero][INFO] - `Trainer(limit_val_batches=1.0)` was configured so 100% of the batches will be used..
+[2024-05-22 16:54:55,566][pytorch_lightning.utilities.rank_zero][INFO] - `Trainer(limit_test_batches=1.0)` was configured so 100% of the batches will be used..
+[2024-05-22 16:54:55,566][root][INFO] - Starting training
+[2024-05-22 16:54:56,965][py.warnings][WARNING] - /local/gerum/hannah/hannah/modules/vision/base.py:63: UserWarning: Vision datasets should return a length 4 tuple, will assume unlabeled data is None
+  warnings.warn(
+
+[2024-05-22 16:54:56,966][hannah.modules.vision.base][INFO] - Dataset lengths:
+[2024-05-22 16:54:56,966][hannah.modules.vision.base][INFO] -   Train Set (Labeled): 45000
+[2024-05-22 16:54:56,966][hannah.modules.vision.base][INFO] -   Train Set (Unlabled): 0
+[2024-05-22 16:54:56,966][hannah.modules.vision.base][INFO] -   Dev Set: 5000
+[2024-05-22 16:54:56,966][hannah.modules.vision.base][INFO] -   Test Set: 10000
+[2024-05-22 16:54:56,967][hannah.modules.vision.base][INFO] - Setting up model resnet18
+[2024-05-22 16:54:57,302][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:803: UserWarning: Overwriting focalnet_tiny_srf in registry with hannah.models._vendor.focalnet.focalnet_tiny_srf. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-22 16:54:57,302][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:824: UserWarning: Overwriting focalnet_small_srf in registry with hannah.models._vendor.focalnet.focalnet_small_srf. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-22 16:54:57,302][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:843: UserWarning: Overwriting focalnet_base_srf in registry with hannah.models._vendor.focalnet.focalnet_base_srf. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-22 16:54:57,302][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:862: UserWarning: Overwriting focalnet_tiny_lrf in registry with hannah.models._vendor.focalnet.focalnet_tiny_lrf. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-22 16:54:57,302][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:885: UserWarning: Overwriting focalnet_small_lrf in registry with hannah.models._vendor.focalnet.focalnet_small_lrf. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-22 16:54:57,302][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:906: UserWarning: Overwriting focalnet_base_lrf in registry with hannah.models._vendor.focalnet.focalnet_base_lrf. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-22 16:54:57,302][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:1010: UserWarning: Overwriting focalnet_large_fl3 in registry with hannah.models._vendor.focalnet.focalnet_large_fl3. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-22 16:54:57,302][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:1031: UserWarning: Overwriting focalnet_large_fl4 in registry with hannah.models._vendor.focalnet.focalnet_large_fl4. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-22 16:54:57,302][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:1052: UserWarning: Overwriting focalnet_xlarge_fl3 in registry with hannah.models._vendor.focalnet.focalnet_xlarge_fl3. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-22 16:54:57,302][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:1073: UserWarning: Overwriting focalnet_xlarge_fl4 in registry with hannah.models._vendor.focalnet.focalnet_xlarge_fl4. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-22 16:54:57,302][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:1094: UserWarning: Overwriting focalnet_huge_fl3 in registry with hannah.models._vendor.focalnet.focalnet_huge_fl3. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-22 16:54:57,303][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/_vendor/focalnet.py:1115: UserWarning: Overwriting focalnet_huge_fl4 in registry with hannah.models._vendor.focalnet.focalnet_huge_fl4. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  @register_model
+
+[2024-05-22 16:54:57,439][hannah.models.timm][INFO] - Using default logger for automatic stem creation
+[2024-05-22 16:54:57,439][hannah.models.timm][INFO] - Small input size detected trying to adopt small input size
+[2024-05-22 16:54:57,455][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib64/python3.11/site-packages/torch/nn/modules/lazy.py:181: UserWarning: Lazy modules are a new feature under heavy development so changes to the API or functionality can happen at any moment.
+  warnings.warn('Lazy modules are a new feature under heavy development '
+
+[2024-05-22 16:54:57,639][hannah.modules.vision.base][INFO] - Instantiating input Normalizer with mean: (0.491, 0.482, 0.446), std: (0.247, 0.243, 0.261)
+[2024-05-22 16:54:57,644][hannah.modules.vision.base][INFO] - Running dummy forward to initialize lazy modules
+[2024-05-22 16:54:57,658][pytorch_lightning.accelerators.cuda][INFO] - LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+[2024-05-22 16:54:57,672][pytorch_lightning.utilities.rank_zero][INFO] - Loading `train_dataloader` to estimate number of stepping batches.
+[2024-05-22 16:54:58,352][pytorch_lightning.callbacks.model_summary][INFO] - 
+  | Name           | Type                           | Params | In sizes       | Out sizes                          
+-------------------------------------------------------------------------------------------------------------------------
+0 | val_metrics    | MetricCollection               | 0      | ?              | ?                                  
+1 | test_metrics   | MetricCollection               | 0      | ?              | ?                                  
+2 | train_metrics  | MetricCollection               | 0      | ?              | ?                                  
+3 | model          | TimmModel                      | 11.2 M | [1, 3, 32, 32] | [[1, 512, 4, 4], [0], [0], [1, 10]]
+4 | test_confusion | MulticlassConfusionMatrix      | 0      | ?              | ?                                  
+5 | test_roc       | MulticlassROC                  | 0      | ?              | ?                                  
+6 | test_pr_curve  | MulticlassPrecisionRecallCurve | 0      | ?              | ?                                  
+7 | metrics        | ModuleDict                     | 0      | ?              | ?                                  
+-------------------------------------------------------------------------------------------------------------------------
+11.2 M    Trainable params
+0         Non-trainable params
+11.2 M    Total params
+44.696    Total estimated model params size (MB)
+[2024-05-22 16:54:58,493][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/timm.py:312: TracerWarning: torch.tensor results are registered as constants in the trace. You can safely ignore this warning if you use this function to create tensors out of constant variables that would be the same every time you call this function. In any other case, this might cause the trace to be incorrect.
+  decoded = torch.tensor([])
+
+[2024-05-22 16:54:58,493][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/timm.py:316: TracerWarning: torch.tensor results are registered as constants in the trace. You can safely ignore this warning if you use this function to create tensors out of constant variables that would be the same every time you call this function. In any other case, this might cause the trace to be incorrect.
+  logits = torch.tensor([])
+
+[2024-05-22 16:54:58,498][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/timm.py:320: TracerWarning: torch.tensor results are registered as constants in the trace. You can safely ignore this warning if you use this function to create tensors out of constant variables that would be the same every time you call this function. In any other case, this might cause the trace to be incorrect.
+  projection = torch.tensor([])
+
+[2024-05-22 16:54:59,610][hannah.callbacks.summaries][INFO] - 
++----+-------------------------------+-----------------------+--------------------------------------------------+------------------+--------------+------------------+--------------+------------------+----------+
+|    | Name                          | Type                  | Attrs                                            | IFM              |   IFM volume | OFM              |   OFM volume |   Weights volume |     MACs |
+|----+-------------------------------+-----------------------+--------------------------------------------------+------------------+--------------+------------------+--------------+------------------+----------|
+|  0 | encoder.conv1                 | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 3, 32, 32)   |         3072 | (1, 64, 32, 32)  |        65536 |             1728 |  1769472 |
+|  1 | encoder.bn1                   | BatchNorm2d           |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  2 | encoder.act1                  | ReLU                  |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  3 | encoder.maxpool               | Identity              |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  4 | encoder.layer1.0.conv1        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |            36864 | 37748736 |
+|  5 | encoder.layer1.0.bn1          | BatchNorm2d           |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  6 | encoder.layer1.0.drop_block   | Identity              |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  7 | encoder.layer1.0.act1         | ReLU                  |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  8 | encoder.layer1.0.aa           | Identity              |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  9 | encoder.layer1.0.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |            36864 | 37748736 |
+| 10 | encoder.layer1.0.bn2          | BatchNorm2d           |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 11 | encoder.layer1.0.act2         | ReLU                  |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 12 | encoder.layer1.0              | BasicBlock            |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 13 | encoder.layer1.1.conv1        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |            36864 | 37748736 |
+| 14 | encoder.layer1.1.bn1          | BatchNorm2d           |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 15 | encoder.layer1.1.drop_block   | Identity              |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 16 | encoder.layer1.1.act1         | ReLU                  |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 17 | encoder.layer1.1.aa           | Identity              |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 18 | encoder.layer1.1.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |            36864 | 37748736 |
+| 19 | encoder.layer1.1.bn2          | BatchNorm2d           |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 20 | encoder.layer1.1.act2         | ReLU                  |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 21 | encoder.layer1.1              | BasicBlock            |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 22 | encoder.layer1                | Sequential            |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 23 | encoder.layer2.0.conv1        | Conv2d                | k=(3, 3), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 128, 16, 16) |        32768 |            73728 | 18874368 |
+| 24 | encoder.layer2.0.bn1          | BatchNorm2d           |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 25 | encoder.layer2.0.drop_block   | Identity              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 26 | encoder.layer2.0.act1         | ReLU                  |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 27 | encoder.layer2.0.aa           | Identity              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 28 | encoder.layer2.0.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |           147456 | 37748736 |
+| 29 | encoder.layer2.0.bn2          | BatchNorm2d           |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 30 | encoder.layer2.0.downsample.0 | Conv2d                | k=(1, 1), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 128, 16, 16) |        32768 |             8192 |  2097152 |
+| 31 | encoder.layer2.0.downsample.1 | BatchNorm2d           |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 32 | encoder.layer2.0.downsample   | Sequential            |                                                  | (1, 64, 32, 32)  |        65536 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 33 | encoder.layer2.0.act2         | ReLU                  |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 34 | encoder.layer2.0              | BasicBlock            |                                                  | (1, 64, 32, 32)  |        65536 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 35 | encoder.layer2.1.conv1        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |           147456 | 37748736 |
+| 36 | encoder.layer2.1.bn1          | BatchNorm2d           |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 37 | encoder.layer2.1.drop_block   | Identity              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 38 | encoder.layer2.1.act1         | ReLU                  |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 39 | encoder.layer2.1.aa           | Identity              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 40 | encoder.layer2.1.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |           147456 | 37748736 |
+| 41 | encoder.layer2.1.bn2          | BatchNorm2d           |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 42 | encoder.layer2.1.act2         | ReLU                  |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 43 | encoder.layer2.1              | BasicBlock            |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 44 | encoder.layer2                | Sequential            |                                                  | (1, 64, 32, 32)  |        65536 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 45 | encoder.layer3.0.conv1        | Conv2d                | k=(3, 3), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 256, 8, 8)   |        16384 |           294912 | 18874368 |
+| 46 | encoder.layer3.0.bn1          | BatchNorm2d           |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 47 | encoder.layer3.0.drop_block   | Identity              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 48 | encoder.layer3.0.act1         | ReLU                  |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 49 | encoder.layer3.0.aa           | Identity              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 50 | encoder.layer3.0.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |           589824 | 37748736 |
+| 51 | encoder.layer3.0.bn2          | BatchNorm2d           |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 52 | encoder.layer3.0.downsample.0 | Conv2d                | k=(1, 1), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 256, 8, 8)   |        16384 |            32768 |  2097152 |
+| 53 | encoder.layer3.0.downsample.1 | BatchNorm2d           |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 54 | encoder.layer3.0.downsample   | Sequential            |                                                  | (1, 128, 16, 16) |        32768 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 55 | encoder.layer3.0.act2         | ReLU                  |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 56 | encoder.layer3.0              | BasicBlock            |                                                  | (1, 128, 16, 16) |        32768 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 57 | encoder.layer3.1.conv1        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |           589824 | 37748736 |
+| 58 | encoder.layer3.1.bn1          | BatchNorm2d           |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 59 | encoder.layer3.1.drop_block   | Identity              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 60 | encoder.layer3.1.act1         | ReLU                  |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 61 | encoder.layer3.1.aa           | Identity              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 62 | encoder.layer3.1.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |           589824 | 37748736 |
+| 63 | encoder.layer3.1.bn2          | BatchNorm2d           |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 64 | encoder.layer3.1.act2         | ReLU                  |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 65 | encoder.layer3.1              | BasicBlock            |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 66 | encoder.layer3                | Sequential            |                                                  | (1, 128, 16, 16) |        32768 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 67 | encoder.layer4.0.conv1        | Conv2d                | k=(3, 3), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 512, 4, 4)   |         8192 |          1179648 | 18874368 |
+| 68 | encoder.layer4.0.bn1          | BatchNorm2d           |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 69 | encoder.layer4.0.drop_block   | Identity              |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 70 | encoder.layer4.0.act1         | ReLU                  |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 71 | encoder.layer4.0.aa           | Identity              |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 72 | encoder.layer4.0.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |          2359296 | 37748736 |
+| 73 | encoder.layer4.0.bn2          | BatchNorm2d           |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 74 | encoder.layer4.0.downsample.0 | Conv2d                | k=(1, 1), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 512, 4, 4)   |         8192 |           131072 |  2097152 |
+| 75 | encoder.layer4.0.downsample.1 | BatchNorm2d           |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 76 | encoder.layer4.0.downsample   | Sequential            |                                                  | (1, 256, 8, 8)   |        16384 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 77 | encoder.layer4.0.act2         | ReLU                  |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 78 | encoder.layer4.0              | BasicBlock            |                                                  | (1, 256, 8, 8)   |        16384 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 79 | encoder.layer4.1.conv1        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |          2359296 | 37748736 |
+| 80 | encoder.layer4.1.bn1          | BatchNorm2d           |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 81 | encoder.layer4.1.drop_block   | Identity              |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 82 | encoder.layer4.1.act1         | ReLU                  |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 83 | encoder.layer4.1.aa           | Identity              |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 84 | encoder.layer4.1.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |          2359296 | 37748736 |
+| 85 | encoder.layer4.1.bn2          | BatchNorm2d           |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 86 | encoder.layer4.1.act2         | ReLU                  |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 87 | encoder.layer4.1              | BasicBlock            |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 88 | encoder.layer4                | Sequential            |                                                  | (1, 256, 8, 8)   |        16384 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 89 | encoder.global_pool.pool      | Identity              |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 90 | encoder.global_pool.flatten   | Identity              |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 91 | encoder.global_pool           | SelectAdaptivePool2d  |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 92 | encoder.fc                    | Identity              |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 93 | encoder                       | ResNet                |                                                  | (1, 3, 32, 32)   |         3072 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 94 | classifier.pooling            | AdaptiveAvgPool2d     |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 1, 1)   |          512 |                0 |        0 |
+| 95 | classifier.flatten            | Flatten               |                                                  | (1, 512, 1, 1)   |          512 | (1, 512)         |          512 |                0 |        0 |
+| 96 | classifier.linear             | Linear                |                                                  | (1, 512)         |          512 | (1, 10)          |           10 |             5120 |     5120 |
+| 97 | classifier                    | DefaultClassifierHead |                                                  | (1, 512, 4, 4)   |         8192 | (1, 10)          |           10 |                0 |        0 |
++----+-------------------------------+-----------------------+--------------------------------------------------+------------------+--------------+------------------+--------------+------------------+----------+
+[2024-05-22 16:54:59,611][hannah.callbacks.summaries][INFO] - Total MACs: 555,422,720
+[2024-05-22 16:54:59,611][hannah.callbacks.summaries][INFO] - Total Weights: 11,164,352
+[2024-05-22 16:54:59,611][hannah.callbacks.summaries][INFO] - Total Activations: 2,813,972
+[2024-05-22 16:54:59,611][hannah.callbacks.summaries][INFO] - Estimated Activations: 131,072
+[2024-05-22 16:55:05,676][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 0, global step 351: 'val_error' reached 0.59495 (best 0.59495), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=0-step=351.ckpt' as top 1
+[2024-05-22 16:55:12,001][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 1, global step 702: 'val_error' reached 0.52885 (best 0.52885), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=1-step=702.ckpt' as top 1
+[2024-05-22 16:55:18,261][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 2, global step 1053: 'val_error' reached 0.36378 (best 0.36378), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=2-step=1053.ckpt' as top 1
+[2024-05-22 16:55:24,651][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 3, global step 1404: 'val_error' reached 0.36058 (best 0.36058), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=3-step=1404.ckpt' as top 1
+[2024-05-22 16:55:30,971][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 4, global step 1755: 'val_error' reached 0.30769 (best 0.30769), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=4-step=1755.ckpt' as top 1
+[2024-05-22 16:55:37,241][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 5, global step 2106: 'val_error' reached 0.29046 (best 0.29046), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=5-step=2106.ckpt' as top 1
+[2024-05-22 16:55:43,611][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 6, global step 2457: 'val_error' reached 0.28225 (best 0.28225), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=6-step=2457.ckpt' as top 1
+[2024-05-22 16:55:50,163][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 7, global step 2808: 'val_error' reached 0.24579 (best 0.24579), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=7-step=2808.ckpt' as top 1
+[2024-05-22 16:55:56,488][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 8, global step 3159: 'val_error' reached 0.23958 (best 0.23958), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=8-step=3159.ckpt' as top 1
+[2024-05-22 16:56:02,966][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 9, global step 3510: 'val_error' was not in top 1
+[2024-05-22 16:56:09,118][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 10, global step 3861: 'val_error' was not in top 1
+[2024-05-22 16:56:15,405][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 11, global step 4212: 'val_error' was not in top 1
+[2024-05-22 16:56:21,601][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 12, global step 4563: 'val_error' was not in top 1
+[2024-05-22 16:56:27,924][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 13, global step 4914: 'val_error' was not in top 1
+[2024-05-22 16:56:34,045][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 14, global step 5265: 'val_error' reached 0.19992 (best 0.19992), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=14-step=5265.ckpt' as top 1
+[2024-05-22 16:56:40,258][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 15, global step 5616: 'val_error' was not in top 1
+[2024-05-22 16:56:46,488][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 16, global step 5967: 'val_error' was not in top 1
+[2024-05-22 16:56:52,697][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 17, global step 6318: 'val_error' was not in top 1
+[2024-05-22 16:56:58,894][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 18, global step 6669: 'val_error' was not in top 1
+[2024-05-22 16:57:05,053][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 19, global step 7020: 'val_error' was not in top 1
+[2024-05-22 16:57:11,205][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 20, global step 7371: 'val_error' was not in top 1
+[2024-05-22 16:57:17,390][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 21, global step 7722: 'val_error' was not in top 1
+[2024-05-22 16:57:23,679][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 22, global step 8073: 'val_error' was not in top 1
+[2024-05-22 16:57:29,912][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 23, global step 8424: 'val_error' was not in top 1
+[2024-05-22 16:57:36,079][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 24, global step 8775: 'val_error' was not in top 1
+[2024-05-22 16:57:42,293][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 25, global step 9126: 'val_error' reached 0.19191 (best 0.19191), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=25-step=9126.ckpt' as top 1
+[2024-05-22 16:57:48,645][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 26, global step 9477: 'val_error' was not in top 1
+[2024-05-22 16:57:54,828][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 27, global step 9828: 'val_error' was not in top 1
+[2024-05-22 16:58:00,895][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 28, global step 10179: 'val_error' was not in top 1
+[2024-05-22 16:58:07,080][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 29, global step 10530: 'val_error' was not in top 1
+[2024-05-22 16:58:13,345][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 30, global step 10881: 'val_error' was not in top 1
+[2024-05-22 16:58:19,634][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 31, global step 11232: 'val_error' reached 0.17688 (best 0.17688), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=31-step=11232.ckpt' as top 1
+[2024-05-22 16:58:25,829][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 32, global step 11583: 'val_error' reached 0.17368 (best 0.17368), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=32-step=11583.ckpt' as top 1
+[2024-05-22 16:58:32,155][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 33, global step 11934: 'val_error' was not in top 1
+[2024-05-22 16:58:38,313][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 34, global step 12285: 'val_error' was not in top 1
+[2024-05-22 16:58:44,555][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 35, global step 12636: 'val_error' reached 0.17027 (best 0.17027), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=35-step=12636.ckpt' as top 1
+[2024-05-22 16:58:50,911][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 36, global step 12987: 'val_error' reached 0.15244 (best 0.15244), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=36-step=12987.ckpt' as top 1
+[2024-05-22 16:58:57,309][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 37, global step 13338: 'val_error' was not in top 1
+[2024-05-22 16:59:03,575][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 38, global step 13689: 'val_error' was not in top 1
+[2024-05-22 16:59:09,779][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 39, global step 14040: 'val_error' reached 0.14383 (best 0.14383), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=39-step=14040.ckpt' as top 1
+[2024-05-22 16:59:16,142][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 40, global step 14391: 'val_error' reached 0.12881 (best 0.12881), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=40-step=14391.ckpt' as top 1
+[2024-05-22 16:59:22,468][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 41, global step 14742: 'val_error' was not in top 1
+[2024-05-22 16:59:28,681][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 42, global step 15093: 'val_error' reached 0.11378 (best 0.11378), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=42-step=15093.ckpt' as top 1
+[2024-05-22 16:59:35,072][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 43, global step 15444: 'val_error' reached 0.10817 (best 0.10817), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=43-step=15444.ckpt' as top 1
+[2024-05-22 16:59:41,674][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 44, global step 15795: 'val_error' reached 0.09856 (best 0.09856), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=44-step=15795.ckpt' as top 1
+[2024-05-22 16:59:48,141][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 45, global step 16146: 'val_error' reached 0.09535 (best 0.09535), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=45-step=16146.ckpt' as top 1
+[2024-05-22 16:59:54,455][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 46, global step 16497: 'val_error' reached 0.08614 (best 0.08614), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=46-step=16497.ckpt' as top 1
+[2024-05-22 17:00:00,749][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 47, global step 16848: 'val_error' reached 0.08193 (best 0.08193), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=47-step=16848.ckpt' as top 1
+[2024-05-22 17:00:07,219][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 48, global step 17199: 'val_error' reached 0.08093 (best 0.08093), saving model to '/local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=48-step=17199.ckpt' as top 1
+[2024-05-22 17:00:13,618][pytorch_lightning.utilities.rank_zero][INFO] - Epoch 49, global step 17550: 'val_error' was not in top 1
+[2024-05-22 17:00:13,797][pytorch_lightning.utilities.rank_zero][INFO] - `Trainer.fit` stopped: `max_epochs=50` reached.
+[2024-05-22 17:00:13,984][lightning.fabric.utilities.seed][INFO] - Seed set to 1234
+[2024-05-22 17:00:13,985][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/checkpoint_connector.py:145: `.validate(ckpt_path=None)` was called without a model. The best model of the previous `fit` call will be used. You can pass `.validate(ckpt_path='best')` to use the best model or `.validate(ckpt_path='last')` to use the last model. If you pass a value, this warning will be silenced.
+
+[2024-05-22 17:00:13,986][pytorch_lightning.utilities.rank_zero][INFO] - Restoring states from the checkpoint path at /local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=48-step=17199.ckpt
+[2024-05-22 17:00:14,027][pytorch_lightning.accelerators.cuda][INFO] - LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+[2024-05-22 17:00:14,141][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/timm.py:312: TracerWarning: torch.tensor results are registered as constants in the trace. You can safely ignore this warning if you use this function to create tensors out of constant variables that would be the same every time you call this function. In any other case, this might cause the trace to be incorrect.
+  decoded = torch.tensor([])
+
+[2024-05-22 17:00:14,141][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/timm.py:316: TracerWarning: torch.tensor results are registered as constants in the trace. You can safely ignore this warning if you use this function to create tensors out of constant variables that would be the same every time you call this function. In any other case, this might cause the trace to be incorrect.
+  logits = torch.tensor([])
+
+[2024-05-22 17:00:14,143][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/timm.py:320: TracerWarning: torch.tensor results are registered as constants in the trace. You can safely ignore this warning if you use this function to create tensors out of constant variables that would be the same every time you call this function. In any other case, this might cause the trace to be incorrect.
+  projection = torch.tensor([])
+
+[2024-05-22 17:00:14,361][pytorch_lightning.utilities.rank_zero][INFO] - Loaded model weights from the checkpoint at /local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=48-step=17199.ckpt
+[2024-05-22 17:00:15,480][lightning.fabric.utilities.seed][INFO] - Seed set to 1234
+[2024-05-22 17:00:15,481][py.warnings][WARNING] - /local/gerum/.cache/pypoetry/virtualenvs/hannah-8Yp6PnCx-py3.11/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/checkpoint_connector.py:145: `.test(ckpt_path=None)` was called without a model. The best model of the previous `fit` call will be used. You can pass `.test(ckpt_path='best')` to use the best model or `.test(ckpt_path='last')` to use the last model. If you pass a value, this warning will be silenced.
+
+[2024-05-22 17:00:15,482][pytorch_lightning.utilities.rank_zero][INFO] - Restoring states from the checkpoint path at /local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=48-step=17199.ckpt
+[2024-05-22 17:00:15,516][pytorch_lightning.accelerators.cuda][INFO] - LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+[2024-05-22 17:00:15,632][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/timm.py:312: TracerWarning: torch.tensor results are registered as constants in the trace. You can safely ignore this warning if you use this function to create tensors out of constant variables that would be the same every time you call this function. In any other case, this might cause the trace to be incorrect.
+  decoded = torch.tensor([])
+
+[2024-05-22 17:00:15,633][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/timm.py:316: TracerWarning: torch.tensor results are registered as constants in the trace. You can safely ignore this warning if you use this function to create tensors out of constant variables that would be the same every time you call this function. In any other case, this might cause the trace to be incorrect.
+  logits = torch.tensor([])
+
+[2024-05-22 17:00:15,634][py.warnings][WARNING] - /local/gerum/hannah/hannah/models/timm.py:320: TracerWarning: torch.tensor results are registered as constants in the trace. You can safely ignore this warning if you use this function to create tensors out of constant variables that would be the same every time you call this function. In any other case, this might cause the trace to be incorrect.
+  projection = torch.tensor([])
+
+[2024-05-22 17:00:15,853][pytorch_lightning.utilities.rank_zero][INFO] - Loaded model weights from the checkpoint at /local/gerum/hannah/experiments/cifar10/trained_models/sweep_models/resnet18/checkpoints/epoch=48-step=17199.ckpt
+[2024-05-22 17:00:17,199][hannah.callbacks.summaries][INFO] - 
++----+-------------------------------+-----------------------+--------------------------------------------------+------------------+--------------+------------------+--------------+------------------+----------+
+|    | Name                          | Type                  | Attrs                                            | IFM              |   IFM volume | OFM              |   OFM volume |   Weights volume |     MACs |
+|----+-------------------------------+-----------------------+--------------------------------------------------+------------------+--------------+------------------+--------------+------------------+----------|
+|  0 | encoder.conv1                 | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 3, 32, 32)   |         3072 | (1, 64, 32, 32)  |        65536 |             1728 |  1769472 |
+|  1 | encoder.bn1                   | BatchNorm2d           |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  2 | encoder.act1                  | ReLU                  |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  3 | encoder.maxpool               | Identity              |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  4 | encoder.layer1.0.conv1        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |            36864 | 37748736 |
+|  5 | encoder.layer1.0.bn1          | BatchNorm2d           |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  6 | encoder.layer1.0.drop_block   | Identity              |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  7 | encoder.layer1.0.act1         | ReLU                  |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  8 | encoder.layer1.0.aa           | Identity              |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+|  9 | encoder.layer1.0.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |            36864 | 37748736 |
+| 10 | encoder.layer1.0.bn2          | BatchNorm2d           |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 11 | encoder.layer1.0.act2         | ReLU                  |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 12 | encoder.layer1.0              | BasicBlock            |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 13 | encoder.layer1.1.conv1        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |            36864 | 37748736 |
+| 14 | encoder.layer1.1.bn1          | BatchNorm2d           |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 15 | encoder.layer1.1.drop_block   | Identity              |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 16 | encoder.layer1.1.act1         | ReLU                  |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 17 | encoder.layer1.1.aa           | Identity              |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 18 | encoder.layer1.1.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |            36864 | 37748736 |
+| 19 | encoder.layer1.1.bn2          | BatchNorm2d           |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 20 | encoder.layer1.1.act2         | ReLU                  |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 21 | encoder.layer1.1              | BasicBlock            |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 22 | encoder.layer1                | Sequential            |                                                  | (1, 64, 32, 32)  |        65536 | (1, 64, 32, 32)  |        65536 |                0 |        0 |
+| 23 | encoder.layer2.0.conv1        | Conv2d                | k=(3, 3), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 128, 16, 16) |        32768 |            73728 | 18874368 |
+| 24 | encoder.layer2.0.bn1          | BatchNorm2d           |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 25 | encoder.layer2.0.drop_block   | Identity              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 26 | encoder.layer2.0.act1         | ReLU                  |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 27 | encoder.layer2.0.aa           | Identity              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 28 | encoder.layer2.0.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |           147456 | 37748736 |
+| 29 | encoder.layer2.0.bn2          | BatchNorm2d           |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 30 | encoder.layer2.0.downsample.0 | Conv2d                | k=(1, 1), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 64, 32, 32)  |        65536 | (1, 128, 16, 16) |        32768 |             8192 |  2097152 |
+| 31 | encoder.layer2.0.downsample.1 | BatchNorm2d           |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 32 | encoder.layer2.0.downsample   | Sequential            |                                                  | (1, 64, 32, 32)  |        65536 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 33 | encoder.layer2.0.act2         | ReLU                  |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 34 | encoder.layer2.0              | BasicBlock            |                                                  | (1, 64, 32, 32)  |        65536 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 35 | encoder.layer2.1.conv1        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |           147456 | 37748736 |
+| 36 | encoder.layer2.1.bn1          | BatchNorm2d           |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 37 | encoder.layer2.1.drop_block   | Identity              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 38 | encoder.layer2.1.act1         | ReLU                  |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 39 | encoder.layer2.1.aa           | Identity              |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 40 | encoder.layer2.1.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |           147456 | 37748736 |
+| 41 | encoder.layer2.1.bn2          | BatchNorm2d           |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 42 | encoder.layer2.1.act2         | ReLU                  |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 43 | encoder.layer2.1              | BasicBlock            |                                                  | (1, 128, 16, 16) |        32768 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 44 | encoder.layer2                | Sequential            |                                                  | (1, 64, 32, 32)  |        65536 | (1, 128, 16, 16) |        32768 |                0 |        0 |
+| 45 | encoder.layer3.0.conv1        | Conv2d                | k=(3, 3), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 256, 8, 8)   |        16384 |           294912 | 18874368 |
+| 46 | encoder.layer3.0.bn1          | BatchNorm2d           |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 47 | encoder.layer3.0.drop_block   | Identity              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 48 | encoder.layer3.0.act1         | ReLU                  |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 49 | encoder.layer3.0.aa           | Identity              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 50 | encoder.layer3.0.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |           589824 | 37748736 |
+| 51 | encoder.layer3.0.bn2          | BatchNorm2d           |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 52 | encoder.layer3.0.downsample.0 | Conv2d                | k=(1, 1), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 128, 16, 16) |        32768 | (1, 256, 8, 8)   |        16384 |            32768 |  2097152 |
+| 53 | encoder.layer3.0.downsample.1 | BatchNorm2d           |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 54 | encoder.layer3.0.downsample   | Sequential            |                                                  | (1, 128, 16, 16) |        32768 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 55 | encoder.layer3.0.act2         | ReLU                  |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 56 | encoder.layer3.0              | BasicBlock            |                                                  | (1, 128, 16, 16) |        32768 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 57 | encoder.layer3.1.conv1        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |           589824 | 37748736 |
+| 58 | encoder.layer3.1.bn1          | BatchNorm2d           |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 59 | encoder.layer3.1.drop_block   | Identity              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 60 | encoder.layer3.1.act1         | ReLU                  |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 61 | encoder.layer3.1.aa           | Identity              |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 62 | encoder.layer3.1.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |           589824 | 37748736 |
+| 63 | encoder.layer3.1.bn2          | BatchNorm2d           |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 64 | encoder.layer3.1.act2         | ReLU                  |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 65 | encoder.layer3.1              | BasicBlock            |                                                  | (1, 256, 8, 8)   |        16384 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 66 | encoder.layer3                | Sequential            |                                                  | (1, 128, 16, 16) |        32768 | (1, 256, 8, 8)   |        16384 |                0 |        0 |
+| 67 | encoder.layer4.0.conv1        | Conv2d                | k=(3, 3), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 512, 4, 4)   |         8192 |          1179648 | 18874368 |
+| 68 | encoder.layer4.0.bn1          | BatchNorm2d           |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 69 | encoder.layer4.0.drop_block   | Identity              |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 70 | encoder.layer4.0.act1         | ReLU                  |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 71 | encoder.layer4.0.aa           | Identity              |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 72 | encoder.layer4.0.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |          2359296 | 37748736 |
+| 73 | encoder.layer4.0.bn2          | BatchNorm2d           |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 74 | encoder.layer4.0.downsample.0 | Conv2d                | k=(1, 1), s=(2, 2), g=(1), dsc=(False), d=(1, 1) | (1, 256, 8, 8)   |        16384 | (1, 512, 4, 4)   |         8192 |           131072 |  2097152 |
+| 75 | encoder.layer4.0.downsample.1 | BatchNorm2d           |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 76 | encoder.layer4.0.downsample   | Sequential            |                                                  | (1, 256, 8, 8)   |        16384 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 77 | encoder.layer4.0.act2         | ReLU                  |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 78 | encoder.layer4.0              | BasicBlock            |                                                  | (1, 256, 8, 8)   |        16384 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 79 | encoder.layer4.1.conv1        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |          2359296 | 37748736 |
+| 80 | encoder.layer4.1.bn1          | BatchNorm2d           |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 81 | encoder.layer4.1.drop_block   | Identity              |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 82 | encoder.layer4.1.act1         | ReLU                  |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 83 | encoder.layer4.1.aa           | Identity              |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 84 | encoder.layer4.1.conv2        | Conv2d                | k=(3, 3), s=(1, 1), g=(1), dsc=(False), d=(1, 1) | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |          2359296 | 37748736 |
+| 85 | encoder.layer4.1.bn2          | BatchNorm2d           |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 86 | encoder.layer4.1.act2         | ReLU                  |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 87 | encoder.layer4.1              | BasicBlock            |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 88 | encoder.layer4                | Sequential            |                                                  | (1, 256, 8, 8)   |        16384 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 89 | encoder.global_pool.pool      | Identity              |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 90 | encoder.global_pool.flatten   | Identity              |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 91 | encoder.global_pool           | SelectAdaptivePool2d  |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 92 | encoder.fc                    | Identity              |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 93 | encoder                       | ResNet                |                                                  | (1, 3, 32, 32)   |         3072 | (1, 512, 4, 4)   |         8192 |                0 |        0 |
+| 94 | classifier.pooling            | AdaptiveAvgPool2d     |                                                  | (1, 512, 4, 4)   |         8192 | (1, 512, 1, 1)   |          512 |                0 |        0 |
+| 95 | classifier.flatten            | Flatten               |                                                  | (1, 512, 1, 1)   |          512 | (1, 512)         |          512 |                0 |        0 |
+| 96 | classifier.linear             | Linear                |                                                  | (1, 512)         |          512 | (1, 10)          |           10 |             5120 |     5120 |
+| 97 | classifier                    | DefaultClassifierHead |                                                  | (1, 512, 4, 4)   |         8192 | (1, 10)          |           10 |                0 |        0 |
++----+-------------------------------+-----------------------+--------------------------------------------------+------------------+--------------+------------------+--------------+------------------+----------+
+[2024-05-22 17:00:17,200][hannah.callbacks.summaries][INFO] - Total MACs: 555,422,720
+[2024-05-22 17:00:17,200][hannah.callbacks.summaries][INFO] - Total Weights: 11,164,352
+[2024-05-22 17:00:17,200][hannah.callbacks.summaries][INFO] - Total Activations: 2,813,972
+[2024-05-22 17:00:17,200][hannah.callbacks.summaries][INFO] - Estimated Activations: 131,072
+[2024-05-22 17:00:17,200][hannah.datasets.base][WARNING] - Datasets class names contain classes that are longer than the recommended lenght of 5 characters, consider implementing class_names_abbreviated in your dataset
+[2024-05-22 17:00:17,201][hannah.datasets.base][WARNING] - Datasets class names contain classes that are longer than the recommended lenght of 5 characters, consider implementing class_names_abbreviated in your dataset
+[2024-05-22 17:00:17,679][hannah.datasets.base][WARNING] - Datasets class names contain classes that are longer than the recommended lenght of 5 characters, consider implementing class_names_abbreviated in your dataset
+[2024-05-22 17:00:17,787][hannah.datasets.base][WARNING] - Datasets class names contain classes that are longer than the recommended lenght of 5 characters, consider implementing class_names_abbreviated in your dataset
+[2024-05-22 17:00:18,019][hannah.train][INFO] - Averaged Result Metrics:
+| Metric               |      Mean |   Std |   Count |
+|----------------------|-----------|-------|---------|
+| test_classifier_loss | 0.257257  |     0 |       1 |
+| test_accuracy        | 0.923177  |     0 |       1 |
+| test_error           | 0.0768229 |     0 |       1 |
+| test_f1              | 0.923048  |     0 |       1 |
+| test_precision       | 0.923095  |     0 |       1 |
+| test_recall          | 0.923152  |     0 |       1 |
+| test_loss            | 0.257257  |     0 |       1 |
+[2024-05-22 17:00:18,030][hannah.train][INFO] - Averaged Result Metrics:
+| Metric              |      Mean |   Std |   Count |
+|---------------------|-----------|-------|---------|
+| val_classifier_loss | 0.279795  |     0 |       1 |
+| val_accuracy        | 0.919071  |     0 |       1 |
+| val_error           | 0.0809295 |     0 |       1 |
+| val_f1              | 0.918574  |     0 |       1 |
+| val_precision       | 0.918772  |     0 |       1 |
+| val_recall          | 0.918524  |     0 |       1 |
+| val_loss            | 0.279795  |     0 |       1 |
