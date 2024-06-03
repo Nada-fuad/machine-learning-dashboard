@@ -1,10 +1,10 @@
 import React from "react";
 import { Box, styled, useMediaQuery } from "@mui/material";
-import TestBarOverwiev from "../subexpermintDashboard/TestBarOverwiew";
+import BarTestAccuracy from "../subexpermintDashboard/BarTestAccuracy";
 import ValAccuracyOverwiev from "../subexpermintDashboard/ValAccuracyOverwiev";
-import ValBarOverwiev from "../subexpermintDashboard/ValBarOverwiev";
+import BarValAccuracy from "../subexpermintDashboard/BarValAccuracy";
 import TestAccuracyOverwiev from "../subexpermintDashboard/TestAccuracyOverwiev";
-import ValAccRange from "../subexpermintDashboard/ValAccRange";
+import ValAccRange from "../subexpermintDashboard/ValLossBar";
 const StyledBox = styled(Box)(({ theme }) => ({
   borderRadius: "1rem",
   boxShadow: "0.15rem 0.2rem 0.15rem 0.1rem rgba(0, 0, 0, .4)",
@@ -93,14 +93,14 @@ export default function SubExpermints({
       }
     >
       <StyledBox gridArea="a" backgroundColor={theme.palette.primary.box}>
-        <TestBarOverwiev
+        <BarValAccuracy
           path={selectedHistoryData}
           jsonSubexperiment={jsonSubexperiment}
           theme={theme}
         />
       </StyledBox>
       <StyledBox gridArea="b" backgroundColor={theme.palette.primary.box}>
-        <ValBarOverwiev
+        <BarTestAccuracy
           path={selectedHistoryData}
           jsonSubexperiment={jsonSubexperiment}
           theme={theme}
@@ -116,14 +116,14 @@ export default function SubExpermints({
       </StyledBox>
 
       <StyledBox gridArea="d" backgroundColor={theme.palette.primary.box}>
-        <ValAccRange
+        <TestAccuracyOverwiev
           path={selectedHistoryData}
           jsonSubexperiment={jsonSubexperiment}
           theme={theme}
         />
       </StyledBox>
       <StyledBox gridArea="e" backgroundColor={theme.palette.primary.box}>
-        <TestAccuracyOverwiev
+        <ValAccRange
           path={selectedHistoryData}
           jsonSubexperiment={jsonSubexperiment}
           theme={theme}

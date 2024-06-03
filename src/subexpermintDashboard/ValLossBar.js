@@ -71,7 +71,7 @@ const ValAccRange = ({ path, jsonSubexperiment, theme }) => {
     name: `${metricModel.model} `,
   }));
   const layout = {
-    title: `Validation Accuracy of Each Model in ${jsonSubexperiment.name} by Date`,
+    title: `Validation Accuracy of Each Model in ${jsonSubexperiment.name} `,
     font: { color: theme.palette.primary.font },
     xaxis: { title: "Date" },
     yaxis: { title: "Validation Accuracy" },

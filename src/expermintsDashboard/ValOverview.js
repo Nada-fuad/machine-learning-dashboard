@@ -42,15 +42,21 @@ const ValOverview = ({ path, theme }) => {
   );
 
   const colorMap = {};
+  console.log("🚀 ~ ValOverview ~ colorMap:", colorMap);
   uniqueExperiment.forEach((experiment, index) => {
     colorMap[experiment] = `hsl(${(index * 40) % 360}, 50%, 50%)`;
   });
 
   const neueMetricsData = metrics.reduce((acc, current) => {
     const { experiment, val_accuracy, model, date } = current;
+
+    if (!val_accuracy) {
+      return acc;
+    }
     const metric = acc.find(
       (metric) => metric.experiment === experiment && metric.model === model
     );
+
     if (metric) {
       metric.data.push({ date, val_accuracy });
     } else {
@@ -64,6 +70,7 @@ const ValOverview = ({ path, theme }) => {
 
     return acc;
   }, []);
+  console.log("🚀 ~ neueMetricsData ~ neueMetricsData:", neueMetricsData);
 
   const sortierteMetricsData = neueMetricsData.sort((a, b) => {
     if (a.experiment < b.experiment) return -1;
@@ -90,7 +97,7 @@ const ValOverview = ({ path, theme }) => {
     responsive: true,
     paper_bgcolor: "rgba(0, 0, 0, 0)",
     plot_bgcolor: "rgba(0, 0, 0, 0)",
-    margin: { l: 60, r: 400, b: 60, t: 60 },
+    margin: { l: 60, r: 315, b: 60, t: 60 },
   };
   const config = { responsive: true };
 

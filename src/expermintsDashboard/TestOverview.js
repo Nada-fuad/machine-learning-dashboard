@@ -48,6 +48,10 @@ const TestOverview = ({ path, theme }) => {
 
   const neueMetricsData = metrics.reduce((acc, current) => {
     const { experiment, test_accuracy, model, date } = current;
+
+    if (!test_accuracy) {
+      return acc;
+    }
     const metric = acc.find(
       (metric) => metric.experiment === experiment && metric.model === model
     );
@@ -80,17 +84,17 @@ const TestOverview = ({ path, theme }) => {
   }));
 
   const layout = {
-    title: "Validation Accuracy of Each Model in Experiment by Date",
+    title: "Test Accuracy of Each Model in Experiment by Date",
     font: { color: theme.palette.primary.font },
     xaxis: { title: "Date" },
-    yaxis: { title: "Validation Accuracy" },
+    yaxis: { title: "Test Accuracy" },
 
     width: "100%",
     height: "100%",
     responsive: true,
     paper_bgcolor: "rgba(0, 0, 0, 0)",
     plot_bgcolor: "rgba(0, 0, 0, 0)",
-    margin: { l: 60, r: 400, b: 60, t: 60 },
+    margin: { l: 60, r: 315, b: 60, t: 60 },
   };
   const config = { responsive: true };
 

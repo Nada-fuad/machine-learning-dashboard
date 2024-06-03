@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import Plot from "react-plotly.js";
 const color = [
   [0, "#00b5ff"],
-  [0.5, "#191D87"],
-  [1, "#0500ff"],
+  [0.5, "#0500ff"],
+  [1, "#191D87"],
 ];
 const ConfusionMatrix = ({ path, theme }) => {
   const [confusion, setConfusion] = useState(null);
@@ -33,30 +33,26 @@ const ConfusionMatrix = ({ path, theme }) => {
     font: { color: theme.palette.primary.font },
     xaxis: {
       title: "Predicted",
-      font: { color: theme.palette.primary.font },
       tickvals: tickvalIndexes,
       ticktext: categories,
-      tickfont: { color: theme.palette.primary.font },
     },
     yaxis: {
       title: "Actual",
-      font: { color: theme.palette.primary.font },
       tickvals: tickvalIndexes,
       ticktext: categories,
-      tickfont: { color: theme.palette.primary.font },
     },
     autosize: true,
-
     color: theme.palette.primary.font,
     margin: {
-      l: 50,
-      r: 180,
-      b: 50,
-      t: 50,
+      l: 80,
+      r: 120,
+      b: 60,
+      t: 40,
     },
     paper_bgcolor: "rgba(0, 0, 0, 0)",
     plot_bgcolor: "rgba(0, 0, 0, 0)",
   };
+  console.log("🚀 ~ ConfusionMatrix ~ layout:", layout);
 
   const ConfusionData = [
     {

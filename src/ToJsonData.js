@@ -9,7 +9,17 @@ export const textToJsonObject = (textContent) => {
       const parsedJSON = JSON.parse(line);
       return parsedJSON;
     })
-    .filter((obj) => obj !== null);
+    .filter((obj) => {
+      if (!obj) {
+        return null;
+      }
+      for (const i in obj) {
+        if (typeof obj[i] === "number" && isNaN(obj[i])) {
+          return false;
+        }
+      }
+      return true;
+    });
 
   return jsonObjects;
 };

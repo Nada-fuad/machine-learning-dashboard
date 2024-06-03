@@ -14,7 +14,7 @@ const RocCurve = ({ path, theme }) => {
     };
     rocData();
   }, [newPath]);
-  if (!roc || !path || !newPath) return null;
+  if (!roc || !newPath) return null;
 
   const { categories, fpr, tpr } = roc;
 

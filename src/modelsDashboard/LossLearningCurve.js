@@ -21,9 +21,13 @@ const LossLearningCurve = ({ path, theme }) => {
   if (!learnCurve || !newPath || !path) return null;
 
   const trainLoss = [];
+  console.log("🚀 ~ LossLearningCurve ~ trainLoss:", trainLoss);
   const valLoss = [];
+  console.log("🚀 ~ LossLearningCurve ~ valLoss:", valLoss);
   const trainEpochs = [];
+  console.log("🚀 ~ LossLearningCurve ~ trainEpochs:", trainEpochs);
   const valEpochs = [];
+  console.log("🚀 ~ LossLearningCurve ~ valEpochs:", valEpochs);
   learnCurve.forEach((metric) => {
     if (metric.train_loss !== undefined) {
       trainLoss.push(metric.train_loss);
@@ -32,7 +36,11 @@ const LossLearningCurve = ({ path, theme }) => {
       valLoss.push(metric.val_loss);
     }
 
-    if (metric.epoch !== undefined && metric.val_loss !== undefined) {
+    if (
+      metric.epoch !== undefined &&
+      metric.val_loss !== undefined &&
+      valEpochs.indexOf(metric.epoch) === -1
+    ) {
       valEpochs.push(metric.epoch);
     }
 
@@ -101,7 +109,7 @@ const LossLearningCurve = ({ path, theme }) => {
   const trainArea = [
     {
       x: trainEpochs.concat(trainEpochs.slice().reverse()),
-      y: shadedAreaMaxTrain.concat(shadedAreaMinTrain.reverse()),
+      y: shadedAreaMaxTrain.concat(shadedAreaMinTrain.slice().reverse()),
       fill: "toself",
       fillcolor: "rgba(0, 0, 255, 0.2)",
       line: { color: "rgba(0, 0, 0, 0)" },
@@ -115,7 +123,7 @@ const LossLearningCurve = ({ path, theme }) => {
   const valArea = [
     {
       x: valEpochs.concat(valEpochs.slice().reverse()),
-      y: shadedAreaMaxVal.concat(shadedAreaMinVal.reverse()),
+      y: shadedAreaMaxVal.concat(shadedAreaMinVal.slice().reverse()),
       fill: "toself",
       fillcolor: "rgba(255, 200, 0, 0.2)",
       line: { color: "rgba(0, 0, 0, 0)" },

@@ -79,7 +79,7 @@ export default function Models({ theme, jsonSubexperiment, jsonModel }) {
 
   return (
     <Box
-      maxHeight={1650}
+      maxHeight={1700}
       width="100%"
       height="100%"
       p={2}

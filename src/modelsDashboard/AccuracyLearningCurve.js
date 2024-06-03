@@ -31,7 +31,11 @@ const AccuracyLearningCurve = ({ path, theme }) => {
       valAccuracy.push(metric.val_accuracy);
     }
 
-    if (metric.epoch !== undefined && metric.val_accuracy !== undefined) {
+    if (
+      metric.epoch !== undefined &&
+      metric.val_accuracy !== undefined &&
+      valEpochs.indexOf(metric.epoch) === -1
+    ) {
       valEpochs.push(metric.epoch);
     }
 
@@ -111,7 +115,7 @@ const AccuracyLearningCurve = ({ path, theme }) => {
   const trainArea = [
     {
       x: trainEpochs.concat(trainEpochs.slice().reverse()),
-      y: shadedAreaMaxTrain.concat(shadedAreaMinTrain.reverse()),
+      y: shadedAreaMaxTrain.concat(shadedAreaMinTrain.slice().reverse()),
       fill: "toself",
       fillcolor: "rgba(0, 0, 255, 0.2)",
       line: { color: "rgba(0, 0, 0, 0)" },
@@ -135,7 +139,7 @@ const AccuracyLearningCurve = ({ path, theme }) => {
   const valArea = [
     {
       x: valEpochs.concat(valEpochs.slice().reverse()),
-      y: shadedAreaMaxVal.concat(shadedAreaMinVal.reverse()),
+      y: shadedAreaMaxVal.concat(shadedAreaMinVal.slice().reverse()),
       fill: "toself",
       fillcolor: "rgba(255, 200, 0, 0.2)",
       line: { color: "rgba(0, 0, 0, 0)" },

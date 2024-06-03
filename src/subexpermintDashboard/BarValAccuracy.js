@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import Plot from "react-plotly.js";
 import textToJsonObject from "../ToJsonData";
 
-const TestBarOverwiev = ({ path, jsonSubexperiment, theme }) => {
+const BarValAccuracy = ({ path, jsonSubexperiment, theme }) => {
   const [metrics, setMetrics] = useState([]);
   const newPath = `/machine-learning-dashboard${path}history.jsonl`;
 
@@ -15,14 +15,14 @@ const TestBarOverwiev = ({ path, jsonSubexperiment, theme }) => {
       setMetrics(metrics);
     };
     metricsData();
-  }, [newPath, jsonSubexperiment.name]);
+  }, [newPath, jsonSubexperiment]);
 
   const modelData = useMemo(
     () =>
       metrics.filter(
         (metric) =>
           metric.experiment === jsonSubexperiment.name &&
-          metric.test_accuracy !== undefined
+          metric.val_accuracy !== undefined
       ),
     [metrics, jsonSubexperiment.name]
   );
@@ -43,7 +43,7 @@ const TestBarOverwiev = ({ path, jsonSubexperiment, theme }) => {
 
   const plotData = uniqueModels.map((model) => ({
     x: [model.date],
-    y: [model.test_accuracy],
+    y: [model.val_accuracy],
     type: "bar",
     mode: "bar",
     name: model.model,
@@ -61,10 +61,10 @@ const TestBarOverwiev = ({ path, jsonSubexperiment, theme }) => {
     height: "100%",
     paper_bgcolor: "rgba(0, 0, 0, 0)",
     plot_bgcolor: "rgba(0, 0, 0, 0)",
-    margin: { l: 60, r: 300, b: 50, t: 70 },
+    margin: { l: 50, r: 230, b: 50, t: 50 },
   };
   if (!metrics || !newPath) return null;
   return <Plot data={plotData} layout={layout} />;
 };
 
-export default TestBarOverwiev;
+export default BarValAccuracy;

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import Plot from "react-plotly.js";
 import textToJsonObject from "../ToJsonData";
 
-const ValBarOverwiev = ({ path, jsonSubexperiment, theme }) => {
+const BarTestAccuracy = ({ path, jsonSubexperiment, theme }) => {
   const [metrics, setMetrics] = useState([]);
   const newPath = `/machine-learning-dashboard${path}history.jsonl`;
 
@@ -15,14 +15,14 @@ const ValBarOverwiev = ({ path, jsonSubexperiment, theme }) => {
       setMetrics(metrics);
     };
     metricsData();
-  }, [newPath, jsonSubexperiment]);
+  }, [newPath, jsonSubexperiment.name]);
 
   const modelData = useMemo(
     () =>
       metrics.filter(
         (metric) =>
           metric.experiment === jsonSubexperiment.name &&
-          metric.val_accuracy !== undefined
+          metric.test_accuracy !== undefined
       ),
     [metrics, jsonSubexperiment.name]
   );
@@ -43,17 +43,18 @@ const ValBarOverwiev = ({ path, jsonSubexperiment, theme }) => {
 
   const plotData = uniqueModels.map((model) => ({
     x: [model.date],
-    y: [model.val_accuracy],
+    y: [model.test_accuracy],
     type: "bar",
     mode: "bar",
     name: model.model,
   }));
+  console.log("🚀 ~ plotData ~ plotData:", plotData);
 
   const layout = {
     title: `Test Accuracy for Each Model`,
     font: { color: theme.palette.primary.font },
     xaxis: { title: "Date" },
-    yaxis: { title: "Validation Accuracy" },
+    yaxis: { title: "Test Accuracy" },
 
     autosize: true,
     responsive: true,
@@ -61,10 +62,10 @@ const ValBarOverwiev = ({ path, jsonSubexperiment, theme }) => {
     height: "100%",
     paper_bgcolor: "rgba(0, 0, 0, 0)",
     plot_bgcolor: "rgba(0, 0, 0, 0)",
-    margin: { l: 60, r: 300, b: 50, t: 70 },
+    margin: { l: 50, r: 230, b: 50, t: 50 },
   };
   if (!metrics || !newPath) return null;
   return <Plot data={plotData} layout={layout} />;
 };
 
-export default ValBarOverwiev;
+export default BarTestAccuracy;

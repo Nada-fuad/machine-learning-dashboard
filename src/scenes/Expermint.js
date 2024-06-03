@@ -41,7 +41,7 @@ const displayOneColum = `
 
 `;
 export default function Experiment({ jsonExperiment, theme }) {
-  const toSmall = useMediaQuery("(min-width:1000px)");
+  const toSmall = useMediaQuery("(min-width:1300px)");
 
   const selectedHistoryData = jsonExperiment.historyPath;
 
@@ -51,21 +51,21 @@ export default function Experiment({ jsonExperiment, theme }) {
       width="100%"
       height="100%"
       pt={2}
-      pl={0}
+      pl={1}
       display="grid"
       gap="0.6rem"
       sx={
         toSmall
           ? {
-              gridTemplateColumns: "repeat(2 ,minmax(5px,1fr))",
-              gridTemplateRows: "repeat(10 ,minmax(5px,1fr))",
+              gridTemplateColumns: "repeat(2 ,minmax(590px,1fr))",
+              gridTemplateRows: "repeat(10 ,minmax(60px,1fr))",
               gridTemplateAreas: displayTowColum,
               backgroundColor: theme.palette.primary.contentbackground,
             }
           : {
               gridTemplateAreas: displayOneColum,
               gridAutoColumns: "1fr",
-              gridAutoRows: "100px",
+              gridAutoRows: "90px",
               backgroundColor: theme.palette.primary.contentbackground,
             }
       }

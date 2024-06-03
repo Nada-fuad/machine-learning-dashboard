@@ -52,17 +52,17 @@ const TestAccuracyOverwiev = ({ path, jsonSubexperiment, theme }) => {
     name: `${metricModel.model} `,
   }));
   const layout = {
-    title: `Test Accuracy of Each Model in ${jsonSubexperiment.name} by Date`,
+    title: `Test Accuracy of Each Model in ${jsonSubexperiment.name} `,
     font: { color: theme.palette.primary.font },
     xaxis: { title: "Date" },
-    yaxis: { title: "Validation Accuracy" },
+    yaxis: { title: "Test Accuracy" },
     autosize: true,
     responsive: true,
     width: "100%",
     height: "100%",
     paper_bgcolor: "rgba(0, 0, 0, 0)",
     plot_bgcolor: "rgba(0, 0, 0, 0)",
-    margin: { l: 60, r: 300, b: 50, t: 70 },
+    margin: { l: 50, r: 230, b: 50, t: 50 },
   };
 
   return <Plot data={data} layout={layout} />;

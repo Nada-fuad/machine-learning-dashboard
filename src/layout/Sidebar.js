@@ -40,7 +40,6 @@ export default function Sidebar({
   return (
     <>
       <Box
-        flex="0 0 10rem"
         sx={{
           bgcolor: theme.palette.primary.contentbackground,
         }}

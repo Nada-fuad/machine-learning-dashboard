@@ -14,7 +14,7 @@ const RecallCurve = ({ path, theme }) => {
     };
     curveData();
   }, [newPath]);
-  if (!curve || !path || !newPath) return null;
+  if (!curve || !newPath) return null;
 
   const { categories, precision, recall } = curve;
 

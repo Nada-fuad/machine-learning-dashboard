@@ -20,6 +20,7 @@ const LearningsRate = ({ path, theme }) => {
   if (!metrics) return null;
 
   const lr_SGDs = metrics.filter((metric) => metric["lr-SGD"] !== undefined);
+  const epochs = metrics.filter((metric) => metric.epoch !== undefined);
 
   const lr_SGD = [];
   const epoch = [];
@@ -29,10 +30,8 @@ const LearningsRate = ({ path, theme }) => {
     }
   });
 
-  const epochs = metrics.filter((metric) => metric.epoch !== undefined);
-
   epochs.forEach((metric) => {
-    if (epoch.indexOf(metric.epoch) === -1) {
+    if (metric.epoch !== undefined && epoch.indexOf(metric.epoch) === -1) {
       epoch.push(metric.epoch);
     }
   });

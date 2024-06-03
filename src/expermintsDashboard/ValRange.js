@@ -99,7 +99,7 @@ const ValRange = ({ path, theme }) => {
     responsive: true,
     paper_bgcolor: "rgba(0, 0, 0, 0)",
     plot_bgcolor: "rgba(0, 0, 0, 0)",
-    margin: { l: 100, r: 250, b: 60, t: 60 },
+    margin: { l: 100, r: 200, b: 60, t: 60 },
   };
 
   const data = experimentHistory.map((a) => ({

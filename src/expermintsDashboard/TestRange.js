@@ -41,7 +41,7 @@ const TestRange = ({ path, theme }) => {
     (name, index) => experimentName.indexOf(name) === index
   );
 
-  const expermintData = uniqueExperiment.map((expermint, index) => ({
+  const expermintData = uniqueExperiment.map((expermint) => ({
     myExperiment: expermint,
     color: color[Math.floor(Math.random() * color.length)],
   }));
@@ -76,8 +76,13 @@ const TestRange = ({ path, theme }) => {
     );
 
     const rangeValue = max - min;
+    console.log("🚀 ~ experimentHistory ~ rangeValue:", rangeValue);
 
     const rangeTestAccuracy = [];
+    console.log(
+      "🚀 ~ experimentHistory ~ rangeTestAccuracy:",
+      rangeTestAccuracy
+    );
 
     for (let i = 0; i < testAccuracy.length; i++) {
       rangeTestAccuracy.push(rangeValue);
@@ -89,6 +94,8 @@ const TestRange = ({ path, theme }) => {
       color: experiment.color,
     };
   });
+  console.log("🚀 ~ experimentHistory ~ experimentHistory:", experimentHistory);
+
   const layout = {
     title: "Range Test Accuracy ",
     font: { color: theme.palette.primary.font },
@@ -99,7 +106,7 @@ const TestRange = ({ path, theme }) => {
     responsive: true,
     paper_bgcolor: "rgba(0, 0, 0, 0)",
     plot_bgcolor: "rgba(0, 0, 0, 0)",
-    margin: { l: 100, r: 250, b: 60, t: 60 },
+    margin: { l: 100, r: 200, b: 60, t: 60 },
   };
   const config = { responsive: true };
   const data = experimentHistory.map((a) => ({

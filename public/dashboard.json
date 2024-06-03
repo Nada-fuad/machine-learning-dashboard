@@ -92,7 +92,29 @@
     },
     {
       "name": "Dresden Capsule",
-      "subexperiments": []
+      "subexperiments": [
+        {
+          "name": "weighted_loss",
+          "models": [
+            {
+              "name": "mobilenetv3_small_075",
+
+              "dataPath": "/dresden_capsule/trained_models/weighted_loss/mobilenetv3_small_075/logs/",
+              "confusionPath": "/cifar10/trained_models/pretrained_models/mobilenetv3_small_075/plots/",
+              "curvePath": "/cifar10/trained_models/pretrained_models/mobilenetv3_small_075/plots/",
+              "rocPath": "/cifar10/trained_models/pretrained_models/mobilenetv3_small_075/plots/"
+            },
+            {
+              "name": "resnet18",
+              "dataPath": "/cifar10/trained_models/pretrained_models/resnet18/logs/",
+              "confusionPath": "/cifar10/trained_models/pretrained_models/resnet18/plots/",
+              "curvePath": "/cifar10/trained_models/pretrained_models/resnet18/plots/",
+              "rocPath": "/cifar10/trained_models/pretrained_models/resnet18/plots/"
+            }
+          ]
+        }
+      ],
+      "historyPath": "/dresden_capsule/trained_models/"
     },
     {
       "name": "DSD22",
