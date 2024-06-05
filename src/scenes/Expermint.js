@@ -41,7 +41,7 @@ const displayOneColum = `
 
 `;
 export default function Experiment({ jsonExperiment, theme }) {
-  const toSmall = useMediaQuery("(min-width:1300px)");
+  const toSmall = useMediaQuery("(min-width:1000px)");
 
   const selectedHistoryData = jsonExperiment.historyPath;
 

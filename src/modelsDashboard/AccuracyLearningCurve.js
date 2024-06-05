@@ -86,6 +86,13 @@ const AccuracyLearningCurve = ({ path, theme }) => {
     (metric, i) => metric - valGraduallyStandardDeviation[i]
   );
 
+  const xTrainArea = trainEpochs.concat(trainEpochs.slice().reverse());
+  const yTrainArea = shadedAreaMaxTrain.concat(
+    shadedAreaMinTrain.slice().reverse()
+  );
+  const xValArea = valEpochs.concat(valEpochs.slice().reverse());
+  const yValArea = shadedAreaMaxVal.concat(shadedAreaMinVal.slice().reverse());
+
   const data = [
     {
       x: trainEpochs,
@@ -102,20 +109,10 @@ const AccuracyLearningCurve = ({ path, theme }) => {
       name: "ValAcc",
     },
   ];
-
-  // const trainEpochsSlice = trainEpochs.slice();
-  // for (let i = trainEpochs.length - 1; i >= 0; i--) {
-  //   trainEpochsSlice.push(trainEpochs[i]);
-  // }
-  // const shadedAreaMaxTrainSlice = shadedAreaMaxTrain.slice();
-  // for (let i = shadedAreaMinTrain.length - 1; i >= 0; i--) {
-  //   shadedAreaMaxTrainSlice.push(shadedAreaMinTrain[i]);
-  // }
-
   const trainArea = [
     {
-      x: trainEpochs.concat(trainEpochs.slice().reverse()),
-      y: shadedAreaMaxTrain.concat(shadedAreaMinTrain.slice().reverse()),
+      x: xTrainArea,
+      y: yTrainArea,
       fill: "toself",
       fillcolor: "rgba(0, 0, 255, 0.2)",
       line: { color: "rgba(0, 0, 0, 0)" },
@@ -126,6 +123,26 @@ const AccuracyLearningCurve = ({ path, theme }) => {
     },
   ];
 
+  const valArea = [
+    {
+      x: xValArea,
+      y: yValArea,
+      fill: "toself",
+      fillcolor: "rgba(255, 200, 0, 0.2)",
+      line: { color: "rgba(0, 0, 0, 0)" },
+      name: "Val",
+    },
+  ];
+
+  // const trainEpochsSlice = trainEpochs.slice();
+  // for (let i = trainEpochs.length - 1; i >= 0; i--) {
+  //   trainEpochsSlice.push(trainEpochs[i]);
+  // }
+  // const shadedAreaMaxTrainSlice = shadedAreaMaxTrain.slice();
+  // for (let i = shadedAreaMinTrain.length - 1; i >= 0; i--) {
+  //   shadedAreaMaxTrainSlice.push(shadedAreaMinTrain[i]);
+  // }
+
   // const valEpochsSlice = valEpochs.slice();
   // for (let i = valEpochs.length - 1; i >= 0; i--) {
   //   valEpochsSlice.push(valEpochs[i]);
@@ -135,17 +152,6 @@ const AccuracyLearningCurve = ({ path, theme }) => {
   // for (let i = 0; (i = shadedAreaMinVal.length - 1); i--) {
   //   shadedAreaMaxValSlice.push(shadedAreaMinVal[i]);
   // }
-
-  const valArea = [
-    {
-      x: valEpochs.concat(valEpochs.slice().reverse()),
-      y: shadedAreaMaxVal.concat(shadedAreaMinVal.slice().reverse()),
-      fill: "toself",
-      fillcolor: "rgba(255, 200, 0, 0.2)",
-      line: { color: "rgba(0, 0, 0, 0)" },
-      name: "Val",
-    },
-  ];
 
   const layout = {
     title: "Learning Curve:Training vs. Validation Accuracy",
@@ -164,7 +170,7 @@ const AccuracyLearningCurve = ({ path, theme }) => {
     color: theme.palette.primary.font,
     margin: {
       l: 70,
-      r: 230,
+      r: 170,
       b: 40,
       t: 80,
     },

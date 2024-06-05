@@ -5,7 +5,6 @@ export const textToJsonObject = (textContent) => {
       if (line.trim() === "") {
         return null;
       }
-
       const parsedJSON = JSON.parse(line);
       return parsedJSON;
     })

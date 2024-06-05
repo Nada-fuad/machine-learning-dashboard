@@ -40,14 +40,24 @@ function App() {
   };
 
   const getExpermintData = async () => {
-    const response = await fetch("/machine-learning-dashboard/dashboard.json");
+    const response = await fetch("/machine-learning-dashboard/dashboard.json", {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
     const data = await response.json();
+
     let dataObjekt = data.experiments;
+
     setExpermintData(dataObjekt);
   };
   useEffect(() => {
     getExpermintData();
   }, []);
+
+  console.log("🚀 ~ App ~ expermintData:", expermintData);
+
   const darkTheme = createTheme({
     palette: {
       mode: "dark",
@@ -95,7 +105,12 @@ function App() {
         }}
       >
         <Box display="flex">
-          <Box sx={{ color: theme.palette.primary.font, flex: "0 0 200px" }}>
+          <Box
+            sx={{
+              color: theme.palette.primary.font,
+              flex: "100px 100px 200px",
+            }}
+          >
             <Sidebar
               theme={theme}
               expermintData={expermintData}

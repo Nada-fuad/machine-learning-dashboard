@@ -70,6 +70,7 @@ const LearningsRate = ({ path, theme }) => {
       b: 80,
       t: 80,
     },
+    hovermode: "closest",
   };
   const config = { responsive: true };
 

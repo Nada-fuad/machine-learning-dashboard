@@ -94,7 +94,7 @@ const TestOverview = ({ path, theme }) => {
     responsive: true,
     paper_bgcolor: "rgba(0, 0, 0, 0)",
     plot_bgcolor: "rgba(0, 0, 0, 0)",
-    margin: { l: 60, r: 315, b: 60, t: 60 },
+    margin: { l: 60, r: 350, b: 60, t: 60 },
   };
   const config = { responsive: true };
 

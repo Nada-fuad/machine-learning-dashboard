@@ -106,10 +106,16 @@ const LossLearningCurve = ({ path, theme }) => {
     },
   ];
 
+  const xTrainArea = trainEpochs.concat(trainEpochs.slice().reverse());
+  const yTrainArea = shadedAreaMaxTrain.concat(
+    shadedAreaMinTrain.slice().reverse()
+  );
+  const xValArea = valEpochs.concat(valEpochs.slice().reverse());
+  const yValArea = shadedAreaMaxVal.concat(shadedAreaMinVal.slice().reverse());
   const trainArea = [
     {
-      x: trainEpochs.concat(trainEpochs.slice().reverse()),
-      y: shadedAreaMaxTrain.concat(shadedAreaMinTrain.slice().reverse()),
+      x: xTrainArea,
+      y: yTrainArea,
       fill: "toself",
       fillcolor: "rgba(0, 0, 255, 0.2)",
       line: { color: "rgba(0, 0, 0, 0)" },
@@ -122,8 +128,8 @@ const LossLearningCurve = ({ path, theme }) => {
 
   const valArea = [
     {
-      x: valEpochs.concat(valEpochs.slice().reverse()),
-      y: shadedAreaMaxVal.concat(shadedAreaMinVal.slice().reverse()),
+      x: xValArea,
+      y: yValArea,
       fill: "toself",
       fillcolor: "rgba(255, 200, 0, 0.2)",
       line: { color: "rgba(0, 0, 0, 0)" },
@@ -149,7 +155,7 @@ const LossLearningCurve = ({ path, theme }) => {
     color: "#d1d3da",
     margin: {
       l: 70,
-      r: 220,
+      r: 170,
       b: 40,
       t: 80,
     },

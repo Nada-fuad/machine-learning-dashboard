@@ -4,7 +4,8 @@ import BarTestAccuracy from "../subexpermintDashboard/BarTestAccuracy";
 import ValAccuracyOverwiev from "../subexpermintDashboard/ValAccuracyOverwiev";
 import BarValAccuracy from "../subexpermintDashboard/BarValAccuracy";
 import TestAccuracyOverwiev from "../subexpermintDashboard/TestAccuracyOverwiev";
-import ValAccRange from "../subexpermintDashboard/ValLossBar";
+import ValLossBar from "../subexpermintDashboard/ValLossBar";
+import TestLossBar from "../subexpermintDashboard/TestLossBar";
 const StyledBox = styled(Box)(({ theme }) => ({
   borderRadius: "1rem",
   boxShadow: "0.15rem 0.2rem 0.15rem 0.1rem rgba(0, 0, 0, .4)",
@@ -123,14 +124,14 @@ export default function SubExpermints({
         />
       </StyledBox>
       <StyledBox gridArea="e" backgroundColor={theme.palette.primary.box}>
-        <ValAccRange
+        <ValLossBar
           path={selectedHistoryData}
           jsonSubexperiment={jsonSubexperiment}
           theme={theme}
         />
       </StyledBox>
       <StyledBox gridArea="f" backgroundColor={theme.palette.primary.box}>
-        <ValAccRange
+        <TestLossBar
           path={selectedHistoryData}
           jsonSubexperiment={jsonSubexperiment}
           theme={theme}

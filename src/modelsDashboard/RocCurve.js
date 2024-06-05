@@ -54,8 +54,8 @@ const RocCurve = ({ path, theme }) => {
     paper_bgcolor: "rgba(0, 0, 0, 0)",
     plot_bgcolor: "rgba(0, 0, 0, 0)",
     margin: {
-      l: 45,
-      r: 225,
+      l: 60,
+      r: 170,
       b: 50,
       t: 50,
     },

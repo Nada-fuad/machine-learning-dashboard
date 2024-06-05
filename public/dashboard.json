@@ -15,7 +15,7 @@
               "rocPath": "/cifar10/trained_models/pretrained_models/mobilenetv3_small_075/plots/"
             },
             {
-              "name": "resnet18",
+              "name": "kakao_resnet8",
               "dataPath": "/cifar10/trained_models/pretrained_models/resnet18/logs/",
               "confusionPath": "/cifar10/trained_models/pretrained_models/resnet18/plots/",
               "curvePath": "/cifar10/trained_models/pretrained_models/resnet18/plots/",
@@ -28,18 +28,60 @@
           "name": "sweep_lr",
           "models": [
             {
-              "name": "kakao_resnet8",
-              "dataPath": "/cifar10/trained_models/sweep_models/kakao_resnet8/logs/",
-              "confusionPath": "/cifar10/trained_models/sweep_models/resnet18/plots/",
-              "curvePath": "/cifar10/trained_models/sweep_models/resnet18/plots/",
-              "rocPath": "/cifar10/trained_models/sweep_models/resnet18/"
+              "name": "kakao_resnet8(0.1)",
+              "dataPath": "/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.1/logs/",
+              "confusionPath": "/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.1/plots/",
+              "curvePath": "/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.1/plots/",
+              "rocPath": "/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.1/plots/"
             },
             {
-              "name": "resnet50",
-              "dataPath": "/cifar10/trained_models/sweep_models/resnet50/logs/",
-              "confusionPath": "/cifar10/trained_models/sweep_models/resnet50/plots/",
-              "curvePath": "/cifar10/trained_models/sweep_models/resnet50/plots/",
-              "rocPath": "/cifar10/trained_models/sweep_models/resnet50/plots/"
+              "name": "kakao_resnet8(0.9)",
+              "dataPath": "/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.9/logs/",
+              "confusionPath": "/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.9/plots/",
+              "curvePath": "/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.9/plots/",
+              "rocPath": "/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.9/plots/"
+            },
+            {
+              "name": "mobilenetv3_small_075(1)",
+              "dataPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_075/lr=0.1/logs/",
+              "confusionPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_075/lr=0.1/plots/",
+              "curvePath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_075/lr=0.1/plots/",
+              "rocPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_075/lr=0.1/plots/"
+            },
+            {
+              "name": "mobilenetv3_small_075(9)",
+              "dataPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_075/lr=0.9/logs/",
+              "confusionPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_075/lr=0.9/plots/",
+              "curvePath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_075/lr=0.9/plots/",
+              "rocPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_075/lr=0.9/plots/"
+            },
+            {
+              "name": "mobilenetv3_small_100(1)",
+              "dataPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_100/lr=0.1/logs/",
+              "confusionPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_100/lr=0.1/plots/",
+              "curvePath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_100/lr=0.1/plots/",
+              "rocPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_100/lr=0.1/plots/"
+            },
+            {
+              "name": "mobilenetv3_small_100(9)",
+              "dataPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_100/lr=0.9/logs/",
+              "confusionPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_100/lr=0.9/plots/",
+              "curvePath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_100/lr=0.9/plots/",
+              "rocPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_100/lr=0.9/plots/"
+            },
+            {
+              "name": "resnet18(0.1)",
+              "dataPath": "/cifar10/trained_models/sweep_lr/resnet18/lr=0.1/logs/",
+              "confusionPath": "/cifar10/trained_models/sweep_lr/resnet18/lr=0.1/plots/",
+              "curvePath": "/cifar10/trained_models/sweep_lr/resnet18/lr=0.1/plots/",
+              "rocPath": "/cifar10/trained_models/sweep_lr/resnet18/lr=0.1/plots/"
+            },
+            {
+              "name": "resnet18(0.9)",
+              "dataPath": "/cifar10/trained_models/sweep_lr/resnet18/lr=0.9/logs/",
+              "confusionPath": "/cifar10/trained_models/sweep_lr/resnet18/lr=0.9/plots/",
+              "curvePath": "/cifar10/trained_models/sweep_lr/resnet18/lr=0.9/plots/",
+              "rocPath": "/cifar10/trained_models/sweep_lr/resnet18/lr=0.9/plots/"
             }
           ]
         },
