@@ -35,7 +35,7 @@
               "rocPath": "/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.1/plots/"
             },
             {
-              "name": "kakao_resnet8(0.9)",
+              "name": "kakao_resnet8",
               "dataPath": "/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.9/logs/",
               "confusionPath": "/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.9/plots/",
               "curvePath": "/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.9/plots/",
