@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Plot from "react-plotly.js";
-import textToJsonObject from "../ToJsonData";
+import textToJsonObject from "../JsonLToJson";
 
 const LossLearningCurve = ({ path, theme }) => {
   const [learnCurve, setLearnCurve] = useState(null);
@@ -21,13 +21,9 @@ const LossLearningCurve = ({ path, theme }) => {
   if (!learnCurve || !newPath || !path) return null;
 
   const trainLoss = [];
-  console.log("🚀 ~ LossLearningCurve ~ trainLoss:", trainLoss);
   const valLoss = [];
-  console.log("🚀 ~ LossLearningCurve ~ valLoss:", valLoss);
   const trainEpochs = [];
-  console.log("🚀 ~ LossLearningCurve ~ trainEpochs:", trainEpochs);
   const valEpochs = [];
-  console.log("🚀 ~ LossLearningCurve ~ valEpochs:", valEpochs);
   learnCurve.forEach((metric) => {
     if (metric.train_loss !== undefined) {
       trainLoss.push(metric.train_loss);
@@ -36,24 +32,16 @@ const LossLearningCurve = ({ path, theme }) => {
       valLoss.push(metric.val_loss);
     }
 
-    if (
-      metric.epoch !== undefined &&
-      metric.val_loss !== undefined &&
-      valEpochs.indexOf(metric.epoch) === -1
-    ) {
+    if (metric.epoch !== undefined && metric.val_loss !== undefined) {
       valEpochs.push(metric.epoch);
     }
 
-    if (
-      metric.epoch !== undefined &&
-      metric.train_loss !== undefined &&
-      trainEpochs.indexOf(metric.epoch) === -1
-    ) {
+    if (metric.epoch !== undefined && metric.train_loss !== undefined) {
       trainEpochs.push(metric.epoch);
     }
   });
 
-  function graduallyStandardDeviation(metric) {
+  function graduallyStd(metric) {
     const gradually = [];
 
     for (let i = 0; i < metric.length; i++) {
@@ -72,22 +60,28 @@ const LossLearningCurve = ({ path, theme }) => {
     }
     return gradually;
   }
-  const trainGraduallyStandardDeviation = graduallyStandardDeviation(trainLoss);
-  const valGraduallyStandardDeviation = graduallyStandardDeviation(valLoss);
+  const trainGraduallyStd = graduallyStd(trainLoss);
+  const valGraduallyStd = graduallyStd(valLoss);
 
   const shadedAreaMaxTrain = trainLoss.map(
-    (metric, i) => metric + trainGraduallyStandardDeviation[i]
+    (metric, i) => metric + trainGraduallyStd[i]
   );
   const shadedAreaMinTrain = trainLoss.map(
-    (metric, i) => metric - trainGraduallyStandardDeviation[i]
+    (metric, i) => metric - trainGraduallyStd[i]
   );
 
   const shadedAreaMaxVal = valLoss.map(
-    (metric, i) => metric + valGraduallyStandardDeviation[i]
+    (metric, i) => metric + valGraduallyStd[i]
   );
   const shadedAreaMinVal = valLoss.map(
-    (metric, i) => metric - valGraduallyStandardDeviation[i]
+    (metric, i) => metric - valGraduallyStd[i]
   );
+  const xTrainArea = trainEpochs.concat(trainEpochs.slice().reverse());
+  const yTrainArea = shadedAreaMaxTrain.concat(
+    shadedAreaMinTrain.slice().reverse()
+  );
+  const xValArea = valEpochs.concat(valEpochs.slice().reverse());
+  const yValArea = shadedAreaMaxVal.concat(shadedAreaMinVal.slice().reverse());
 
   const data = [
     {
@@ -96,6 +90,8 @@ const LossLearningCurve = ({ path, theme }) => {
       type: "scatter",
       mode: "lines+markers",
       name: "TrainLoss",
+      line: { color: theme.palette.primary.learnLine1 },
+      marker: { color: theme.palette.primary.learnLine1 },
     },
     {
       x: valEpochs,
@@ -103,21 +99,17 @@ const LossLearningCurve = ({ path, theme }) => {
       type: "scatter",
       mode: "lines+markers",
       name: "ValLoss",
+      line: { color: theme.palette.primary.learnLine },
+      marker: { color: theme.palette.primary.learnLine },
     },
   ];
 
-  const xTrainArea = trainEpochs.concat(trainEpochs.slice().reverse());
-  const yTrainArea = shadedAreaMaxTrain.concat(
-    shadedAreaMinTrain.slice().reverse()
-  );
-  const xValArea = valEpochs.concat(valEpochs.slice().reverse());
-  const yValArea = shadedAreaMaxVal.concat(shadedAreaMinVal.slice().reverse());
   const trainArea = [
     {
       x: xTrainArea,
       y: yTrainArea,
       fill: "toself",
-      fillcolor: "rgba(0, 0, 255, 0.2)",
+      fillcolor: theme.palette.primary.shadedLearnLine1,
       line: { color: "rgba(0, 0, 0, 0)" },
       name: "Train",
       marker: {
@@ -125,13 +117,12 @@ const LossLearningCurve = ({ path, theme }) => {
       },
     },
   ];
-
   const valArea = [
     {
       x: xValArea,
       y: yValArea,
       fill: "toself",
-      fillcolor: "rgba(255, 200, 0, 0.2)",
+      fillcolor: theme.palette.primary.shadedLearnLine,
       line: { color: "rgba(0, 0, 0, 0)" },
       name: "Val",
     },
@@ -155,7 +146,7 @@ const LossLearningCurve = ({ path, theme }) => {
     color: "#d1d3da",
     margin: {
       l: 70,
-      r: 170,
+      r: 150,
       b: 40,
       t: 80,
     },

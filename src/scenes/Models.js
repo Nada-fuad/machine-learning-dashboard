@@ -102,7 +102,11 @@ export default function Models({ theme, jsonSubexperiment, jsonModel }) {
       }
     >
       <StyledBox gridArea="a" backgroundColor={theme.palette.primary.box}>
-        <AccuracyLearningCurve path={dataPath} theme={theme} />
+        <AccuracyLearningCurve
+          path={dataPath}
+          theme={theme}
+          modelName={modelName}
+        />
       </StyledBox>
       <StyledBox gridArea="b" backgroundColor={theme.palette.primary.box}>
         {" "}

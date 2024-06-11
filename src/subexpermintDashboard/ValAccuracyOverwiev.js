@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Plot from "react-plotly.js";
-import textToJsonObject from "../ToJsonData";
+import textToJsonObject from "../JsonLToJson";
 
 const ValAccuracyOverwiev = ({ path, jsonSubexperiment, theme }) => {
   const [historyMetric, setHistoryMetric] = useState(null);

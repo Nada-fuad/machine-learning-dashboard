@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Plot from "react-plotly.js";
-import textToJsonObject from "../ToJsonData";
+import textToJsonObject from "../JsonLToJson";
 
 const ValOverview = ({ path, theme }) => {
   const [metrics, setMetrics] = useState(null);

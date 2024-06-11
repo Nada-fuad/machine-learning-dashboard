@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Plot from "react-plotly.js";
-import textToJsonObject from "../ToJsonData";
+import textToJsonObject from "../JsonLToJson";
 
 const ValRange = ({ path, theme }) => {
   const [historyMetric, setHistoryMetric] = useState(null);
@@ -21,18 +21,18 @@ const ValRange = ({ path, theme }) => {
   if (!historyMetric || !newPath) return null;
 
   const color = [
-    "#0000FF",
-    "#458B74",
-    "#473C8B",
-    "#008000",
-    "#008080",
-    "#006400",
+    "#95D2B3",
+    "#FF7D29",
+    "#E5E483",
+    "#C69749",
+    "#38E54D",
+    "#D24545",
     "#556B2F",
-    "#4682B4",
-    "#6495ED",
-    "#1E90FF",
-    "#483D8B",
-    "#6A5ACD",
+    "#F6B17A",
+    "#BED754",
+    "#D4ADFC",
+    "#FF3FA4",
+    "#C40C0C",
   ];
 
   const experimentName = historyMetric.map((metric) => metric.experiment);
@@ -45,7 +45,6 @@ const ValRange = ({ path, theme }) => {
     myExperiment: expermint,
     color: color[Math.floor(Math.random() * color.length)],
   }));
-  console.log("🚀 ~ expermintData ~ expermintData:", expermintData);
 
   const experimentHistory = expermintData.map((experiment) => {
     const dates = [];

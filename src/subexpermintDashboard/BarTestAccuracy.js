@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import Plot from "react-plotly.js";
-import textToJsonObject from "../ToJsonData";
+import textToJsonObject from "../JsonLToJson";
 
 const BarTestAccuracy = ({ path, jsonSubexperiment, theme }) => {
   const [metrics, setMetrics] = useState([]);

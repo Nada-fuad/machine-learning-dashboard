@@ -1,6 +1,6 @@
 import Plot from "react-plotly.js";
 import React, { useState, useEffect } from "react";
-import textToJsonObject from "../ToJsonData";
+import textToJsonObject from "../JsonLToJson";
 
 const LearningsRate = ({ path, theme }) => {
   const [metrics, setMetrics] = useState(null);
@@ -20,10 +20,14 @@ const LearningsRate = ({ path, theme }) => {
   if (!metrics) return null;
 
   const lr_SGDs = metrics.filter((metric) => metric["lr-SGD"] !== undefined);
+  console.log("🚀 ~ LearningsRate ~ lr_SGDs:", lr_SGDs);
   const epochs = metrics.filter((metric) => metric.epoch !== undefined);
+  console.log("🚀 ~ LearningsRate ~ epochs:", epochs);
 
   const lr_SGD = [];
+  console.log("🚀 ~ LearningsRate ~ lr_SGD:", lr_SGD);
   const epoch = [];
+  console.log("🚀 ~ LearningsRate ~ epoch:", epoch);
   lr_SGDs.forEach((metric) => {
     if (metric["lr-SGD"] !== undefined) {
       lr_SGD.push(metric["lr-SGD"]);
@@ -31,7 +35,7 @@ const LearningsRate = ({ path, theme }) => {
   });
 
   epochs.forEach((metric) => {
-    if (metric.epoch !== undefined && epoch.indexOf(metric.epoch) === -1) {
+    if (metric.epoch !== undefined) {
       epoch.push(metric.epoch);
     }
   });
@@ -42,11 +46,12 @@ const LearningsRate = ({ path, theme }) => {
       y: lr_SGD,
       type: "scatter",
       mode: "lines+markers",
-      marker: { color: theme.palette.primary.main },
-      line: { color: theme.palette.primary.main },
+      line: { color: theme.palette.primary.learnRate },
+      marker: { color: theme.palette.primary.learnRate },
       name: "Learning Rate",
     },
   ];
+  console.log("🚀 ~ LearningsRate ~ data:", data);
 
   const layout = {
     title: "Learnings Rate with Epoch",

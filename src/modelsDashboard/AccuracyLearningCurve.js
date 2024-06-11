@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Plot from "react-plotly.js";
-import textToJsonObject from "../ToJsonData";
+import textToJsonObject from "../JsonLToJson";
 
-const AccuracyLearningCurve = ({ path, theme }) => {
+const AccuracyLearningCurve = ({ path, modelName, theme }) => {
   const [learnCurve, setLearnCurve] = useState(null);
 
   const newPath = `/machine-learning-dashboard${path}metrics.jsonl`;
@@ -31,24 +31,16 @@ const AccuracyLearningCurve = ({ path, theme }) => {
       valAccuracy.push(metric.val_accuracy);
     }
 
-    if (
-      metric.epoch !== undefined &&
-      metric.val_accuracy !== undefined &&
-      valEpochs.indexOf(metric.epoch) === -1
-    ) {
+    if (metric.epoch !== undefined && metric.val_accuracy !== undefined) {
       valEpochs.push(metric.epoch);
     }
 
-    if (
-      metric.epoch !== undefined &&
-      metric.train_accuracy !== undefined &&
-      trainEpochs.indexOf(metric.epoch) === -1
-    ) {
+    if (metric.epoch !== undefined && metric.train_accuracy !== undefined) {
       trainEpochs.push(metric.epoch);
     }
   });
 
-  function graduallyStandardDeviation(metric) {
+  function graduallyStd(metric) {
     const gradually = [];
 
     for (let i = 0; i < metric.length; i++) {
@@ -68,30 +60,30 @@ const AccuracyLearningCurve = ({ path, theme }) => {
     return gradually;
   }
 
-  const trainGraduallyStandardDeviation =
-    graduallyStandardDeviation(trainAccuracy);
-  const valGraduallyStandardDeviation = graduallyStandardDeviation(valAccuracy);
+  const trainGraduallyStd = graduallyStd(trainAccuracy);
+  const valGraduallyStd = graduallyStd(valAccuracy);
 
   const shadedAreaMaxTrain = trainAccuracy.map(
-    (metric, i) => metric + trainGraduallyStandardDeviation[i]
+    (metric, i) => metric + trainGraduallyStd[i]
   );
   const shadedAreaMinTrain = trainAccuracy.map(
-    (metric, i) => metric - trainGraduallyStandardDeviation[i]
+    (metric, i) => metric - trainGraduallyStd[i]
   );
 
   const shadedAreaMaxVal = valAccuracy.map(
-    (metric, i) => metric + valGraduallyStandardDeviation[i]
+    (metric, i) => metric + valGraduallyStd[i]
   );
   const shadedAreaMinVal = valAccuracy.map(
-    (metric, i) => metric - valGraduallyStandardDeviation[i]
+    (metric, i) => metric - valGraduallyStd[i]
   );
 
-  const xTrainArea = trainEpochs.concat(trainEpochs.slice().reverse());
-  const yTrainArea = shadedAreaMaxTrain.concat(
-    shadedAreaMinTrain.slice().reverse()
-  );
-  const xValArea = valEpochs.concat(valEpochs.slice().reverse());
-  const yValArea = shadedAreaMaxVal.concat(shadedAreaMinVal.slice().reverse());
+  const xTrainArea = trainEpochs.slice().reverse().concat(trainEpochs);
+  const yTrainArea = shadedAreaMinTrain
+    .slice()
+    .reverse()
+    .concat(shadedAreaMaxTrain);
+  const xValArea = valEpochs.slice().reverse().concat(valEpochs);
+  const yValArea = shadedAreaMinVal.slice().reverse().concat(shadedAreaMaxVal);
 
   const data = [
     {
@@ -100,6 +92,8 @@ const AccuracyLearningCurve = ({ path, theme }) => {
       type: "scatter",
       mode: "lines+markers",
       name: "TrainAcc",
+      line: { color: theme.palette.primary.learnLine1 },
+      marker: { color: theme.palette.primary.learnLine1 },
     },
     {
       x: valEpochs,
@@ -107,6 +101,8 @@ const AccuracyLearningCurve = ({ path, theme }) => {
       type: "scatter",
       mode: "lines+markers",
       name: "ValAcc",
+      line: { color: theme.palette.primary.learnLine },
+      marker: { color: theme.palette.primary.learnLine },
     },
   ];
   const trainArea = [
@@ -114,7 +110,7 @@ const AccuracyLearningCurve = ({ path, theme }) => {
       x: xTrainArea,
       y: yTrainArea,
       fill: "toself",
-      fillcolor: "rgba(0, 0, 255, 0.2)",
+      fillcolor: theme.palette.primary.shadedLearnLine1,
       line: { color: "rgba(0, 0, 0, 0)" },
       name: "Train",
       marker: {
@@ -128,7 +124,8 @@ const AccuracyLearningCurve = ({ path, theme }) => {
       x: xValArea,
       y: yValArea,
       fill: "toself",
-      fillcolor: "rgba(255, 200, 0, 0.2)",
+
+      fillcolor: theme.palette.primary.shadedLearnLine,
       line: { color: "rgba(0, 0, 0, 0)" },
       name: "Val",
     },
@@ -154,7 +151,7 @@ const AccuracyLearningCurve = ({ path, theme }) => {
   // }
 
   const layout = {
-    title: "Learning Curve:Training vs. Validation Accuracy",
+    title: `Learning Curve for ${modelName}`,
     textposition: "top center",
 
     font: {
@@ -170,7 +167,7 @@ const AccuracyLearningCurve = ({ path, theme }) => {
     color: theme.palette.primary.font,
     margin: {
       l: 70,
-      r: 170,
+      r: 150,
       b: 40,
       t: 80,
     },

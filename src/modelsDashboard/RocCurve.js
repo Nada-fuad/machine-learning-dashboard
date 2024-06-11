@@ -41,10 +41,10 @@ const RocCurve = ({ path, theme }) => {
       size: 16,
     },
     xaxis: {
-      title: "Recall",
+      title: "False positive rate",
     },
     yaxis: {
-      title: "Precision",
+      title: "True positive rate",
     },
     autosize: true,
     responsive: true,

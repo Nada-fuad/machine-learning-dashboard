@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Plot from "react-plotly.js";
-const color = [
-  [0, "#00b5ff"],
-  [0.5, "#0500ff"],
-  [1, "#191D87"],
-];
+
 const ConfusionMatrix = ({ path, theme }) => {
   const [confusion, setConfusion] = useState(null);
 
@@ -20,7 +16,11 @@ const ConfusionMatrix = ({ path, theme }) => {
   }, [newPath]);
 
   if (!confusion || !newPath) return null;
-
+  const color = [
+    [0, theme.palette.primary.confusion0],
+    [0.5, theme.palette.primary.confusion1],
+    [1, theme.palette.primary.confusion2],
+  ];
   const { data, categories } = confusion;
 
   const tickvalIndexes = [];
