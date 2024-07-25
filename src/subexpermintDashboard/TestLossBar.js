@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import Plot from "react-plotly.js";
-import textToJsonObject from "../JsonLToJson";
+import jsonLtoJson from "../JsonLToJson";
 
 const TestLossBar = ({ path, jsonSubexperiment, theme }) => {
   const [metrics, setMetrics] = useState([]);
@@ -10,7 +10,7 @@ const TestLossBar = ({ path, jsonSubexperiment, theme }) => {
     const metricsData = async () => {
       const response = await fetch(newPath);
       const text = await response.text();
-      const metrics = textToJsonObject(text);
+      const metrics = jsonLtoJson(text);
 
       setMetrics(metrics);
     };

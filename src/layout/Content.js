@@ -14,6 +14,9 @@ export default function Content({
   isSubexperiment,
   isModel,
 }) {
+  // Rendern der Komponente für Experimenten,
+  // Unterexperimenten oder Modellen je nach Auswahl
+
   return (
     <Box mr={4}>
       {jsonExperiment && (

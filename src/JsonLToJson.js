@@ -1,4 +1,4 @@
-export const textToJsonObject = (textContent) => {
+export const jsonLtoJson = (textContent) => {
   const jsonObjects = textContent
     .split("\n")
     .map((line) => {
@@ -23,4 +23,4 @@ export const textToJsonObject = (textContent) => {
   return jsonObjects;
 };
 
-export default textToJsonObject;
+export default jsonLtoJson;

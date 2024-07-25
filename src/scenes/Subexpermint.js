@@ -68,7 +68,8 @@ export default function SubExpermints({
 }) {
   const toSmall = useMediaQuery("(min-width:1300px)");
   const selectedHistoryData = jsonExperiment.historyPath;
-
+  // Rendern sechs Komponenten, die die grafische
+  //Darstellung des ausgewählten Unterexperiments zeigt.
   return (
     <Box
       width="100%"

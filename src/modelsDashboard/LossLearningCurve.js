@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Plot from "react-plotly.js";
-import textToJsonObject from "../JsonLToJson";
+import jsonLtoJson from "../JsonLToJson";
 
 const LossLearningCurve = ({ path, theme }) => {
   const [learnCurve, setLearnCurve] = useState(null);
@@ -11,7 +11,7 @@ const LossLearningCurve = ({ path, theme }) => {
     const learnCurveData = async () => {
       const response = await fetch(newPath);
       const text = await response.text();
-      const learnCurve = textToJsonObject(text);
+      const learnCurve = jsonLtoJson(text);
       setLearnCurve(learnCurve);
     };
 

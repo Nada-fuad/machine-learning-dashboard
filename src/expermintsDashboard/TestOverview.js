@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Plot from "react-plotly.js";
-import textToJsonObject from "../JsonLToJson";
+import jsonLtoJson from "../JsonLToJson";
 
 const TestOverview = ({ path, theme }) => {
   const [metrics, setMetrics] = useState(null);
@@ -12,7 +12,7 @@ const TestOverview = ({ path, theme }) => {
       const response = await fetch(newPath);
 
       const text = await response.text();
-      const metrics = textToJsonObject(text);
+      const metrics = jsonLtoJson(text);
       setMetrics(metrics);
     };
     historyData();

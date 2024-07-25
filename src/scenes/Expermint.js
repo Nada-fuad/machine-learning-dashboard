@@ -44,7 +44,9 @@ export default function Experiment({ jsonExperiment, theme }) {
   const toSmall = useMediaQuery("(min-width:1000px)");
 
   const selectedHistoryData = jsonExperiment.historyPath;
-
+  // Rendern vier Komponenten,  die grafische Darstellungen
+  // für alle Unterexperimente und Modelle für ein
+  // einzelnes Experiment angezeigt.
   return (
     <Box
       maxHeight={1200}

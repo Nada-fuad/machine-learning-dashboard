@@ -76,7 +76,8 @@ export default function Models({ theme, jsonSubexperiment, jsonModel }) {
   }
 
   const { confusionPath, dataPath, rocPath, curvePath } = selectedModelData;
-
+  // Rendern sechs Komponenten, die die grafische
+  //Darstellung des ausgewählten Modells zeigt.
   return (
     <Box
       maxHeight={1700}

@@ -15,10 +15,13 @@ const RocCurve = ({ path, theme }) => {
     rocData();
   }, [newPath]);
   if (!roc || !newPath) return null;
+  //Daten aus dem Pfad der RocCurve extrahieren
 
   const { categories, fpr, tpr } = roc;
+  //extrahierte Daten werden mit der push-Methode hinzugefügt, je nach Index der Kategorie.
 
   const data = [];
+  console.log("🚀 ~ RocCurve ~ data:", data);
 
   for (let i = 0; i < categories.length; i++) {
     data.push({

@@ -3,6 +3,8 @@ import { Box, IconButton, Typography } from "@mui/material";
 import React from "react";
 
 export default function Navbar({ mode, setMode, theme }) {
+  // Rendern von Titel, Logo und Hell- und Dunkelmodus-Button
+
   return (
     <Box
       display="flex"
@@ -28,7 +30,7 @@ export default function Navbar({ mode, setMode, theme }) {
           justifyContent="center"
           fontSize="22px"
         >
-          hannah Dashboard
+          Hannah Dashboard
         </Typography>
       </Box>
 

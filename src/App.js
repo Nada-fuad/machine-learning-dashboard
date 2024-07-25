@@ -15,6 +15,7 @@ function App() {
   const [isSubexperiment, setIsSubexperiment] = useState(false);
   const [isModel, setIsModel] = useState(false);
 
+  //Experiment Informationen zu aktualisieren.
   const handleExperimentButton = (experiment) => {
     setJsonExperiment(experiment);
     setJsonSubExperiment(true);
@@ -23,7 +24,7 @@ function App() {
     setIsSubexperiment(false);
     setIsModel(false);
   };
-
+  //SubExperiment Informationen zu aktualisieren.
   const handleSubExperimentButton = (subExperiment) => {
     setJsonSubExperiment(subExperiment);
     setJsonModel("");
@@ -31,7 +32,7 @@ function App() {
     setIsSubexperiment(true);
     setIsModel(false);
   };
-
+  //Model Informationen zu aktualisieren.
   const handleModelButton = (model) => {
     setJsonModel(model);
     setIsExperiment(false);

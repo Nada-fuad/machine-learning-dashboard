@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Plot from "react-plotly.js";
-import textToJsonObject from "../JsonLToJson";
+import jsonLtoJson from "../JsonLToJson";
 
 const TestRange = ({ path, theme }) => {
   const [historyMetric, setHistoryMetric] = useState(null);
@@ -12,14 +12,11 @@ const TestRange = ({ path, theme }) => {
       const response = await fetch(newPath);
 
       const text = await response.text();
-      const historyMetric = textToJsonObject(text);
+      const historyMetric = jsonLtoJson(text);
       setHistoryMetric(historyMetric);
     };
     historyData();
   }, [newPath]);
-
-  if (!historyMetric || !newPath) return null;
-
   const color = [
     "#95D2B3",
     "#FF7D29",
@@ -34,6 +31,8 @@ const TestRange = ({ path, theme }) => {
     "#FF3FA4",
     "#C40C0C",
   ];
+
+  if (!historyMetric || !newPath) return null;
 
   const experimentName = historyMetric.map((metric) => metric.experiment);
 

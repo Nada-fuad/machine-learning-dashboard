@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Plot from "react-plotly.js";
-import textToJsonObject from "../JsonLToJson";
+import jsonLtoJson from "../JsonLToJson";
 
 const ValRange = ({ path, theme }) => {
   const [historyMetric, setHistoryMetric] = useState(null);
@@ -12,7 +12,7 @@ const ValRange = ({ path, theme }) => {
       const response = await fetch(newPath);
 
       const text = await response.text();
-      const historyMetric = textToJsonObject(text);
+      const historyMetric = jsonLtoJson(text);
       setHistoryMetric(historyMetric);
     };
     historyData();

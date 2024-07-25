@@ -1,238 +1,230 @@
 {
-  "experiments": [
-    {
-      "name": "CIFAR10",
-      "subexperiments": [
-        {
-          "name": "pretrained_models",
-          "models": [
-            {
-              "name": "mobilenetv3_small_075",
+    "experiments": [{
+            "name": "CIFAR10",
+            "subexperiments": [{
+                    "name": "pretrained_models",
+                    "models": [{
+                            "name": "mobilenetv3_small_075",
 
-              "dataPath": "/cifar10/trained_models/pretrained_models/mobilenetv3_small_075/logs/",
-              "confusionPath": "/cifar10/trained_models/pretrained_models/mobilenetv3_small_075/plots/",
-              "curvePath": "/cifar10/trained_models/pretrained_models/mobilenetv3_small_075/plots/",
-              "rocPath": "/cifar10/trained_models/pretrained_models/mobilenetv3_small_075/plots/"
-            },
-            {
-              "name": "kakao_resnet8",
-              "dataPath": "/cifar10/trained_models/pretrained_models/resnet18/logs/",
-              "confusionPath": "/cifar10/trained_models/pretrained_models/resnet18/plots/",
-              "curvePath": "/cifar10/trained_models/pretrained_models/resnet18/plots/",
-              "rocPath": "/cifar10/trained_models/pretrained_models/resnet18/plots/"
-            }
-          ]
+                            "dataPath": "/cifar10/trained_models/pretrained_models/mobilenetv3_small_075/logs/",
+                            "confusionPath": "/cifar10/trained_models/pretrained_models/mobilenetv3_small_075/plots/",
+                            "curvePath": "/cifar10/trained_models/pretrained_models/mobilenetv3_small_075/plots/",
+                            "rocPath": "/cifar10/trained_models/pretrained_models/mobilenetv3_small_075/plots/"
+                        },
+                        {
+                            "name": "kakao_resnet8",
+                            "dataPath": "/cifar10/trained_models/pretrained_models/resnet18/logs/",
+                            "confusionPath": "/cifar10/trained_models/pretrained_models/resnet18/plots/",
+                            "curvePath": "/cifar10/trained_models/pretrained_models/resnet18/plots/",
+                            "rocPath": "/cifar10/trained_models/pretrained_models/resnet18/plots/"
+                        }
+                    ]
+                },
+
+                {
+                    "name": "sweep_lr",
+                    "models": [{
+                            "name": "kakao_resnet8(0.1)",
+                            "dataPath": "/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.1/logs/",
+                            "confusionPath": "/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.1/plots/",
+                            "curvePath": "/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.1/plots/",
+                            "rocPath": "/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.1/plots/"
+                        },
+                        {
+                            "name": "kakao_resnet8(0.9)",
+                            "dataPath": "/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.9/logs/",
+                            "confusionPath": "/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.9/plots/",
+                            "curvePath": "/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.9/plots/",
+                            "rocPath": "/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.9/plots/"
+                        },
+                        {
+                            "name": "mobilenetv3_small_075",
+                            "dataPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_075/lr=0.1/logs/",
+                            "confusionPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_075/lr=0.1/plots/",
+                            "curvePath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_075/lr=0.1/plots/",
+                            "rocPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_075/lr=0.1/plots/"
+                        },
+                        {
+                            "name": "mobilenetv3_small_075",
+                            "dataPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_075/lr=0.9/logs/",
+                            "confusionPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_075/lr=0.9/plots/",
+                            "curvePath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_075/lr=0.9/plots/",
+                            "rocPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_075/lr=0.9/plots/"
+                        },
+                        {
+                            "name": "mobilenetv3_small_100",
+                            "dataPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_100/lr=0.1/logs/",
+                            "confusionPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_100/lr=0.1/plots/",
+                            "curvePath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_100/lr=0.1/plots/",
+                            "rocPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_100/lr=0.1/plots/"
+                        },
+                        {
+                            "name": "mobilenetv3_small_100",
+                            "dataPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_100/lr=0.9/logs/",
+                            "confusionPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_100/lr=0.9/plots/",
+                            "curvePath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_100/lr=0.9/plots/",
+                            "rocPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_100/lr=0.9/plots/"
+                        },
+                        {
+                            "name": "resnet18(0.1)",
+                            "dataPath": "/cifar10/trained_models/sweep_lr/resnet18/lr=0.1/logs/",
+                            "confusionPath": "/cifar10/trained_models/sweep_lr/resnet18/lr=0.1/plots/",
+                            "curvePath": "/cifar10/trained_models/sweep_lr/resnet18/lr=0.1/plots/",
+                            "rocPath": "/cifar10/trained_models/sweep_lr/resnet18/lr=0.1/plots/"
+                        },
+                        {
+                            "name": "resnet18(0.9)",
+                            "dataPath": "/cifar10/trained_models/sweep_lr/resnet18/lr=0.9/logs/",
+                            "confusionPath": "/cifar10/trained_models/sweep_lr/resnet18/lr=0.9/plots/",
+                            "curvePath": "/cifar10/trained_models/sweep_lr/resnet18/lr=0.9/plots/",
+                            "rocPath": "/cifar10/trained_models/sweep_lr/resnet18/lr=0.9/plots/"
+                        }
+                    ]
+                },
+                {
+                    "name": "sweep_models",
+                    "models": [{
+                            "name": "kakao_resnet8",
+                            "dataPath": "/cifar10/trained_models/sweep_models/kakao_resnet8/logs/",
+                            "confusionPath": "/cifar10/trained_models/sweep_models/kakao_resnet8/plots/",
+                            "curvePath": "/cifar10/trained_models/sweep_models/kakao_resnet8/plots/",
+                            "rocPath": "/cifar10/trained_models/sweep_models/kakao_resnet8/plots/"
+                        },
+                        {
+                            "name": "mobilenetv3_small_075",
+                            "dataPath": "/cifar10/trained_models/sweep_models/mobilenetv3_small_075/logs/",
+                            "confusionPath": "/cifar10/trained_models/sweep_models/mobilenetv3_small_075/plots/",
+                            "curvePath": "/cifar10/trained_models/sweep_models/mobilenetv3_small_075/plots/",
+                            "rocPath": "/cifar10/trained_models/sweep_models/mobilenetv3_small_075/plots/"
+                        },
+                        {
+                            "name": "mobilenetv3_small_100",
+                            "dataPath": "/cifar10/trained_models/sweep_models/mobilenetv3_small_100/logs/",
+                            "confusionPath": "/cifar10/trained_models/sweep_models/mobilenetv3_small_100/plots/",
+                            "curvePath": "/cifar10/trained_models/sweep_models/mobilenetv3_small_100/plots/",
+                            "rocPath": "/cifar10/trained_models/sweep_models/mobilenetv3_small_100/plots/"
+                        },
+                        {
+                            "name": "resnet18",
+                            "dataPath": "/cifar10/trained_models/sweep_models/resnet18/logs/",
+                            "confusionPath": "/cifar10/trained_models/sweep_models/resnet18/plots/",
+                            "curvePath": "/cifar10/trained_models/sweep_models/resnet18/plots/",
+                            "rocPath": "/cifar10/trained_models/sweep_models/resnet18/plots/"
+                        },
+                        {
+                            "name": "resnet50",
+                            "dataPath": "/cifar10/trained_models/sweep_models/resnet50/logs/",
+                            "confusionPath": "/cifar10/trained_models/sweep_models/resnet50/plots/",
+                            "curvePath": "/cifar10/trained_models/sweep_models/resnet50/plots/",
+                            "rocPath": "/cifar10/trained_models/sweep_models/resnet18/plots/"
+                        }
+                    ]
+                }
+            ],
+            "historyPath": "/cifar10/trained_models/"
         },
-
         {
-          "name": "sweep_lr",
-          "models": [
-            {
-              "name": "kakao_resnet8(0.1)",
-              "dataPath": "/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.1/logs/",
-              "confusionPath": "/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.1/plots/",
-              "curvePath": "/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.1/plots/",
-              "rocPath": "/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.1/plots/"
-            },
-            {
-              "name": "kakao_resnet8",
-              "dataPath": "/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.9/logs/",
-              "confusionPath": "/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.9/plots/",
-              "curvePath": "/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.9/plots/",
-              "rocPath": "/cifar10/trained_models/sweep_lr/kakao_resnet8/lr=0.9/plots/"
-            },
-            {
-              "name": "mobilenetv3_small_075(1)",
-              "dataPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_075/lr=0.1/logs/",
-              "confusionPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_075/lr=0.1/plots/",
-              "curvePath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_075/lr=0.1/plots/",
-              "rocPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_075/lr=0.1/plots/"
-            },
-            {
-              "name": "mobilenetv3_small_075(9)",
-              "dataPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_075/lr=0.9/logs/",
-              "confusionPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_075/lr=0.9/plots/",
-              "curvePath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_075/lr=0.9/plots/",
-              "rocPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_075/lr=0.9/plots/"
-            },
-            {
-              "name": "mobilenetv3_small_100(1)",
-              "dataPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_100/lr=0.1/logs/",
-              "confusionPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_100/lr=0.1/plots/",
-              "curvePath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_100/lr=0.1/plots/",
-              "rocPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_100/lr=0.1/plots/"
-            },
-            {
-              "name": "mobilenetv3_small_100(9)",
-              "dataPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_100/lr=0.9/logs/",
-              "confusionPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_100/lr=0.9/plots/",
-              "curvePath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_100/lr=0.9/plots/",
-              "rocPath": "/cifar10/trained_models/sweep_lr/mobilenetv3_small_100/lr=0.9/plots/"
-            },
-            {
-              "name": "resnet18(0.1)",
-              "dataPath": "/cifar10/trained_models/sweep_lr/resnet18/lr=0.1/logs/",
-              "confusionPath": "/cifar10/trained_models/sweep_lr/resnet18/lr=0.1/plots/",
-              "curvePath": "/cifar10/trained_models/sweep_lr/resnet18/lr=0.1/plots/",
-              "rocPath": "/cifar10/trained_models/sweep_lr/resnet18/lr=0.1/plots/"
-            },
-            {
-              "name": "resnet18(0.9)",
-              "dataPath": "/cifar10/trained_models/sweep_lr/resnet18/lr=0.9/logs/",
-              "confusionPath": "/cifar10/trained_models/sweep_lr/resnet18/lr=0.9/plots/",
-              "curvePath": "/cifar10/trained_models/sweep_lr/resnet18/lr=0.9/plots/",
-              "rocPath": "/cifar10/trained_models/sweep_lr/resnet18/lr=0.9/plots/"
-            }
-          ]
+            "name": "Constrained Space Comparison",
+            "subexperiments": []
         },
         {
-          "name": "sweep_models",
-          "models": [
-            {
-              "name": "kakao_resnet8",
-              "dataPath": "/cifar10/trained_models/sweep_models/kakao_resnet8/logs/",
-              "confusionPath": "/cifar10/trained_models/sweep_models/kakao_resnet8/plots/",
-              "curvePath": "/cifar10/trained_models/sweep_models/kakao_resnet8/plots/",
-              "rocPath": "/cifar10/trained_models/sweep_models/kakao_resnet8/plots/"
-            },
-            {
-              "name": "mobilenetv3_small_075",
-              "dataPath": "/cifar10/trained_models/sweep_models/mobilenetv3_small_075/logs/",
-              "confusionPath": "/cifar10/trained_models/sweep_models/mobilenetv3_small_075/plots/",
-              "curvePath": "/cifar10/trained_models/sweep_models/mobilenetv3_small_075/plots/",
-              "rocPath": "/cifar10/trained_models/sweep_models/mobilenetv3_small_075/plots/"
-            },
-            {
-              "name": "mobilenetv3_small_100",
-              "dataPath": "/cifar10/trained_models/sweep_models/mobilenetv3_small_100/logs/",
-              "confusionPath": "/cifar10/trained_models/sweep_models/mobilenetv3_small_100/plots/",
-              "curvePath": "/cifar10/trained_models/sweep_models/mobilenetv3_small_100/plots/",
-              "rocPath": "/cifar10/trained_models/sweep_models/mobilenetv3_small_100/plots/"
-            },
-            {
-              "name": "resnet18",
-              "dataPath": "/cifar10/trained_models/sweep_models/resnet18/logs/",
-              "confusionPath": "/cifar10/trained_models/sweep_models/resnet18/plots/",
-              "curvePath": "/cifar10/trained_models/sweep_models/resnet18/plots/",
-              "rocPath": "/cifar10/trained_models/sweep_models/resnet18/plots/"
-            },
-            {
-              "name": "resnet50",
-              "dataPath": "/cifar10/trained_models/sweep_models/resnet50/logs/",
-              "confusionPath": "/cifar10/trained_models/sweep_models/resnet50/plots/",
-              "curvePath": "/cifar10/trained_models/sweep_models/resnet50/plots/",
-              "rocPath": "/cifar10/trained_models/sweep_models/resnet18/plots/"
-            }
-          ]
-        }
-      ],
-      "historyPath": "/cifar10/trained_models/"
-    },
-    {
-      "name": "Constrained Space Comparison",
-      "subexperiments": []
-    },
-    {
-      "name": "Dresden Capsule",
-      "subexperiments": [
-        {
-          "name": "weighted_loss",
-          "models": [
-            {
-              "name": "mobilenetv3_small_075",
+            "name": "Dresden Capsule",
+            "subexperiments": [{
+                "name": "weighted_loss",
+                "models": [{
+                        "name": "mobilenetv3_small_075",
 
-              "dataPath": "/dresden_capsule/trained_models/weighted_loss/mobilenetv3_small_075/logs/",
-              "confusionPath": "/cifar10/trained_models/pretrained_models/mobilenetv3_small_075/plots/",
-              "curvePath": "/cifar10/trained_models/pretrained_models/mobilenetv3_small_075/plots/",
-              "rocPath": "/cifar10/trained_models/pretrained_models/mobilenetv3_small_075/plots/"
-            },
-            {
-              "name": "resnet18",
-              "dataPath": "/cifar10/trained_models/pretrained_models/resnet18/logs/",
-              "confusionPath": "/cifar10/trained_models/pretrained_models/resnet18/plots/",
-              "curvePath": "/cifar10/trained_models/pretrained_models/resnet18/plots/",
-              "rocPath": "/cifar10/trained_models/pretrained_models/resnet18/plots/"
-            }
-          ]
+                        "dataPath": "/dresden_capsule/trained_models/weighted_loss/mobilenetv3_small_075/logs/",
+                        "confusionPath": "/cifar10/trained_models/pretrained_models/mobilenetv3_small_075/plots/",
+                        "curvePath": "/cifar10/trained_models/pretrained_models/mobilenetv3_small_075/plots/",
+                        "rocPath": "/cifar10/trained_models/pretrained_models/mobilenetv3_small_075/plots/"
+                    },
+                    {
+                        "name": "resnet18",
+                        "dataPath": "/cifar10/trained_models/pretrained_models/resnet18/logs/",
+                        "confusionPath": "/cifar10/trained_models/pretrained_models/resnet18/plots/",
+                        "curvePath": "/cifar10/trained_models/pretrained_models/resnet18/plots/",
+                        "rocPath": "/cifar10/trained_models/pretrained_models/resnet18/plots/"
+                    }
+                ]
+            }],
+            "historyPath": "/dresden_capsule/trained_models/"
+        },
+        {
+            "name": "DSD22",
+            "subexperiments": []
+        },
+        {
+            "name": "EEG Deployment",
+            "subexperiments": []
+        },
+        {
+            "name": "Embedded Vision Net RI",
+            "subexperiments": []
+        },
+        {
+            "name": "Eurosys23",
+            "subexperiments": []
+        },
+        {
+            "name": "EVN Test",
+            "subexperiments": []
+        },
+        {
+            "name": "Examples Experiment",
+            "subexperiments": []
+        },
+        {
+            "name": "Kvasir",
+            "subexperiments": []
+        },
+        {
+            "name": "Kvasir AE",
+            "subexperiments": []
+        },
+        {
+            "name": "Kvasir Anomaly",
+            "subexperiments": []
+        },
+        {
+            "name": "Kvasir Pseudo",
+            "subexperiments": []
+        },
+        {
+            "name": "Kvasir SSL",
+            "subexperiments": []
+        },
+        {
+            "name": "KWS",
+            "subexperiments": []
+        },
+        {
+            "name": "MobileNet vs EVN",
+            "subexperiments": []
+        },
+        {
+            "name": "OVSF",
+            "subexperiments": []
+        },
+        {
+            "name": "Presampling",
+            "subexperiments": []
+        },
+        {
+            "name": "Rhode Island",
+            "subexperiments": []
+        },
+        {
+            "name": "Rhode Island Pseudo",
+            "subexperiments": []
+        },
+        {
+            "name": "Samos23",
+            "subexperiments": []
+        },
+        {
+            "name": "UMA NAS",
+            "subexperiments": []
         }
-      ],
-      "historyPath": "/dresden_capsule/trained_models/"
-    },
-    {
-      "name": "DSD22",
-      "subexperiments": []
-    },
-    {
-      "name": "EEG Deployment",
-      "subexperiments": []
-    },
-    {
-      "name": "Embedded Vision Net RI",
-      "subexperiments": []
-    },
-    {
-      "name": "Eurosys23",
-      "subexperiments": []
-    },
-    {
-      "name": "EVN Test",
-      "subexperiments": []
-    },
-    {
-      "name": "Examples Experiment",
-      "subexperiments": []
-    },
-    {
-      "name": "Kvasir",
-      "subexperiments": []
-    },
-    {
-      "name": "Kvasir AE",
-      "subexperiments": []
-    },
-    {
-      "name": "Kvasir Anomaly",
-      "subexperiments": []
-    },
-    {
-      "name": "Kvasir Pseudo",
-      "subexperiments": []
-    },
-    {
-      "name": "Kvasir SSL",
-      "subexperiments": []
-    },
-    {
-      "name": "KWS",
-      "subexperiments": []
-    },
-    {
-      "name": "MobileNet vs EVN",
-      "subexperiments": []
-    },
-    {
-      "name": "OVSF",
-      "subexperiments": []
-    },
-    {
-      "name": "Presampling",
-      "subexperiments": []
-    },
-    {
-      "name": "Rhode Island",
-      "subexperiments": []
-    },
-    {
-      "name": "Rhode Island Pseudo",
-      "subexperiments": []
-    },
-    {
-      "name": "Samos23",
-      "subexperiments": []
-    },
-    {
-      "name": "UMA NAS",
-      "subexperiments": []
-    }
-  ]
+    ]
 }

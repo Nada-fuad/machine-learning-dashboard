@@ -1,6 +1,6 @@
 import Plot from "react-plotly.js";
 import React, { useState, useEffect } from "react";
-import textToJsonObject from "../JsonLToJson";
+import jsonLtoJson from "../JsonLToJson";
 
 const LearningsRate = ({ path, theme }) => {
   const [metrics, setMetrics] = useState(null);
@@ -11,7 +11,7 @@ const LearningsRate = ({ path, theme }) => {
     const metricsData = async () => {
       const response = await fetch(newPath);
       const text = await response.text();
-      const metrics = textToJsonObject(text);
+      const metrics = jsonLtoJson(text);
       setMetrics(metrics);
     };
     metricsData();
@@ -19,15 +19,13 @@ const LearningsRate = ({ path, theme }) => {
 
   if (!metrics) return null;
 
-  const lr_SGDs = metrics.filter((metric) => metric["lr-SGD"] !== undefined);
-  console.log("🚀 ~ LearningsRate ~ lr_SGDs:", lr_SGDs);
-  const epochs = metrics.filter((metric) => metric.epoch !== undefined);
-  console.log("🚀 ~ LearningsRate ~ epochs:", epochs);
+  // lr_SGDs und  epochs aus metrics extrahieren.
 
+  const lr_SGDs = metrics.filter((metric) => metric["lr-SGD"] !== undefined);
+  const epochs = metrics.filter((metric) => metric.epoch !== undefined);
+  //extrahierte Daten werden mit der push-Methode Daten zum lr_SGD und epoch hinzugefügt.
   const lr_SGD = [];
-  console.log("🚀 ~ LearningsRate ~ lr_SGD:", lr_SGD);
   const epoch = [];
-  console.log("🚀 ~ LearningsRate ~ epoch:", epoch);
   lr_SGDs.forEach((metric) => {
     if (metric["lr-SGD"] !== undefined) {
       lr_SGD.push(metric["lr-SGD"]);
@@ -51,7 +49,6 @@ const LearningsRate = ({ path, theme }) => {
       name: "Learning Rate",
     },
   ];
-  console.log("🚀 ~ LearningsRate ~ data:", data);
 
   const layout = {
     title: "Learnings Rate with Epoch",

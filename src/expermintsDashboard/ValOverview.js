@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Plot from "react-plotly.js";
-import textToJsonObject from "../JsonLToJson";
+import jsonLtoJson from "../JsonLToJson";
 
 const ValOverview = ({ path, theme }) => {
   const [metrics, setMetrics] = useState(null);
@@ -12,7 +12,7 @@ const ValOverview = ({ path, theme }) => {
       const response = await fetch(newPath);
 
       const text = await response.text();
-      const metrics = textToJsonObject(text);
+      const metrics = jsonLtoJson(text);
       setMetrics(metrics);
     };
     historyData();
@@ -20,19 +20,19 @@ const ValOverview = ({ path, theme }) => {
 
   if (!metrics || !newPath) return null;
 
-  const colors = [
-    "#0000FF",
-    "#458B74",
-    "#473C8B",
-    "#008000",
-    "#008080",
-    "#006400",
+  const c = [
+    "#95D2B3",
+    "#FF7D29",
+    "#E5E483",
+    "#C69749",
+    "#38E54D",
+    "#D24545",
     "#556B2F",
-    "#4682B4",
-    "#6495ED",
-    "#1E90FF",
-    "#483D8B",
-    "#6A5ACD",
+    "#F6B17A",
+    "#BED754",
+    "#D4ADFC",
+    "#FF3FA4",
+    "#C40C0C",
   ];
 
   const experimentName = metrics.map((metric) => metric.experiment);
@@ -42,9 +42,8 @@ const ValOverview = ({ path, theme }) => {
   );
 
   const colorMap = {};
-  console.log("🚀 ~ ValOverview ~ colorMap:", colorMap);
   uniqueExperiment.forEach((experiment, index) => {
-    colorMap[experiment] = `hsl(${(index * 40) % 360}, 50%, 50%)`;
+    colorMap[experiment] = c[Math.floor(Math.random() * c.length)];
   });
 
   const neueMetricsData = metrics.reduce((acc, current) => {
@@ -62,7 +61,7 @@ const ValOverview = ({ path, theme }) => {
     } else {
       acc.push({
         experiment,
-        color: colors[experiment],
+        // color: colors[experiment],
         model,
         data: [{ date, val_accuracy }],
       });

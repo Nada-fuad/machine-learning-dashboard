@@ -15,8 +15,10 @@ const RecallCurve = ({ path, theme }) => {
     curveData();
   }, [newPath]);
   if (!curve || !newPath) return null;
+  //Daten aus dem Pfad der Curve extrahieren
 
   const { categories, precision, recall } = curve;
+  //extrahierte Daten werden mit der push-Methode hinzugefügt, je nach Index der Kategorie.
 
   const data = [];
   for (let i = 0; i < categories.length; i++) {

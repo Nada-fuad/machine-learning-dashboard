@@ -37,6 +37,8 @@ export default function Sidebar({
   onModelButton,
   theme,
 }) {
+  // Rendern der Liste von anklickbarer Buttons mit Experimenten,
+  // Unterexperimenten und Modellen.
   return (
     <>
       <Box

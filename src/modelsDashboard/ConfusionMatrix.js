@@ -2,27 +2,31 @@ import React, { useState, useEffect } from "react";
 import Plot from "react-plotly.js";
 
 const ConfusionMatrix = ({ path, theme }) => {
-  const [confusion, setConfusion] = useState(null);
+  const [confusionMetric, setConfusionMetric] = useState(null);
 
   const newPath = `/machine-learning-dashboard${path}test_confusion.json`;
 
   useEffect(() => {
     const confusionData = async () => {
       const response = await fetch(newPath);
-      const confusion = await response.json();
-      setConfusion(confusion);
+      const confusionMetric = await response.json();
+      setConfusionMetric(confusionMetric);
     };
     confusionData();
   }, [newPath]);
 
-  if (!confusion || !newPath) return null;
+  if (!confusionMetric || !newPath) return null;
   const color = [
     [0, theme.palette.primary.confusion0],
     [0.5, theme.palette.primary.confusion1],
     [1, theme.palette.primary.confusion2],
   ];
-  const { data, categories } = confusion;
 
+  //Daten aus dem Pfad der Confusion Matrix extrahieren
+  const { data, categories } = confusionMetric;
+
+  //Für jede Kategorie gibt es ein Data. Hier wird der Index des Data so festgelegt,
+  // dass er dem Index der entsprechenden Kategorie entspricht.
   const tickvalIndexes = [];
   for (let i = 0; i < data.length; i++) {
     tickvalIndexes.push(i);
@@ -52,7 +56,6 @@ const ConfusionMatrix = ({ path, theme }) => {
     paper_bgcolor: "rgba(0, 0, 0, 0)",
     plot_bgcolor: "rgba(0, 0, 0, 0)",
   };
-  console.log("🚀 ~ ConfusionMatrix ~ layout:", layout);
 
   const ConfusionData = [
     {
