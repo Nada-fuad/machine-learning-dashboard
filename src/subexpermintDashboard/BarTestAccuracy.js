@@ -48,7 +48,6 @@ const BarTestAccuracy = ({ path, jsonSubexperiment, theme }) => {
     mode: "bar",
     name: model.model,
   }));
-  console.log("🚀 ~ plotData ~ plotData:", plotData);
 
   const layout = {
     title: `Test Accuracy for Each Model`,

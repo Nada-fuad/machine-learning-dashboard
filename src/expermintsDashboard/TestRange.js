@@ -17,54 +17,43 @@ const TestRange = ({ path, theme }) => {
     };
     historyData();
   }, [newPath]);
-  const color = [
-    "#95D2B3",
-    "#FF7D29",
-    "#E5E483",
-    "#C69749",
-    "#38E54D",
-    "#D24545",
-    "#556B2F",
-    "#F6B17A",
-    "#BED754",
-    "#D4ADFC",
-    "#FF3FA4",
-    "#C40C0C",
-  ];
 
   if (!historyMetric || !newPath) return null;
 
+  // Namen der Experimente aus historyMetric zu extrahieren und
+  // Falls die Namen der experimentName mehrfach vorkommen, filtere sie auf nur einen.
   const experimentName = historyMetric.map((metric) => metric.experiment);
 
   const uniqueExperiment = experimentName.filter(
     (name, index) => experimentName.indexOf(name) === index
   );
 
-  const expermintData = uniqueExperiment.map((expermint) => ({
-    myExperiment: expermint,
-    color: color[Math.floor(Math.random() * color.length)],
-  }));
-  console.log("🚀 ~ expermintData ~ expermintData:", expermintData);
+  // Zuordnung jedes Experiments zu einer einzelnen Farbe.
+  const colorPalette = {};
 
-  const experimentHistory = expermintData.map((experiment) => {
+  for (let i = 0; i < uniqueExperiment.length; i++) {
+    const experiment = uniqueExperiment[i];
+    colorPalette[experiment] = `hsl(${(i * 40) % 360}, 60%, 60%)`;
+  }
+
+  // Experimente mit den test_accuracy und dem letzten Datum extrahieren,
+  //  um die Range der test_accuracy zu berechnen.
+
+  const experimentHistory = uniqueExperiment.sort().map((experiment) => {
     const dates = [];
     const testAccuracy = [];
     historyMetric.forEach((metric) => {
-      if (
-        metric.date !== undefined &&
-        metric.experiment === experiment.myExperiment
-      ) {
+      if (metric.date !== undefined && metric.experiment === experiment) {
         dates.push(metric.date);
       }
       if (
         metric.test_accuracy !== undefined &&
-        metric.experiment === experiment.myExperiment
+        metric.experiment === experiment
       ) {
         testAccuracy.push(metric.test_accuracy);
       }
     });
-    const oneDate = dates.slice(0, 1);
-
+    const lastDate = dates.slice(-1);
     const min = testAccuracy.reduce(
       (acc, val) => Math.min(acc, val),
       testAccuracy[0]
@@ -75,25 +64,30 @@ const TestRange = ({ path, theme }) => {
     );
 
     const rangeValue = max - min;
-    console.log("🚀 ~ experimentHistory ~ rangeValue:", rangeValue);
 
     const rangeTestAccuracy = [];
-    console.log(
-      "🚀 ~ experimentHistory ~ rangeTestAccuracy:",
-      rangeTestAccuracy
-    );
 
     for (let i = 0; i < testAccuracy.length; i++) {
       rangeTestAccuracy.push(rangeValue);
     }
     return {
-      name: experiment.myExperiment,
-      dates: oneDate,
+      name: experiment,
+      dates: lastDate,
       testAccuracy: rangeTestAccuracy,
-      color: experiment.color,
     };
   });
-  console.log("🚀 ~ experimentHistory ~ experimentHistory:", experimentHistory);
+  // Informationen auf der x- und y-Achse sortieren, um sie darzustellen.
+
+  const data = experimentHistory.map((a) => ({
+    x: a.dates,
+    y: a.testAccuracy,
+    type: "scatter",
+    mode: "lines+markers",
+    marker: { color: colorPalette[a.name] },
+    name: a.name,
+  }));
+
+  // das Aussehen und die Darstellung des Diagramms zu konfigurieren.
 
   const layout = {
     title: "Range Test Accuracy ",
@@ -107,15 +101,8 @@ const TestRange = ({ path, theme }) => {
     plot_bgcolor: "rgba(0, 0, 0, 0)",
     margin: { l: 100, r: 200, b: 60, t: 60 },
   };
+
   const config = { responsive: true };
-  const data = experimentHistory.map((a) => ({
-    x: a.dates,
-    y: a.testAccuracy,
-    type: "scatter",
-    mode: "lines+markers",
-    marker: { color: a.color },
-    name: a.name,
-  }));
   return <Plot data={data} layout={layout} config={config} />;
 };
 
