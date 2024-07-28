@@ -40,12 +40,20 @@ const ValLossBar = ({ path, jsonSubexperiment, theme }) => {
       ),
     [sortedModelDate]
   );
+  // Zuordnung jedes Modells zu einer einzelnen Farbe.
+  const colorPalette = {};
 
+  for (let i = 0; i < uniqueModels.length; i++) {
+    const modell = uniqueModels[i].model;
+    colorPalette[modell] = `hsl(${(i * 40) % 360}, 60%, 60%)`;
+  }
   const plotData = uniqueModels.map((model) => ({
     x: [model.date],
     y: [model.val_loss],
     type: "bar",
     mode: "bar",
+    marker: { color: colorPalette[model.model] },
+
     name: model.model,
   }));
 

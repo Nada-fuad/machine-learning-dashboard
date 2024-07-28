@@ -44,12 +44,21 @@ const ValAccuracyOverwiev = ({ path, jsonSubexperiment, theme }) => {
     };
   });
 
+  // Zuordnung jedes Modells zu einer einzelnen Farbe.
+  const colorPalette = {};
+
+  for (let i = 0; i < metricData.length; i++) {
+    const modell = metricData[i].model;
+    colorPalette[modell] = `hsl(${(i * 40) % 360}, 60%, 60%)`;
+  }
+
   const data = metricData.map((metricModel) => ({
     x: metricModel.date,
     y: metricModel.val,
 
     mode: "markers+text",
     type: "scatter",
+    marker: { color: colorPalette[metricModel.model] },
 
     name: `${metricModel.model} `,
   }));
