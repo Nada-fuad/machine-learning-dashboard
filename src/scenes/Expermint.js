@@ -74,14 +74,22 @@ export default function Experiment({ jsonExperiment, theme }) {
     >
       <StyledBox gridArea="a" backgroundColor={theme.palette.primary.box}>
         {" "}
-        <ValOverview path={selectedHistoryData} theme={theme} />
+        <ValOverview
+          path={selectedHistoryData}
+          theme={theme}
+          jsonExperiment={jsonExperiment}
+        />
       </StyledBox>
       <StyledBox gridArea="b" backgroundColor={theme.palette.primary.box}>
         <ValRange path={selectedHistoryData} theme={theme} />
       </StyledBox>
 
       <StyledBox gridArea="c" backgroundColor={theme.palette.primary.box}>
-        <TestOverview path={selectedHistoryData} theme={theme} />
+        <TestOverview
+          path={selectedHistoryData}
+          theme={theme}
+          jsonExperiment={jsonExperiment}
+        />
       </StyledBox>
 
       <StyledBox gridArea="d" backgroundColor={theme.palette.primary.box}>

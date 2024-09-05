@@ -16,6 +16,7 @@ const ConfusionMatrix = ({ path, theme }) => {
   }, [newPath]);
 
   if (!confusionMetric || !newPath) return null;
+  
   const color = [
     [0, theme.palette.primary.confusion0],
     [0.5, theme.palette.primary.confusion1],

@@ -12,7 +12,7 @@
                             "rocPath": "/cifar10/trained_models/pretrained_models/mobilenetv3_small_075/plots/"
                         },
                         {
-                            "name": "kakao_resnet8",
+                            "name": "resnet18",
                             "dataPath": "/cifar10/trained_models/pretrained_models/resnet18/logs/",
                             "confusionPath": "/cifar10/trained_models/pretrained_models/resnet18/plots/",
                             "curvePath": "/cifar10/trained_models/pretrained_models/resnet18/plots/",
@@ -117,6 +117,28 @@
                             "confusionPath": "/cifar10/trained_models/sweep_models/resnet50/plots/",
                             "curvePath": "/cifar10/trained_models/sweep_models/resnet50/plots/",
                             "rocPath": "/cifar10/trained_models/sweep_models/resnet18/plots/"
+                        }
+                    ]
+                },
+                {
+                    "name": "test",
+                    "models": [{
+                            "name": "kakao_resnet8",
+                            "dataPath": "/cifar10/trained_models/test/kakao_resnet8/logs/",
+                            "confusionPath": "/cifar10/trained_models/test/kakao_resnet8/plots/",
+                            "curvePath": "/cifar10/trained_models/test/kakao_resnet8/plots/",
+                            "rocPath": "/cifar10/trained_models/test/kakao_resnet8/plots/"
+                        },
+                        {
+                            "name": "resnet18",
+                            "dataPath": "/cifar10/trained_models/test/resnet18/logs/",
+                            "confusionPath": "/cifar10/trained_models/test/resnet18/plots/",
+                            "curvePath": "/cifar10/trained_models/test/resnet18/plots/",
+                            "rocPath": "/cifar10/trained_models/test/resnet18/plots/"
+                        },
+                        {
+                            "name": "resnet50",
+                            "dataPath": "/cifar10/trained_models/test/resnet50/logs/"
                         }
                     ]
                 }

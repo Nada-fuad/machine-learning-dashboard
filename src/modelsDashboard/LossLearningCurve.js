@@ -76,6 +76,7 @@ const LossLearningCurve = ({ path, theme }) => {
   const shadedAreaMinVal = valLoss.map(
     (metric, i) => metric - valGraduallyStd[i]
   );
+
   const xTrainArea = trainEpochs.concat(trainEpochs.slice().reverse());
   const yTrainArea = shadedAreaMaxTrain.concat(
     shadedAreaMinTrain.slice().reverse()

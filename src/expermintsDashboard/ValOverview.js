@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Plot from "react-plotly.js";
 import jsonLtoJson from "../JsonLToJson";
 
-const ValOverview = ({ path, theme }) => {
+const ValOverview = ({ path, theme, jsonExperiment }) => {
   const [metrics, setMetrics] = useState(null);
 
   const newPath = `/machine-learning-dashboard${path}history.jsonl`;
@@ -75,7 +75,7 @@ const ValOverview = ({ path, theme }) => {
   }));
   // das Aussehen und die Darstellung des Diagramms zu konfigurieren.
   const layout = {
-    title: "Validation Accuracy of Each Model in Experiment by Date",
+    title: `Validation Accuracy of Each Model in ${jsonExperiment.name} by Date`,
     font: { color: theme.palette.primary.font },
     xaxis: { title: "Date" },
     yaxis: { title: "Validation Accuracy" },
