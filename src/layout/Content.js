@@ -1,8 +1,8 @@
 import { Box } from "@mui/material";
 import React from "react";
 import Models from "../scenes/Models";
-import Experiment from "../scenes/Expermint";
-import SubExpermint from "../scenes/Subexpermint";
+import Experiment from "../scenes/Experiment";
+import SubExpermint from "../scenes/Experiment";
 
 export default function Content({
   expermintData,

@@ -1,11 +1,11 @@
 import React from "react";
 import { Box, styled, useMediaQuery } from "@mui/material";
-import BarTestAccuracy from "../subexpermintDashboard/BarTestAccuracy";
-import ValAccuracyOverwiev from "../subexpermintDashboard/ValAccuracyOverwiev";
-import BarValAccuracy from "../subexpermintDashboard/BarValAccuracy";
-import TestAccuracyOverwiev from "../subexpermintDashboard/TestAccuracyOverwiev";
-import ValLossBar from "../subexpermintDashboard/ValLossBar";
-import TestLossBar from "../subexpermintDashboard/TestLossBar";
+import BarTestAccuracy from "../subExperimentDashboard/BarTestAccuracy";
+import ValAccuracyOverwiev from "../subExperimentDashboard/ValAccuracyOverwiev";
+import BarValAccuracy from "../subExperimentDashboard/BarValAccuracy";
+import TestAccuracyOverwiev from "../subExperimentDashboard/TestAccuracyOverwiev";
+import ValLossBar from "../subExperimentDashboard/ValLossBar";
+import TestLossBar from "../subExperimentDashboard/TestLossBar";
 const StyledBox = styled(Box)(({ theme }) => ({
   borderRadius: "1rem",
   boxShadow: "0.15rem 0.2rem 0.15rem 0.1rem rgba(0, 0, 0, .4)",
